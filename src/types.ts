@@ -8,6 +8,7 @@ export interface Entity {
   email: string;
   branch?: string;
   contactPerson?: string;
+  logo?: string;
 }
 
 export interface LineItem {

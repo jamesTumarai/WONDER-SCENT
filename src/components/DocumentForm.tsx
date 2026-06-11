@@ -136,6 +136,38 @@ export default function DocumentForm({ data, onChange }: Props) {
             <input placeholder="เบอร์โทรศัพท์" value={data.from.phone} onChange={(e) => updateEntity('from', 'phone', e.target.value)} className="w-full border-stone-200 rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500/10 shadow-sm p-3 border outline-none text-sm placeholder:text-stone-400 transition-all bg-white" />
             <input placeholder="อีเมล" value={data.from.email} onChange={(e) => updateEntity('from', 'email', e.target.value)} className="w-full border-stone-200 rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500/10 shadow-sm p-3 border outline-none text-sm placeholder:text-stone-400 transition-all bg-white" />
           </div>
+
+          <div className="pt-2">
+            <label className="block text-[11px] font-bold text-stone-500 mb-1.5 uppercase tracking-wider ml-1">โลโก้บริษัท (จะแสดงในส่วนหัวเอกสาร)</label>
+            <input 
+              type="file" 
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  const reader = new FileReader();
+                  reader.onloadend = () => {
+                    updateEntity('from', 'logo', reader.result as string);
+                  };
+                  reader.readAsDataURL(file);
+                }
+              }}
+              className="w-full text-sm text-stone-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-leaf-50 file:text-leaf-700 hover:file:bg-leaf-100 transition-colors file:cursor-pointer"
+            />
+            {data.from.logo && (
+              <div className="mt-3 flex items-center gap-3 bg-stone-50 p-2 rounded-xl border border-stone-100">
+                <div className="w-12 h-12 rounded-lg bg-white overflow-hidden shadow-sm flex items-center justify-center">
+                  <img src={data.from.logo} alt="Logo preview" className="max-w-full max-h-full object-contain" />
+                </div>
+                <button 
+                  onClick={() => updateEntity('from', 'logo', '')}
+                  className="text-xs font-bold text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg transition-colors"
+                >
+                  ลบรูปนี้
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </section>
 

@@ -50,7 +50,11 @@ export default function DocumentPreview({ data }: Props) {
             {data.from.name ? (
               <div className="space-y-1.5 text-sm text-stone-600">
                 <div className="flex items-center gap-3 mb-4">
-                  {(data.from.name.includes('วอนเดอร์ เซ้นท์') || data.from.name.toLowerCase().includes('wonder scent')) ? (
+                  {data.from.logo ? (
+                    <div className="relative flex items-center shrink-0 w-24 h-24 sm:w-28 sm:h-28">
+                      <img src={data.from.logo} alt="Company Logo" className="w-full h-full object-contain object-left" />
+                    </div>
+                  ) : (data.from.name.includes('วอนเดอร์ เซ้นท์') || data.from.name.toLowerCase().includes('wonder scent')) ? (
                     <div className="relative flex items-center justify-center bg-white w-12 h-12 rounded-full border border-leaf-200/60 shadow-[0_2px_10px_rgba(0,0,0,0.03)] shrink-0 overflow-hidden">
                       <div className="absolute inset-0 bg-gradient-to-tr from-leaf-100/30 to-transparent"></div>
                       <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="relative z-10 text-leaf-600">
@@ -60,8 +64,9 @@ export default function DocumentPreview({ data }: Props) {
                       </svg>
                     </div>
                   ) : null}
-                  <h1 className="text-2xl font-bold text-stone-800 tracking-tight">{data.from.name}</h1>
+                  {!data.from.logo && <h1 className="text-2xl font-bold text-stone-800 tracking-tight">{data.from.name}</h1>}
                 </div>
+                {data.from.logo && <h1 className="text-xl font-bold text-stone-800 tracking-tight pb-1">{data.from.name}</h1>}
                 <p className="whitespace-pre-line leading-relaxed">{data.from.address}</p>
                 <div className="pt-2 space-y-0.5 text-[13px]">
                   {data.from.taxId && <p><span className="text-stone-400 w-32 inline-block">เลขประจำตัวผู้เสียภาษี:</span> <span className="text-stone-700 font-medium">{data.from.taxId}</span></p>}
