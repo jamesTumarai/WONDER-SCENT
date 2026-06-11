@@ -132,7 +132,7 @@ export default function DocumentPreview({ data }: Props) {
 
           {/* Table */}
           <div className="mb-4 flex-1">
-            <table className="w-full text-left border-collapse border-2 border-black">
+            <table className="w-full text-left border-collapse border-2 border-black table-fixed">
               <thead>
                 <tr className={`${c.bg} text-white`}>
                   <th className="py-2.5 px-3 font-medium text-center w-12 text-[11px] border border-black">ลำดับ</th>
@@ -157,7 +157,7 @@ export default function DocumentPreview({ data }: Props) {
                     <tr key={item.id} className="h-6">
                       <td className="py-2 px-3 text-center border border-black text-[11px] align-top">{index + 1}</td>
                       <td className="py-2 px-6 border text-stone-800 align-top break-words text-[11px] border-black">
-                        <div className="whitespace-pre-wrap">{item.description || ''}</div>
+                        <div className="whitespace-pre-wrap break-words">{item.description || ''}</div>
                       </td>
                       <td className="py-2 px-4 text-center align-top text-[11px] border border-black">{item.quantity}</td>
                       <td className="py-2 px-4 text-right align-top text-[11px] border border-black">{formatCurrency(item.unitPrice)}</td>
@@ -169,34 +169,6 @@ export default function DocumentPreview({ data }: Props) {
                   ))
                 )}
                 
-                {data.paymentTerms && (
-                  <tr className="h-6">
-                    <td className="border border-black"></td>
-                    <td className="py-2 px-6 border text-stone-800 align-top break-words text-[11px] border-black">
-                      <div className="font-bold underline mb-1">ช่องทางการชำระเงิน</div>
-                      <div className="whitespace-pre-wrap pb-2">{data.paymentTerms.replace(/^ช่องทางการชำระเงิน\s*\n?/, '')}</div>
-                    </td>
-                    <td className="border border-black"></td>
-                    <td className="border border-black"></td>
-                    {data.columnSettings?.showPrice2 && <td className="border border-black"></td>}
-                    <td className="border border-black"></td>
-                  </tr>
-                )}
-
-                {notes && (
-                  <tr className="h-6">
-                    <td className="border border-black"></td>
-                    <td className="py-2 px-6 border text-stone-800 align-top break-words text-[11px] border-black">
-                      <div className="font-bold italic underline mb-1">หมายเหตุ:</div>
-                      <div className="whitespace-pre-wrap leading-relaxed pb-2">{notes}</div>
-                    </td>
-                    <td className="border border-black"></td>
-                    <td className="border border-black"></td>
-                    {data.columnSettings?.showPrice2 && <td className="border border-black"></td>}
-                    <td className="border border-black"></td>
-                  </tr>
-                )}
-
                 {/* Fill empty rows visually */}
                 {Array.from({ length: Math.max(0, 5 - data.items.length) }).map((_, i) => (
                   <tr key={`empty-${i}`} className="h-8">
@@ -208,6 +180,41 @@ export default function DocumentPreview({ data }: Props) {
                     <td className="border border-black"></td>
                   </tr>
                 ))}
+                
+                {data.paymentTerms && (
+                  <tr className="h-6">
+                    <td className="border border-black"></td>
+                    <td className="py-2 px-6 border text-stone-800 align-top break-words text-[11px] border-black">
+                      <div className="font-bold underline mb-1">ช่องทางการชำระเงิน</div>
+                      <div className="whitespace-pre-wrap pb-2 break-words">{data.paymentTerms.replace(/^ช่องทางการชำระเงิน\s*\n?/, '')}</div>
+                    </td>
+                    <td className="border border-black"></td>
+                    <td className="border border-black"></td>
+                    {data.columnSettings?.showPrice2 && <td className="border border-black"></td>}
+                    <td className="border border-black"></td>
+                  </tr>
+                )}
+
+                {notes && (
+                  <tr className="h-6">
+                    <td className="border border-black"></td>
+                    <td className="pt-1.5 px-6 border text-stone-800 align-top break-words text-[11px] border-black">
+                      <div className="font-bold italic mb-1">หมายเหตุ:</div>
+                      <div className="flex flex-col w-full pb-1">
+                        <div className="border-t border-stone-300 w-full"></div>
+                        {notes.split('\n').filter(line => line.trim()).map((line, idx) => (
+                          <div key={idx} className="w-full border-b border-stone-300">
+                            <div className="py-1 leading-relaxed w-full whitespace-pre-wrap">{line}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </td>
+                    <td className="border border-black"></td>
+                    <td className="border border-black"></td>
+                    {data.columnSettings?.showPrice2 && <td className="border border-black"></td>}
+                    <td className="border border-black"></td>
+                  </tr>
+                )}
               </tbody>
               <tfoot className="font-semibold text-[11px] bg-white">
                 <tr>
@@ -357,7 +364,7 @@ export default function DocumentPreview({ data }: Props) {
 
           {/* Table */}
           <div className="mb-12 flex-1">
-            <table className="w-full text-left border-collapse border-2 border-black">
+            <table className="w-full text-left border-collapse border-2 border-black table-fixed">
               <thead>
                 <tr className={`${c.receiptBg} text-white`}>
                   <th className="py-2 px-3 font-medium text-center w-16 text-[11px] border border-black">ลำดับ</th>
@@ -385,7 +392,7 @@ export default function DocumentPreview({ data }: Props) {
                     <tr key={item.id} className="h-6">
                       <td className={`py-2 px-3 text-center border border-black text-[11px] align-top`}>{index + 1}</td>
                       <td className={`py-2 px-6 border text-stone-800 align-top break-words text-[11px] border-black`}>
-                        <div className="whitespace-pre-wrap">{item.description || ''}</div>
+                        <div className="whitespace-pre-wrap break-words">{item.description || ''}</div>
                       </td>
                       <td className={`py-2 px-4 text-center align-top text-[11px] border border-black`}>{item.quantity}</td>
                       <td className={`py-2 px-4 text-right align-top text-[11px] border border-black`}>{formatCurrency(item.unitPrice)}</td>
@@ -414,7 +421,7 @@ export default function DocumentPreview({ data }: Props) {
                     <td className="border border-black"></td>
                     <td className="py-2 px-6 border text-stone-800 align-top break-words text-[11px] border-black">
                       <div className="font-bold italic underline mb-1">หมายเหตุ:</div>
-                      <div className="whitespace-pre-wrap leading-relaxed pb-2">{notes}</div>
+                      <div className="whitespace-pre-wrap leading-relaxed pb-2 break-words">{notes}</div>
                     </td>
                     <td className="border border-black"></td>
                     <td className="border border-black"></td>
@@ -527,35 +534,41 @@ export default function DocumentPreview({ data }: Props) {
         <div className={`w-full border-b border-stone-800 mb-4`}></div>
 
         {/* Info Grid */}
-        <div className="flex justify-between items-start mb-6 text-[11px] leading-relaxed">
+        <div className="flex justify-between items-start mb-4 text-[11px] leading-relaxed">
           {/* Left: Customer Info */}
           <div className="w-2/3 pr-8">
-            <table className="w-full">
+            <table className="w-full table-fixed">
+              <colgroup>
+                <col className="w-px" />
+                <col className="w-[180px]" />
+                <col className="w-px" />
+                <col className="w-auto" />
+              </colgroup>
               <tbody>
                 <tr>
-                  <td className={`w-[120px] whitespace-nowrap pb-1 ${labelColor}`}>ชื่อลูกค้า</td>
-                  <td className={`pb-1 ${valueColor} font-bold`}>{data.to.name || ''}</td>
+                  <td className={`whitespace-nowrap pr-4 pb-1 ${labelColor}`}>ชื่อลูกค้า</td>
+                  <td className={`pb-1 ${valueColor} font-bold break-words`} colSpan={data.to.branch ? 1 : 3}>{data.to.name || ''}</td>
                   {data.to.branch && (
                     <>
-                      <td className={`w-[80px] whitespace-nowrap pb-1 ${labelColor} pl-4`}>สาขา</td>
-                      <td className={`pb-1 ${valueColor} font-bold`}>{data.to.branch}</td>
+                      <td className={`whitespace-nowrap pr-4 pb-1 ${labelColor} pl-4`}>สาขา</td>
+                      <td className={`pb-1 ${valueColor} font-bold break-words`}>{data.to.branch}</td>
                     </>
                   )}
                 </tr>
                 <tr>
-                  <td className={`w-[120px] align-top whitespace-nowrap pb-1 ${labelColor}`}>ที่อยู่</td>
-                  <td colSpan={3} className={`pb-1 ${valueColor} whitespace-pre-wrap`}>{data.to.address || ''}</td>
+                  <td className={`align-top whitespace-nowrap pr-4 pb-1 ${labelColor}`}>ที่อยู่</td>
+                  <td colSpan={3} className={`pb-1 ${valueColor} whitespace-pre-wrap break-words`}>{data.to.address || ''}</td>
                 </tr>
                 <tr>
-                  <td className={`w-[120px] whitespace-nowrap pb-1 ${labelColor}`}>เลขผู้เสียภาษี</td>
-                  <td className={`pb-1 ${valueColor}`}>{data.to.taxId || ''}</td>
-                  <td className={`w-[100px] whitespace-nowrap pb-1 ${labelColor} pl-4`}>เบอร์โทรศัพท์</td>
-                  <td className={`pb-1 ${valueColor}`}>{data.to.phone || ''}</td>
+                  <td className={`whitespace-nowrap pr-4 pb-1 ${labelColor}`}>เลขผู้เสียภาษี</td>
+                  <td className={`pb-1 ${valueColor} break-words`}>{data.to.taxId || ''}</td>
+                  <td className={`whitespace-nowrap pr-4 pb-1 ${labelColor} pl-4`}>เบอร์โทรศัพท์</td>
+                  <td className={`pb-1 ${valueColor} break-words`}>{data.to.phone || ''}</td>
                 </tr>
                 {data.to.contactPerson && (
                   <tr>
-                    <td className={`w-[120px] whitespace-nowrap pb-1 ${labelColor}`}>ผู้ติดต่อ</td>
-                    <td colSpan={3} className={`pb-1 ${valueColor}`}>{data.to.contactPerson}</td>
+                    <td className={`whitespace-nowrap pr-4 pb-1 ${labelColor}`}>ผู้ติดต่อ</td>
+                    <td colSpan={3} className={`pb-1 ${valueColor} break-words`}>{data.to.contactPerson}</td>
                   </tr>
                 )}
               </tbody>
@@ -567,16 +580,16 @@ export default function DocumentPreview({ data }: Props) {
             <table className="w-full">
               <tbody>
                 <tr>
-                  <td className={`w-[90px] whitespace-nowrap pb-1 ${labelColor}`}>เลขที่</td>
+                  <td className={`w-px pr-4 whitespace-nowrap pb-1 ${labelColor}`}>เลขที่</td>
                   <td className={`pb-1 ${valueColor} font-bold`}>{data.documentNumber || ''}</td>
                 </tr>
                 <tr>
-                  <td className={`w-[90px] whitespace-nowrap pb-1 ${labelColor}`}>วันที่</td>
+                  <td className={`w-px pr-4 whitespace-nowrap pb-1 ${labelColor}`}>วันที่</td>
                   <td className={`pb-1 ${valueColor} font-bold`}>{formatDate(data.date)}</td>
                 </tr>
                 {data.dueDate && (
                   <tr>
-                    <td className={`w-[90px] whitespace-nowrap pb-1 ${labelColor}`}>{data.type === 'QUOTATION' ? 'ยืนยันราคาถึง' : 'ครบกำหนด'}</td>
+                    <td className={`w-px pr-4 whitespace-nowrap pb-1 ${labelColor}`}>{data.type === 'QUOTATION' ? 'ยืนยันราคาถึง' : 'ครบกำหนด'}</td>
                     <td className={`pb-1 ${valueColor} font-bold`}>{formatDate(data.dueDate)}</td>
                   </tr>
                 )}
@@ -591,11 +604,11 @@ export default function DocumentPreview({ data }: Props) {
             <table className="w-full">
               <tbody>
                 <tr>
-                  <td className={`w-[120px] whitespace-nowrap pb-1 ${labelColor}`}>ผู้ออก</td>
+                  <td className={`w-px pr-4 whitespace-nowrap pb-1 ${labelColor}`}>ผู้ออก</td>
                   <td className={`pb-1 ${valueColor} font-bold`}>{data.from.name || ''}</td>
                 </tr>
                 <tr>
-                  <td className={`w-[120px] align-top whitespace-nowrap pb-1 ${labelColor}`}>ที่อยู่</td>
+                  <td className={`w-px pr-4 align-top whitespace-nowrap pb-1 ${labelColor}`}>ที่อยู่</td>
                   <td className={`pb-1 ${valueColor} whitespace-pre-wrap`}>{data.from.address || ''}</td>
                 </tr>
               </tbody>
@@ -605,15 +618,15 @@ export default function DocumentPreview({ data }: Props) {
             <table className="w-full">
               <tbody>
                 <tr>
-                  <td className={`w-[140px] whitespace-nowrap pb-1 ${labelColor}`}>เลขประจำตัวผู้เสียภาษี</td>
+                  <td className={`w-px pr-4 whitespace-nowrap pb-1 ${labelColor}`}>เลขประจำตัวผู้เสียภาษี</td>
                   <td className={`pb-1 ${valueColor} font-bold`}>{data.from.taxId || ''}</td>
                 </tr>
                 <tr>
-                  <td className={`w-[140px] whitespace-nowrap pb-1 ${labelColor}`}>เบอร์โทร</td>
+                  <td className={`w-px pr-4 whitespace-nowrap pb-1 ${labelColor}`}>เบอร์โทร</td>
                   <td className={`pb-1 ${valueColor} font-bold`}>{data.from.phone || ''}</td>
                 </tr>
                 <tr>
-                  <td className={`w-[140px] whitespace-nowrap pb-1 ${labelColor}`}>อีเมล์</td>
+                  <td className={`w-px pr-4 whitespace-nowrap pb-1 ${labelColor}`}>อีเมล์</td>
                   <td className={`pb-1 ${valueColor} font-bold`}>{data.from.email || ''}</td>
                 </tr>
               </tbody>
@@ -623,11 +636,11 @@ export default function DocumentPreview({ data }: Props) {
 
         {/* Items Table */}
         <div className="mb-8 flex-1">
-          <table className="w-full text-left border-collapse">
+          <table className="w-full text-left border-collapse table-fixed">
             <thead>
               <tr className={`${c.bg} text-white`}>
                 <th className="py-2.5 px-3 font-medium text-center w-16 text-[11px]">ลำดับ</th>
-                <th className="py-2.5 px-6 font-medium text-[11px]">รายการสินค้า</th>
+                <th className="py-2.5 px-6 font-medium text-[11px] text-center">รายการสินค้า</th>
                 <th className="py-2.5 px-4 text-center font-medium w-24 text-[11px]">จำนวน</th>
                 <th className="py-2.5 px-4 text-center font-medium w-28 text-[11px]">{data.columnSettings?.price1Label || 'ราคา/หน่วย'}</th>
                 {data.columnSettings?.showPrice2 && (
@@ -653,7 +666,7 @@ export default function DocumentPreview({ data }: Props) {
                   <tr key={item.id}>
                     <td className={`py-3 px-3 text-center ${valueColor} text-[11px] align-top`}>{index + 1}</td>
                     <td className={`py-3 px-6 font-medium ${valueColor} leading-relaxed align-top break-words text-[11px]`}>
-                      <div className="whitespace-pre-wrap">{item.description || ''}</div>
+                      <div className="whitespace-pre-wrap break-words">{item.description || ''}</div>
                     </td>
                     <td className={`py-3 px-4 text-center ${valueColor} align-top text-[11px]`}>{item.quantity}</td>
                     <td className={`py-3 px-4 text-center ${valueColor} align-top text-[11px]`}>{formatCurrency(item.unitPrice)}</td>
@@ -666,19 +679,6 @@ export default function DocumentPreview({ data }: Props) {
                   </tr>
                 ))
               )}
-              {notes && (
-                <tr>
-                  <td></td>
-                  <td className={`py-3 px-6 pb-6 text-stone-800 align-top break-words text-[11px]`}>
-                    <div className="font-bold underline mb-1">หมายเหตุ:</div>
-                    <div className="whitespace-pre-wrap leading-relaxed">{notes}</div>
-                  </td>
-                  <td></td>
-                  <td></td>
-                  {data.columnSettings?.showPrice2 && <td></td>}
-                  <td></td>
-                </tr>
-              )}
             </tbody>
           </table>
         </div>
@@ -689,8 +689,13 @@ export default function DocumentPreview({ data }: Props) {
           <div className="w-full border-t border-stone-800 mb-4"></div>
           
           <div className="flex justify-between items-start mb-6">
-            <div className={`w-1/2 ${labelColor} font-bold text-[11px]`}>
-              หมายเหตุ
+            <div className={`w-1/2`}>
+              {notes && (
+                <>
+                  <div className={`${labelColor} font-bold text-[11px] mb-1`}>หมายเหตุ</div>
+                  <div className={`whitespace-pre-wrap leading-relaxed text-[11px] ${valueColor} break-words`}>{notes}</div>
+                </>
+              )}
             </div>
             <div className="w-1/2 flex flex-col items-end gap-2 text-[11px]">
                <div className="flex justify-between w-64 px-6">
@@ -734,7 +739,7 @@ export default function DocumentPreview({ data }: Props) {
               {data.paymentTerms && (
                 <>
                   <div className={`font-bold ${valueColor}`}>ช่องทางการชำระเงิน</div>
-                  <div className={`whitespace-pre-line leading-relaxed ${valueColor}`}>{data.paymentTerms.replace(/^ช่องทางการชำระเงิน\s*\n?/, '')}</div>
+                  <div className={`whitespace-pre-line leading-relaxed ${valueColor} break-words`}>{data.paymentTerms.replace(/^ช่องทางการชำระเงิน\s*\n?/, '')}</div>
                 </>
               )}
             </div>
