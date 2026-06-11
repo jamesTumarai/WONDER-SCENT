@@ -229,8 +229,8 @@ export default function SavedDocumentsList({ onClose, onSelect }: Props) {
                               onClick={(e) => handleToggleStar(e, doc.id, !!doc.starred)} 
                               className={`p-2 sm:-mt-2 rounded-xl transition-all ${
                                 doc.starred 
-                                  ? 'text-yellow-500 hover:bg-yellow-50 opacity-100' 
-                                  : 'text-stone-400 hover:text-yellow-500 hover:bg-yellow-50 md:opacity-0 md:group-hover:opacity-100 opacity-100'
+                                  ? 'text-yellow-500 hover:bg-yellow-50' 
+                                  : 'text-stone-400 hover:text-yellow-500 hover:bg-yellow-50'
                               }`}
                               title={doc.starred ? 'เลิกติดดาว' : 'ติดดาว'}
                             >
@@ -238,7 +238,7 @@ export default function SavedDocumentsList({ onClose, onSelect }: Props) {
                             </button>
                             <button 
                               onClick={(e) => handleDelete(e, doc.id)} 
-                              className="p-2 sm:-mr-2 sm:-mt-2 text-stone-400 hover:text-red-500 hover:bg-red-50 md:opacity-0 md:group-hover:opacity-100 opacity-100 rounded-xl transition-all"
+                              className="p-2 sm:-mr-2 sm:-mt-2 text-stone-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
                               title="ลบเอกสาร"
                             >
                               <Trash2 size={20} />
