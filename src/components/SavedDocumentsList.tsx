@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { getUserDocuments, SavedDocument, deleteUserDocument, toggleDocumentStar } from '../db';
-import { FileText, Loader2, Trash2, X, AlertCircle, Bookmark, Search, Star } from 'lucide-react';
+import React, { useEffect, useState, useRef } from 'react';
+import { getUserDocuments, SavedDocument, deleteUserDocument, toggleDocumentStar, renameDocument } from '../db';
+import { FileText, Loader2, Trash2, X, AlertCircle, Bookmark, Search, Star, Edit2 } from 'lucide-react';
 import { DocumentType } from '../types';
 
 interface Props {
@@ -23,10 +23,21 @@ export default function SavedDocumentsList({ onClose, onSelect }: Props) {
   const [sortOrder, setSortOrder] = useState<'NEWEST' | 'OLDEST'>('NEWEST');
   const [showStarredOnly, setShowStarredOnly] = useState(false);
   const [docToDelete, setDocToDelete] = useState<string | null>(null);
+  
+  const [editingNameId, setEditingNameId] = useState<string | null>(null);
+  const [editingNameValue, setEditingNameValue] = useState<string>('');
+  const [isRenaming, setIsRenaming] = useState(false);
+  const editInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     fetchDocs();
   }, []);
+
+  useEffect(() => {
+    if (editingNameId && editInputRef.current) {
+      editInputRef.current.focus();
+    }
+  }, [editingNameId]);
 
   const fetchDocs = async () => {
     try {
@@ -61,6 +72,30 @@ export default function SavedDocumentsList({ onClose, onSelect }: Props) {
       setDocToDelete(null);
     }
   };
+
+  const handleRenameSubmit = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!editingNameId) return;
+    
+    try {
+      setIsRenaming(true);
+      await renameDocument(editingNameId, editingNameValue);
+      setDocs(docs.map(d => 
+        d.id === editingNameId ? { ...d, documentName: editingNameValue } : d
+      ));
+    } catch (err) {
+      alert('เกิดข้อผิดพลาดในการบันทึกชื่อเอกสาร');
+    } finally {
+      setIsRenaming(false);
+      setEditingNameId(null);
+    }
+  };
+
+  const handleStartRename = (e: React.MouseEvent, doc: SavedDocument) => {
+    e.stopPropagation();
+    setEditingNameId(doc.id);
+    setEditingNameValue(doc.documentName || doc.to?.name || 'ไม่มีชื่อ');
+  };
   
   const handleToggleStar = async (e: React.MouseEvent, docId: string, currentStarredStatus: boolean) => {
     e.stopPropagation();
@@ -82,7 +117,7 @@ export default function SavedDocumentsList({ onClose, onSelect }: Props) {
     
     if (!searchQuery.trim()) return true;
     const query = searchQuery.toLowerCase();
-    const nameMatch = (doc.to.name || '').toLowerCase().includes(query);
+    const nameMatch = (doc.documentName || doc.to?.name || '').toLowerCase().includes(query);
     const dateMatch = (doc.date || '').includes(query);
     const numMatch = (doc.documentNumber || '').toLowerCase().includes(query);
     return nameMatch || dateMatch || numMatch;
@@ -218,13 +253,53 @@ export default function SavedDocumentsList({ onClose, onSelect }: Props) {
                       >
                         <div className="flex items-start justify-between">
                           <div>
-                            <h4 className="font-bold text-stone-800 line-clamp-1 pr-4 flex items-center gap-2">
-                              {doc.starred && <Star size={14} className="fill-yellow-400 text-yellow-400" />}
-                              {doc.to.name || 'ไม่ได้ระบุผู้รับ'}
-                            </h4>
-                            <p className="text-sm text-stone-500 font-medium font-mono mt-0.5">{doc.documentNumber || 'ไม่มีเลขที่'}</p>
+                            {editingNameId === doc.id ? (
+                              <form 
+                                onSubmit={handleRenameSubmit} 
+                                className="pr-4 mb-1"
+                                onClick={e => e.stopPropagation()}
+                              >
+                                <div className="flex items-center gap-2">
+                                  <input
+                                    ref={editInputRef}
+                                    type="text"
+                                    value={editingNameValue}
+                                    onChange={e => setEditingNameValue(e.target.value)}
+                                    disabled={isRenaming}
+                                    className="border border-leaf-300 focus:border-leaf-500 focus:ring-2 focus:ring-leaf-500/20 rounded-md px-2 py-0.5 text-stone-800 font-bold outline-none text-base w-full max-w-[200px]"
+                                    onBlur={() => {
+                                      // Only cancel if value didn't change, else save
+                                      if (editingNameValue === (doc.documentName || doc.to?.name || 'ไม่มีชื่อ')) {
+                                        setEditingNameId(null);
+                                      } else {
+                                        handleRenameSubmit();
+                                      }
+                                    }}
+                                  />
+                                  {isRenaming && <Loader2 size={14} className="animate-spin text-stone-400" />}
+                                </div>
+                              </form>
+                            ) : (
+                              <h4 className="font-bold text-stone-800 pr-2 flex items-center gap-1.5">
+                                {doc.starred && <Star size={14} className="fill-yellow-400 text-yellow-400 shrink-0" />}
+                                <span className="line-clamp-1">{doc.documentName || doc.to?.name || 'ไม่ได้ระบุผู้รับ'}</span>
+                              </h4>
+                            )}
+                            
+                            {doc.to?.branch ? (
+                              <p className="text-sm text-stone-500 mt-0.5">สาขา: {doc.to.branch}</p>
+                            ) : (
+                              <p className="text-sm text-stone-500 font-medium font-mono mt-0.5">{doc.documentNumber || 'ไม่มีเลขที่'}</p>
+                            )}
                           </div>
                           <div className="flex items-center gap-1">
+                            <button 
+                              onClick={(e) => handleStartRename(e, doc)}
+                              className="p-2 sm:-mt-2 rounded-xl transition-all text-stone-400 hover:text-stone-600 hover:bg-stone-50 active:bg-stone-100"
+                              title="แก้ไขชื่อเอกสาร"
+                            >
+                              <Edit2 size={18} />
+                            </button>
                             <button 
                               onClick={(e) => handleToggleStar(e, doc.id, !!doc.starred)} 
                               className={`p-2 sm:-mt-2 rounded-xl transition-all ${

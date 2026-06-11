@@ -50,11 +50,11 @@ export default function DocumentPreview({ data }: Props) {
   const fontStyle = data.fontFamily === 'prompt' ? '"Prompt", sans-serif' : data.fontFamily === 'sarabun' ? '"Sarabun", sans-serif' : 'sans-serif';
 
   return (
-    <div className={`text-[13px] md:text-[14px] text-stone-800 bg-white min-h-[295mm] print:min-h-0 relative flex flex-col justify-between print:block`} style={{ fontFamily: fontStyle }}>
+    <div className={`text-[14px] text-stone-800 bg-white min-h-[295mm] print:min-h-0 relative flex flex-col justify-between print:block font-medium`} style={{ fontFamily: fontStyle }}>
       {/* Top Border Bar */}
       <div className={`h-2 w-full ${c.bg} absolute top-0 left-0 right-0 print:hidden`}></div>
 
-      <div className="pt-10 pb-8 px-10 md:px-12 flex flex-col flex-1 print:block">
+      <div className="pt-10 pb-8 px-12 flex flex-col flex-1 print:block">
         
         {/* Top Header: Sender Left, Title Right */}
         <div className="flex justify-between items-start mb-6">
@@ -82,7 +82,7 @@ export default function DocumentPreview({ data }: Props) {
                     )}
                   </div>
                 )}
-                <p className="whitespace-pre-line leading-relaxed text-xs">{data.from.address}</p>
+                <p className="whitespace-pre-line break-words leading-relaxed text-xs">{data.from.address}</p>
                 <div className="pt-1 space-y-0 text-xs">
                   {data.from.taxId && <p><span className="text-stone-400 w-28 inline-block">เลขประจำตัวผู้เสียภาษี:</span> <span className="text-stone-700 font-medium">{data.from.taxId}</span></p>}
                   {data.from.branch && <p><span className="text-stone-400 w-28 inline-block">สาขา:</span> <span className="text-stone-700 font-medium">{data.from.branch}</span></p>}
@@ -99,7 +99,7 @@ export default function DocumentPreview({ data }: Props) {
           
           {/* Document Details */}
           <div className="text-right w-64">
-            <h1 className={`text-2xl md:text-3xl font-bold ${c.text} mb-1`}>{title.th}</h1>
+            <h1 className={`text-3xl font-bold ${c.text} mb-1`}>{title.th}</h1>
             <h2 className={`font-semibold ${c.textLight} tracking-[0.2em] text-[10px] uppercase mb-4`}>{title.en}</h2>
             
             <table className="w-full text-xs">
@@ -133,7 +133,7 @@ export default function DocumentPreview({ data }: Props) {
           {data.to.name ? (
              <div className="space-y-0.5 text-[12px] text-stone-600">
                <p className="font-bold text-stone-800 text-sm mb-1">{data.to.name}</p>
-               <p className="whitespace-pre-line leading-relaxed pb-1">{data.to.address}</p>
+               <p className="whitespace-pre-line break-words leading-relaxed pb-1">{data.to.address}</p>
                <div className="grid grid-cols-2 gap-x-4 gap-y-1 pt-1">
                  {data.to.taxId && <p className="col-span-2 sm:col-span-1"><span className="text-stone-400">ผู้เสียภาษี:</span> <span className="text-stone-700 font-medium">{data.to.taxId}</span></p>}
                  {data.to.branch && <p className="col-span-2 sm:col-span-1"><span className="text-stone-400">สาขา:</span> <span className="text-stone-700 font-medium">{data.to.branch}</span></p>}
@@ -171,7 +171,7 @@ export default function DocumentPreview({ data }: Props) {
                 data.items.map((item, index) => (
                   <tr key={item.id} className="group hover:bg-stone-50 transition-colors">
                     <td className="py-2.5 px-4 text-stone-400 text-center border-t border-stone-100 text-[13px] align-top">{index + 1}</td>
-                    <td className="py-2.5 px-6 font-medium text-stone-800 border-t border-stone-100 leading-relaxed align-top">
+                    <td className="py-2.5 px-6 font-medium text-stone-800 border-t border-stone-100 leading-relaxed align-top break-words max-w-[200px]">
                       {item.description || '-'}
                     </td>
                     <td className="py-2.5 px-4 text-center text-stone-700 border-t border-stone-100 align-top">{item.quantity}</td>
@@ -187,15 +187,15 @@ export default function DocumentPreview({ data }: Props) {
         </div>
 
         {/* Totals & Notes Section */}
-        <div className="flex flex-col md:flex-row justify-between items-start gap-8 mt-auto print:mt-6 pt-2 print:break-inside-avoid print:flex-nowrap print:flex-row">
+        <div className="flex flex-row justify-between items-start gap-8 mt-auto print:mt-6 pt-2 print:break-inside-avoid print:flex-nowrap print:flex-row">
           {/* Notes & Payment Terms */}
-          <div className="w-full md:w-1/2 space-y-2">
+          <div className="w-1/2 space-y-2">
             {data.paymentTerms && (
                <div className="text-sm bg-stone-50 p-3.5 rounded-2xl border border-stone-100">
                  <h4 className="font-semibold text-stone-500 mb-1.5 flex items-center gap-2 text-[10px] uppercase tracking-wider">
                    ช่องทางการชำระเงิน
                  </h4>
-                 <p className="whitespace-pre-line text-stone-600 leading-relaxed text-[12px]">{data.paymentTerms}</p>
+                 <p className="whitespace-pre-line break-words text-stone-600 leading-relaxed text-[12px]">{data.paymentTerms}</p>
                </div>
             )}
             {data.notes && (
@@ -203,13 +203,13 @@ export default function DocumentPreview({ data }: Props) {
                 <h4 className="font-semibold text-stone-500 mb-1.5 flex items-center gap-2 text-[10px] uppercase tracking-wider">
                   หมายเหตุ
                 </h4>
-                <p className="whitespace-pre-line text-stone-600 leading-relaxed text-[12px]">{data.notes}</p>
+                <p className="whitespace-pre-line break-words text-stone-600 leading-relaxed text-[12px]">{data.notes}</p>
               </div>
             )}
           </div>
 
           {/* Totals */}
-          <div className="w-full md:w-80 bg-white border border-stone-100 rounded-2xl p-4 shadow-[0_4px_24px_-8px_rgba(0,0,0,0.04)]">
+          <div className="w-80 bg-white border border-stone-100 rounded-2xl p-4 shadow-[0_4px_24px_-8px_rgba(0,0,0,0.04)]">
             <table className="w-full text-sm">
               <tbody>
                 <tr>

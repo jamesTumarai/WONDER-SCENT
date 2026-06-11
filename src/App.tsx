@@ -67,7 +67,14 @@ export default function App() {
   const [showPdfModal, setShowPdfModal] = useState(false);
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [showSavedDocs, setShowSavedDocs] = useState(false);
+  const [showMobilePreview, setShowMobilePreview] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3000);
+  };
 
   useEffect(() => {
     if (showSavedDocs && window.innerWidth < 1280) {
@@ -199,8 +206,10 @@ export default function App() {
       const idToSave = saveAsNew ? undefined : currentDocId;
       const id = await saveDocument(data, idToSave);
       setCurrentDocId(id);
+      showToast(saveAsNew ? 'บันทึกเป็นเอกสารใหม่สำเร็จ' : 'บันทึกเอกสารสำเร็จ');
     } catch (error) {
       console.error('Error saving: ', error);
+      showToast('เกิดข้อผิดพลาดในการบันทึก');
     } finally {
       setIsSaving(false);
     }
@@ -297,7 +306,7 @@ export default function App() {
       <main className="flex-1 min-h-0 flex flex-col xl:flex-row w-full mx-auto relative xl:overflow-hidden print:overflow-visible print:block">
         
         {/* Form Panel (Left) */}
-        <section className={`w-full xl:w-[450px] 2xl:w-[500px] flex-shrink-0 bg-sand-50 border-r border-sand-200 no-print xl:overflow-y-auto custom-scrollbar transition-all duration-300 ${showSavedDocs ? '-ml-[500px]' : 'ml-0'}`}>
+        <section className={`w-full xl:w-[450px] 2xl:w-[500px] flex-shrink-0 bg-sand-50 border-r border-sand-200 no-print xl:overflow-y-auto custom-scrollbar transition-all duration-300 ${showSavedDocs ? '-ml-[500px]' : 'ml-0'} ${showMobilePreview ? 'hidden xl:block' : 'block'}`}>
           <div className="p-6 md:p-8">
             <DocumentForm data={data} onChange={setData} />
           </div>
@@ -326,16 +335,38 @@ export default function App() {
         )}
 
         {/* Preview Panel (Right) */}
-        <section className="flex-1 p-6 md:p-8 xl:p-12 xl:overflow-y-auto print:h-auto print:overflow-visible flex justify-center bg-sand-100 print:bg-white print:p-0 print:block custom-scrollbar items-start relative z-0">
-          <div className="bg-white shadow-xl shadow-stone-200 rounded-2xl print:shadow-none print:rounded-none w-full max-w-[210mm] max-h-min self-start print:max-w-none print:w-full overflow-hidden border border-sand-200 print:border-none">
-            {/* Aspect ratio A4 for realistic preview */}
-            <div id="document-preview-container" className="print-area min-h-[295mm] print:min-h-0 bg-white">
-               <DocumentPreview data={data} />
+        <section className={`flex-1 p-0 sm:p-6 md:p-8 xl:p-12 xl:overflow-y-auto print:h-auto print:overflow-visible justify-center bg-sand-100 print:bg-white print:p-0 print:block custom-scrollbar items-start relative z-0 ${showMobilePreview ? 'flex' : 'hidden xl:flex'} print:!flex`}>
+          <div className="w-full overflow-x-auto overflow-y-hidden custom-scrollbar pb-6 xl:pb-0 px-4 sm:px-0">
+            <div className="bg-white shadow-xl shadow-stone-200 rounded-2xl print:shadow-none print:rounded-none w-[794px] min-h-[1123px] mx-auto overflow-hidden border border-sand-200 print:border-none print:w-full print:min-h-0 relative">
+              {/* Aspect ratio A4 for realistic preview */}
+              <div id="document-preview-container" className="print-area print:min-h-0 bg-white w-[794px] min-h-[1123px] absolute top-0 left-0 right-0 origin-top flex flex-col justify-between print:static print:w-full">
+                 <DocumentPreview data={data} />
+              </div>
             </div>
           </div>
         </section>
         
       </main>
+
+      {/* Mobile Toggle Preview Button */}
+      <div className="fixed bottom-6 right-6 z-[100] xl:hidden no-print">
+        <button
+          onClick={() => setShowMobilePreview(!showMobilePreview)}
+          className="flex items-center gap-2 bg-leaf-600 hover:bg-leaf-700 text-white shadow-lg shadow-leaf-600/30 px-5 py-3 rounded-full font-medium transition-all transform active:scale-95"
+        >
+          {showMobilePreview ? (
+            <>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+              กลับไปแก้ไข
+            </>
+          ) : (
+            <>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>
+              ดูตัวอย่าง
+            </>
+          )}
+        </button>
+      </div>
 
       {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
       <PdfDownloadModal 
@@ -350,6 +381,16 @@ export default function App() {
         onSaveAsNew={() => executeSave(true)}
         onOverwrite={() => executeSave(false)}
       />
+
+      {/* Toast Notification */}
+      {toastMessage && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[150] bg-stone-800 text-white px-6 py-3 rounded-full shadow-lg shadow-black/20 font-medium text-sm animate-in fade-in slide-in-from-bottom-4 duration-300">
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-leaf-400"></div>
+            {toastMessage}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
