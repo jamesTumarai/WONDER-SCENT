@@ -58,8 +58,8 @@ export default function DocumentPreview({ data }: Props) {
 
   if (isQuotation) {
     return (
-      <div className={`text-[12px] text-stone-800 bg-white min-h-[295mm] print:min-h-0 relative flex flex-col justify-between print:block font-medium`} style={{ fontFamily: fontStyle }}>
-        <div className="pt-12 pb-12 px-12 flex flex-col flex-1 print:block">
+      <div className={`text-[12px] text-stone-800 bg-white min-h-[295mm] print:min-h-0 relative flex flex-col justify-between font-medium`} style={{ fontFamily: fontStyle }}>
+        <div className="pt-12 pb-12 px-12 flex flex-col flex-1">
           
           {/* Header */}
           <div className="flex gap-6 mb-6">
@@ -110,15 +110,10 @@ export default function DocumentPreview({ data }: Props) {
                   </tr>
                   <tr>
                     <td className="w-16 py-0.5 align-top whitespace-nowrap">เลขประจำตัวผู้เสียภาษี</td>
-                    <td className="py-0.5 pl-[72px] flex items-center gap-6">
-                      <span>{data.to.taxId || ''}</span>
-                      <div className="flex items-center gap-2">
-                        <div className={`w-3.5 h-3.5 border border-black flex items-center justify-center font-bold pb-0.5 ${!data.to.branch || data.to.branch === 'สำนักงานใหญ่' ? 'text-black' : 'text-transparent'}`}>X</div> 
-                        <span>สำนักงานใหญ่</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className={`w-3.5 h-3.5 border border-black flex items-center justify-center font-bold pb-0.5 ${data.to.branch && data.to.branch !== 'สำนักงานใหญ่' ? 'text-black' : 'text-transparent'}`}>X</div> 
-                        <span>สาขาที่ {data.to.branch && data.to.branch !== 'สำนักงานใหญ่' ? <span className="border-b border-dashed border-black px-2 inline-block min-w-[60px] text-center">{data.to.branch}</span> : '....................'}</span>
+                    <td className="py-0.5 pl-[72px]">
+                      <div className="flex items-center gap-6">
+                        <span>{data.to.taxId || ''}</span>
+                        <span>สาขา {data.to.branch || ''}</span>
                       </div>
                     </td>
                   </tr>
@@ -211,10 +206,10 @@ export default function DocumentPreview({ data }: Props) {
                   </tr>
                 ))}
               </tbody>
-              <tfoot className="font-semibold text-[11px]">
+              <tfoot className="font-semibold text-[11px] bg-white">
                 <tr>
-                   <td colSpan={2} rowSpan={2} className="border border-black p-0 align-top bg-white">
-                      <div className="px-4 py-2 flex items-center h-full gap-8">
+                   <td colSpan={2} rowSpan={2 + (data.discount > 0 ? 1 : 0) + (data.includeTax ? 1 : 0)} className="border border-black px-4 align-middle bg-white">
+                      <div className="flex items-center gap-8">
                          <span className="font-bold">ตัวอักษร.</span>
                          <span className="flex-1 text-center font-normal">({THBText(grandTotal)})</span>
                       </div>
@@ -222,15 +217,35 @@ export default function DocumentPreview({ data }: Props) {
                    <td colSpan={data.columnSettings?.showPrice2 ? 3 : 2} className="border border-black px-4 py-2 bg-white">
                        รวมเงิน
                    </td>
-                   <td className={`border border-black px-6 py-2 text-right font-normal ${c.secBg} text-black`}>
+                   <td className={`border border-black px-6 py-2 text-right font-normal bg-white text-black`}>
                        {formatCurrency(subTotal)}
                    </td>
                 </tr>
+                {data.discount > 0 && (
+                  <tr>
+                     <td colSpan={data.columnSettings?.showPrice2 ? 3 : 2} className="border border-black px-4 py-2 bg-white">
+                         ส่วนลด
+                     </td>
+                     <td className={`border border-black px-6 py-2 text-right font-normal bg-white text-black`}>
+                         -{formatCurrency(data.discount)}
+                     </td>
+                  </tr>
+                )}
+                {data.includeTax && (
+                  <tr>
+                     <td colSpan={data.columnSettings?.showPrice2 ? 3 : 2} className="border border-black px-4 py-2 bg-white">
+                         ภาษีมูลค่าเพิ่ม {data.taxRate}%
+                     </td>
+                     <td className={`border border-black px-6 py-2 text-right font-normal bg-white text-black`}>
+                         {formatCurrency(taxAmount)}
+                     </td>
+                  </tr>
+                )}
                 <tr>
                    <td colSpan={data.columnSettings?.showPrice2 ? 3 : 2} className="border border-black px-4 py-2 bg-white">
                        จำนวนเงินทั้งสิ้น
                    </td>
-                   <td className={`border border-black px-6 py-2 text-right font-bold ${c.secBg} text-black`}>
+                   <td className={`border border-black px-6 py-2 text-right font-bold bg-white text-black`}>
                        {formatCurrency(grandTotal)}
                    </td>
                 </tr>
@@ -258,7 +273,7 @@ export default function DocumentPreview({ data }: Props) {
                 <div className="mt-auto space-y-4 pt-12">
                   <div className="flex gap-2 items-end">
                     <span className="w-16">ผู้เสนอราคา</span>
-                    <span className="flex-1 text-center border-b border-dashed border-black">{data.from.name || ''}</span>
+                    <span className="flex-1 text-center border-b border-dashed border-black">บุษยาพร สามารถ</span>
                   </div>
                   <div className="flex gap-2 items-end">
                     <span className="w-16">วันที่</span>
@@ -284,8 +299,8 @@ export default function DocumentPreview({ data }: Props) {
 
   if (isReceipt) {
     return (
-      <div className={`text-[12px] text-stone-800 bg-white min-h-[295mm] print:min-h-0 relative flex flex-col justify-between print:block font-medium`} style={{ fontFamily: fontStyle }}>
-        <div className="pt-16 pb-12 px-16 flex flex-col flex-1 print:block">
+      <div className={`text-[12px] text-stone-800 bg-white min-h-[295mm] print:min-h-0 relative flex flex-col justify-between font-medium`} style={{ fontFamily: fontStyle }}>
+        <div className="pt-16 pb-12 px-16 flex flex-col flex-1">
           
           <div className="text-center relative mb-12">
              <h1 className="text-2xl font-bold">ใบเสร็จรับเงิน</h1>
@@ -386,27 +401,75 @@ export default function DocumentPreview({ data }: Props) {
                 ))}
               </tbody>
               <tfoot className="font-semibold text-[11px] bg-white">
-                <tr>
-                   <td colSpan={2} className={`border border-black p-2 text-center ${c.secBg}`}>
-                       ( {THBText(grandTotal)} )
-                   </td>
-                   <td colSpan={data.columnSettings?.showPrice2 ? 3 : 2} className="border border-black p-2 text-center bg-white">
-                      รวมทั้งสิ้น
-                   </td>
-                   <td className={`border border-black px-6 py-2 text-right text-black ${c.secBg}`}>
-                      {formatCurrency(grandTotal)}
-                   </td>
-                </tr>
+                {(data.discount > 0 || data.includeTax) ? (
+                  <>
+                    <tr>
+                       <td colSpan={2} rowSpan={2 + (data.discount > 0 ? 1 : 0) + (data.includeTax ? 1 : 0)} className={`border border-black px-4 align-middle bg-white`}>
+                           <div className="flex items-center gap-8">
+                              <span className="font-bold">ตัวอักษร</span>
+                              <span className="flex-1 text-center font-normal">({THBText(grandTotal)})</span>
+                           </div>
+                       </td>
+                       <td colSpan={data.columnSettings?.showPrice2 ? 3 : 2} className="border border-black p-2 text-center bg-white">
+                           รวมเงิน
+                       </td>
+                       <td className={`border border-black px-6 py-2 text-right bg-white text-black`}>
+                           {formatCurrency(subTotal)}
+                       </td>
+                    </tr>
+                    {data.discount > 0 && (
+                      <tr>
+                         <td colSpan={data.columnSettings?.showPrice2 ? 3 : 2} className="border border-black p-2 text-center bg-white">
+                             ส่วนลด
+                         </td>
+                         <td className={`border border-black px-6 py-2 text-right bg-white text-black`}>
+                             -{formatCurrency(data.discount)}
+                         </td>
+                      </tr>
+                    )}
+                    {data.includeTax && (
+                      <tr>
+                         <td colSpan={data.columnSettings?.showPrice2 ? 3 : 2} className="border border-black p-2 text-center bg-white">
+                             ภาษีมูลค่าเพิ่ม {data.taxRate}%
+                         </td>
+                         <td className={`border border-black px-6 py-2 text-right bg-white text-black`}>
+                             {formatCurrency(taxAmount)}
+                         </td>
+                      </tr>
+                    )}
+                    <tr>
+                       <td colSpan={data.columnSettings?.showPrice2 ? 3 : 2} className="border border-black p-2 text-center bg-white">
+                          จำนวนเงินทั้งสิ้น
+                       </td>
+                       <td className={`border border-black px-6 py-2 text-right text-black font-bold ${c.secBg}`}>
+                          {formatCurrency(grandTotal)}
+                       </td>
+                    </tr>
+                  </>
+                ) : (
+                  <tr>
+                     <td colSpan={2} className={`border border-black p-2 text-center ${c.secBg}`}>
+                         ( {THBText(grandTotal)} )
+                     </td>
+                     <td colSpan={data.columnSettings?.showPrice2 ? 3 : 2} className="border border-black p-2 text-center bg-white">
+                        รวมทั้งสิ้น
+                     </td>
+                     <td className={`border border-black px-6 py-2 text-right text-black ${c.secBg}`}>
+                        {formatCurrency(grandTotal)}
+                     </td>
+                  </tr>
+                )}
               </tfoot>
             </table>
           </div>
 
           <div className="flex justify-end mt-16 pb-12 print:break-inside-avoid">
             <div className="text-center text-[11px]">
-              <div className="flex items-end gap-2 mb-3">
+              <div className="flex items-end gap-2 mb-1">
                 <span>ลงชื่อ</span>
-                <span className="w-64 border-b border-black inline-block"></span>
+                <span className="w-64 border-b border-black inline-block text-center text-transparent focus:text-stone-700">_</span>
               </div>
+              <div className="mb-2 w-64 ml-8 text-center">( บุษยาพร สามารถ )</div>
               <div className="pr-4">ผู้รับเงิน</div>
             </div>
           </div>
@@ -417,9 +480,9 @@ export default function DocumentPreview({ data }: Props) {
   }
 
   return (
-    <div className={`text-[12px] text-stone-800 bg-white min-h-[295mm] print:min-h-0 relative flex flex-col justify-between print:block font-medium`} style={{ fontFamily: fontStyle }}>
+    <div className={`text-[12px] text-stone-800 bg-white min-h-[295mm] print:min-h-0 relative flex flex-col justify-between font-medium`} style={{ fontFamily: fontStyle }}>
       
-      <div className="pt-8 pb-8 px-12 flex flex-col flex-1 print:block">
+      <div className="pt-8 pb-8 px-12 flex flex-col flex-1">
         
         {/* Header: Logo and Title */}
         <div className="flex justify-between items-start mb-4">
@@ -647,7 +710,7 @@ export default function DocumentPreview({ data }: Props) {
                   {data.type === 'QUOTATION' ? 'ผู้อนุมัติ' : 'ผู้อนุมัติ'}
                 </div>
                 <div className={`text-center ${labelColor}`}>
-                  {data.from.name ? `(${data.from.name})` : '(                          )'}
+                  (บุษยาพร สามารถ)
                 </div>
                 <div className={`mt-4 flex gap-4 ${labelColor}`}>
                   <span>วันที่</span>
