@@ -227,21 +227,21 @@ export default function SavedDocumentsList({ onClose, onSelect }: Props) {
                           <div className="flex items-center gap-1">
                             <button 
                               onClick={(e) => handleToggleStar(e, doc.id, !!doc.starred)} 
-                              className={`p-2 -mt-2 rounded-lg transition-all ${
+                              className={`p-2 sm:-mt-2 rounded-xl transition-all ${
                                 doc.starred 
                                   ? 'text-yellow-500 hover:bg-yellow-50 opacity-100' 
-                                  : 'text-stone-300 hover:text-yellow-500 hover:bg-yellow-50 opacity-0 group-hover:opacity-100'
+                                  : 'text-stone-400 hover:text-yellow-500 hover:bg-yellow-50 md:opacity-0 md:group-hover:opacity-100 opacity-100'
                               }`}
                               title={doc.starred ? 'เลิกติดดาว' : 'ติดดาว'}
                             >
-                              <Star size={16} className={doc.starred ? 'fill-current' : ''} />
+                              <Star size={20} className={doc.starred ? 'fill-current' : ''} />
                             </button>
                             <button 
                               onClick={(e) => handleDelete(e, doc.id)} 
-                              className="p-2 -mr-2 -mt-2 text-stone-300 hover:text-red-500 hover:bg-red-50 opacity-0 group-hover:opacity-100 rounded-lg transition-all"
+                              className="p-2 sm:-mr-2 sm:-mt-2 text-stone-400 hover:text-red-500 hover:bg-red-50 md:opacity-0 md:group-hover:opacity-100 opacity-100 rounded-xl transition-all"
                               title="ลบเอกสาร"
                             >
-                              <Trash2 size={16} />
+                              <Trash2 size={20} />
                             </button>
                           </div>
                         </div>
@@ -261,7 +261,7 @@ export default function SavedDocumentsList({ onClose, onSelect }: Props) {
       </div>
 
       {docToDelete && (
-        <div className="absolute inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/40 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-stone-900/40 backdrop-blur-sm">
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 border border-stone-200/50">
             <h3 className="text-lg font-bold text-stone-800 mb-2">ยืนยันการลบเอกสาร</h3>
             <p className="text-sm text-stone-600 mb-6 leading-relaxed">คุณแน่ใจหรือไม่ว่าต้องการลบเอกสารนี้? การดำเนินการนี้ไม่สามารถยกเลิกได้</p>
