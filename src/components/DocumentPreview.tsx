@@ -37,11 +37,11 @@ export default function DocumentPreview({ data }: Props) {
   const grandTotal = afterDiscount + taxAmount;
 
   return (
-    <div className="font-sans text-[13px] md:text-[14px] text-stone-800 bg-white h-full relative flex flex-col justify-between shadow-inner" style={{ minHeight: '297mm' }}>
+    <div className="font-sans text-[13px] md:text-[14px] text-stone-800 bg-white min-h-[297mm] print:min-h-0 relative flex flex-col justify-between shadow-inner print:block">
       {/* Top Border Bar */}
-      <div className="h-2 w-full bg-leaf-500 absolute top-0 left-0 right-0"></div>
+      <div className="h-2 w-full bg-leaf-500 absolute top-0 left-0 right-0 print:hidden"></div>
 
-      <div className="pt-16 pb-12 px-12 md:px-16 flex flex-col flex-1">
+      <div className="pt-16 pb-12 px-12 md:px-16 flex flex-col flex-1 print:block">
         
         {/* Top Header: Sender Left, Title Right */}
         <div className="flex justify-between items-start mb-12">
@@ -155,7 +155,7 @@ export default function DocumentPreview({ data }: Props) {
         </div>
 
         {/* Totals & Notes Section */}
-        <div className="flex flex-col md:flex-row justify-between items-start gap-12 mt-auto pt-4">
+        <div className="flex flex-col md:flex-row justify-between items-start gap-12 mt-auto print:mt-12 pt-4 print:break-inside-avoid print:flex-nowrap print:flex-row">
           {/* Notes */}
           <div className="w-full md:w-1/2">
             {data.notes && (
@@ -204,7 +204,7 @@ export default function DocumentPreview({ data }: Props) {
         </div>
 
         {/* Signatures */}
-        <div className="grid grid-cols-2 gap-16 mt-16 pt-8 border-t border-stone-100">
+        <div className="grid grid-cols-2 gap-16 mt-16 pt-8 border-t border-stone-100 print:break-inside-avoid">
           <div className="text-center group flex flex-col items-center">
             <div className="border-b-[1.5px] border-stone-300 mb-4 h-12 w-56 group-hover:border-leaf-400 transition-colors relative flex items-end justify-center pb-1">
               <span className="text-[10px] text-stone-300 uppercase tracking-widest">(ลายมือชื่อ)</span>
