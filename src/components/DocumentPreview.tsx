@@ -50,7 +50,7 @@ export default function DocumentPreview({ data }: Props) {
   const fontStyle = data.fontFamily === 'prompt' ? '"Prompt", sans-serif' : data.fontFamily === 'sarabun' ? '"Sarabun", sans-serif' : 'sans-serif';
 
   return (
-    <div className={`text-[13px] md:text-[14px] text-stone-800 bg-white min-h-[297mm] print:min-h-0 relative flex flex-col justify-between print:block`} style={{ fontFamily: fontStyle }}>
+    <div className={`text-[13px] md:text-[14px] text-stone-800 bg-white min-h-[295mm] print:min-h-0 relative flex flex-col justify-between print:block`} style={{ fontFamily: fontStyle }}>
       {/* Top Border Bar */}
       <div className={`h-2 w-full ${c.bg} absolute top-0 left-0 right-0 print:hidden`}></div>
 

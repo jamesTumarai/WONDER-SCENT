@@ -5,6 +5,7 @@ import DocumentPreview from './components/DocumentPreview';
 import SavedDocumentsList from './components/SavedDocumentsList';
 import LoginModal from './components/LoginModal';
 import PdfDownloadModal from './components/PdfDownloadModal';
+import SaveDocumentModal from './components/SaveDocumentModal';
 import { FileText, Printer, Cloud, LogIn, LogOut, Loader2, Save } from 'lucide-react';
 import { useAuth } from './AuthContext';
 import { saveDocument, getUserDocuments, deleteUserDocument, SavedDocument } from './db';
@@ -64,6 +65,7 @@ export default function App() {
   const [isSaving, setIsSaving] = useState(false);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   const [showPdfModal, setShowPdfModal] = useState(false);
+  const [showSaveModal, setShowSaveModal] = useState(false);
   const [showSavedDocs, setShowSavedDocs] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
 
@@ -175,18 +177,28 @@ export default function App() {
     setCurrentDocId(undefined);
   };
 
-  const handleSaveToCloud = async (saveAsNew = false) => {
+  const handleSaveClick = () => {
     if (!user) {
       setShowLogin(true);
       return;
     }
+    
+    if (currentDocId) {
+      setShowSaveModal(true);
+    } else {
+      executeSave(false);
+    }
+  };
+
+  const executeSave = async (saveAsNew = false) => {
+    setShowSaveModal(false);
+    if (!user) return;
 
     try {
       setIsSaving(true);
       const idToSave = saveAsNew ? undefined : currentDocId;
       const id = await saveDocument(data, idToSave);
       setCurrentDocId(id);
-      // Removed alert as it causes freezes on iOS PWAs
     } catch (error) {
       console.error('Error saving: ', error);
     } finally {
@@ -251,35 +263,14 @@ export default function App() {
             </button>
           )}
 
-          {user && currentDocId ? (
-            <div className="flex gap-2 w-full md:w-auto">
-              <button
-                onClick={() => handleSaveToCloud(false)}
-                disabled={isSaving}
-                className="flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-medium text-leaf-700 bg-leaf-50 border border-leaf-200 hover:bg-leaf-100 active:bg-leaf-200 rounded-xl transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-leaf-200 flex-1 md:flex-none"
-              >
-                {isSaving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
-                บันทึกทับ
-              </button>
-              <button
-                onClick={() => handleSaveToCloud(true)}
-                disabled={isSaving}
-                className="flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-medium text-leaf-700 bg-leaf-50 border border-leaf-200 hover:bg-leaf-100 active:bg-leaf-200 rounded-xl transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-leaf-200 flex-1 md:flex-none"
-              >
-                {isSaving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
-                บันทึกใหม่
-              </button>
-            </div>
-          ) : (
-            <button
-              onClick={() => handleSaveToCloud(false)}
-              disabled={isSaving}
-              className="flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-medium text-leaf-700 bg-leaf-50 border border-leaf-200 hover:bg-leaf-100 active:bg-leaf-200 rounded-xl transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-leaf-200 flex-1 md:flex-none"
-            >
-              {isSaving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
-              {user ? 'บันทึก Cloud' : 'เข้าสู่ระบบเพื่อบันทึก'}
-            </button>
-          )}
+          <button
+            onClick={handleSaveClick}
+            disabled={isSaving}
+            className="flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-medium text-leaf-700 bg-leaf-50 border border-leaf-200 hover:bg-leaf-100 active:bg-leaf-200 rounded-xl transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-leaf-200 flex-1 md:flex-none"
+          >
+            {isSaving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+            {user ? 'บันทึก Cloud' : 'เข้าสู่ระบบเพื่อบันทึก'}
+          </button>
 
           <button
             type="button"
@@ -338,7 +329,7 @@ export default function App() {
         <section className="flex-1 p-6 md:p-8 xl:p-12 xl:overflow-y-auto print:h-auto print:overflow-visible flex justify-center bg-sand-100 print:bg-white print:p-0 print:block custom-scrollbar items-start relative z-0">
           <div className="bg-white shadow-xl shadow-stone-200 rounded-2xl print:shadow-none print:rounded-none w-full max-w-[210mm] max-h-min self-start print:max-w-none print:w-full overflow-hidden border border-sand-200 print:border-none">
             {/* Aspect ratio A4 for realistic preview */}
-            <div id="document-preview-container" className="print-area min-h-[297mm] print:min-h-0 bg-white">
+            <div id="document-preview-container" className="print-area min-h-[295mm] print:min-h-0 bg-white">
                <DocumentPreview data={data} />
             </div>
           </div>
@@ -352,6 +343,12 @@ export default function App() {
         onClose={() => setShowPdfModal(false)} 
         onConfirm={executePdfGeneration}
         defaultFilename={data.documentNumber ? `${data.documentNumber}` : 'เอกสาร'}
+      />
+      <SaveDocumentModal
+        isOpen={showSaveModal}
+        onClose={() => setShowSaveModal(false)}
+        onSaveAsNew={() => executeSave(true)}
+        onOverwrite={() => executeSave(false)}
       />
     </div>
   );
