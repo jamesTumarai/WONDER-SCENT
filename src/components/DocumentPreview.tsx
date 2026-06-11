@@ -97,20 +97,20 @@ export default function DocumentPreview({ data }: Props) {
               <table className="w-full">
                 <tbody>
                   <tr>
-                    <td className="w-16 py-0.5 align-top">นามลูกค้า</td>
-                    <td className="py-0.5">บริษัท {data.to.name || ''}</td>
+                    <td className="w-[120px] py-0.5 align-top">นามลูกค้า</td>
+                    <td className="py-0.5">{data.to.name || ''}</td>
                   </tr>
                   <tr>
-                    <td className="w-16 py-0.5 align-top">ที่อยู่</td>
+                    <td className="w-[120px] py-0.5 align-top">ที่อยู่</td>
                     <td className="py-0.5">{data.to.address || ''}</td>
                   </tr>
                   <tr>
-                    <td className="w-16 py-0.5 align-top"></td>
+                    <td className="w-[120px] py-0.5 align-top"></td>
                     <td className="py-0.5">ผู้ติดต่อ: {data.to.contactPerson || '-'} เบอร์โทร: {data.to.phone || '-'}</td>
                   </tr>
                   <tr>
-                    <td className="w-16 py-0.5 align-top whitespace-nowrap">เลขประจำตัวผู้เสียภาษี</td>
-                    <td className="py-0.5 pl-[72px]">
+                    <td className="w-[120px] py-0.5 align-top whitespace-nowrap">เลขประจำตัวผู้เสียภาษี</td>
+                    <td className="py-0.5 pl-4">
                       <div className="flex items-center gap-6">
                         <span>{data.to.taxId || ''}</span>
                         <span>สาขา {data.to.branch || ''}</span>
@@ -257,7 +257,7 @@ export default function DocumentPreview({ data }: Props) {
           <div className="flex gap-2 text-[11px] print:break-inside-avoid">
             <div className="w-[60%] flex border-2 border-black">
               <div className="w-1/2 flex flex-col p-3 border-r border-black">
-                <div className="font-bold mb-4">{data.to.name ? `บริษัท ${data.to.name}` : 'บริษัท'}</div>
+                <div className="font-bold mb-4">{data.to.name || ''}</div>
                 <div className="mt-auto space-y-4 pt-12">
                   <div className="flex gap-2 items-end">
                     <span className="w-10">ผู้อนุมัติ</span>
@@ -507,15 +507,15 @@ export default function DocumentPreview({ data }: Props) {
         {/* Info Grid */}
         <div className="flex justify-between items-start mb-6 text-[11px] leading-relaxed">
           {/* Left: Customer Info */}
-          <div className="w-2/3 pr-8">
+          <div className="w-[60%] pr-8">
             <table className="w-full">
               <tbody>
                 <tr>
-                  <td className={`w-28 pb-1 ${labelColor}`}>ชื่อลูกค้า</td>
+                  <td className={`w-[88px] pb-1 ${labelColor} whitespace-nowrap`}>ชื่อลูกค้า</td>
                   <td className={`pb-1 ${valueColor} font-bold`}>{data.to.name || ''}</td>
                   {data.to.branch && (
                     <>
-                      <td className={`w-16 pb-1 ${labelColor} pl-2`}>สาขา</td>
+                      <td className={`w-12 pb-1 ${labelColor} pl-2`}>สาขา</td>
                       <td className={`pb-1 ${valueColor} font-bold`}>{data.to.branch}</td>
                     </>
                   )}
@@ -525,9 +525,9 @@ export default function DocumentPreview({ data }: Props) {
                   <td colSpan={3} className={`pb-1 ${valueColor} whitespace-pre-wrap`}>{data.to.address || ''}</td>
                 </tr>
                 <tr>
-                  <td className={`pb-1 ${labelColor}`}>เลขผู้เสียภาษี</td>
+                  <td className={`pb-1 ${labelColor} whitespace-nowrap`}>เลขผู้เสียภาษี</td>
                   <td className={`pb-1 ${valueColor}`}>{data.to.taxId || ''}</td>
-                  <td className={`pb-1 ${labelColor} pl-2`}>เบอร์โทรศัพท์</td>
+                  <td className={`pb-1 ${labelColor} pl-2 whitespace-nowrap`}>เบอร์โทรศัพท์</td>
                   <td className={`pb-1 ${valueColor}`}>{data.to.phone || ''}</td>
                 </tr>
                 {data.to.contactPerson && (
@@ -541,11 +541,11 @@ export default function DocumentPreview({ data }: Props) {
           </div>
 
           {/* Right: Document Info */}
-          <div className="w-1/3">
+          <div className="w-[40%]">
             <table className="w-full">
               <tbody>
                 <tr>
-                  <td className={`w-24 pb-1 ${labelColor}`}>เลขที่</td>
+                  <td className={`w-[60px] pb-1 ${labelColor} whitespace-nowrap`}>เลขที่</td>
                   <td className={`pb-1 ${valueColor} font-bold`}>{data.documentNumber || ''}</td>
                 </tr>
                 <tr>
@@ -569,11 +569,11 @@ export default function DocumentPreview({ data }: Props) {
             <table className="w-full">
               <tbody>
                 <tr>
-                  <td className={`w-28 pb-1 ${labelColor}`}>ผู้ออก</td>
+                  <td className={`w-[88px] pb-1 ${labelColor} whitespace-nowrap`}>ผู้ออก</td>
                   <td className={`pb-1 ${valueColor} font-bold`}>{data.from.name || ''}</td>
                 </tr>
                 <tr>
-                  <td className={`align-top pb-1 ${labelColor}`}>ที่อยู่</td>
+                  <td className={`align-top pb-1 ${labelColor} whitespace-nowrap`}>ที่อยู่</td>
                   <td className={`pb-1 ${valueColor} whitespace-pre-wrap`}>{data.from.address || ''}</td>
                 </tr>
               </tbody>
@@ -583,15 +583,15 @@ export default function DocumentPreview({ data }: Props) {
             <table className="w-full">
               <tbody>
                 <tr>
-                  <td className={`w-40 pb-1 ${labelColor}`}>เลขประจำตัวผู้เสียภาษี</td>
+                  <td className={`w-[130px] pb-1 ${labelColor} whitespace-nowrap`}>เลขประจำตัวผู้เสียภาษี</td>
                   <td className={`pb-1 ${valueColor} font-bold`}>{data.from.taxId || ''}</td>
                 </tr>
                 <tr>
-                  <td className={`pb-1 ${labelColor} w-24`}>เบอร์โทร</td>
+                  <td className={`pb-1 ${labelColor} whitespace-nowrap w-[60px]`}>เบอร์โทร</td>
                   <td className={`pb-1 ${valueColor} font-bold`}>{data.from.phone || ''}</td>
                 </tr>
                 <tr>
-                  <td className={`pb-1 ${labelColor} w-24`}>อีเมล์</td>
+                  <td className={`pb-1 ${labelColor} whitespace-nowrap w-[60px]`}>อีเมล์</td>
                   <td className={`pb-1 ${valueColor} font-bold`}>{data.from.email || ''}</td>
                 </tr>
               </tbody>
