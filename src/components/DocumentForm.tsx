@@ -263,7 +263,7 @@ export default function DocumentForm({ data, onChange }: Props) {
         </div>
 
         <div className="mt-4">
-          <label className="block text-[11px] font-bold text-stone-500 mb-1.5 uppercase tracking-wider ml-1">เงื่อนไขการชำระเงิน</label>
+          <label className="block text-[11px] font-bold text-stone-500 mb-1.5 uppercase tracking-wider ml-1">ช่องทางการชำระเงิน</label>
           <textarea 
             rows={3}
             value={data.paymentTerms || ''}

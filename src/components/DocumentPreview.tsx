@@ -173,7 +173,7 @@ export default function DocumentPreview({ data }: Props) {
             {data.paymentTerms && (
                <div className="text-sm bg-stone-50/50 p-5 rounded-2xl border border-stone-100/80">
                  <h4 className="font-semibold text-stone-500 mb-2.5 flex items-center gap-2 text-[11px] uppercase tracking-wider">
-                   เงื่อนไขการชำระเงิน
+                   ช่องทางการชำระเงิน
                  </h4>
                  <p className="whitespace-pre-line text-stone-600 leading-relaxed text-[13px]">{data.paymentTerms}</p>
                </div>
