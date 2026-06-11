@@ -68,17 +68,25 @@ export default function App() {
     localStorage.setItem('documentData', JSON.stringify(data));
   }, [data]);
 
-  const handlePrint = () => {
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-    const inIframe = window !== window.parent;
-    
-    if (isIOS && inIframe) {
-      alert("เพื่อไม่ให้หน้ากระดาษติดขอบ\n\nกรุณากดไอคอน 'เปิดแท็บใหม่' ที่มุมขวาบนของหน้าจอก่อนกดพิมพ์ครับ");
-    }
-
-    setTimeout(() => {
+  const handlePrint = async () => {
+    try {
+      const html2pdf = (await import('html2pdf.js')).default;
+      const element = document.getElementById('document-preview-container');
+      if (!element) return;
+      
+      const opt = {
+        margin:       0,
+        filename:     `${data.documentNumber || 'เอกสาร'}.pdf`,
+        image:        { type: 'jpeg', quality: 1 },
+        html2canvas:  { scale: 2, useCORS: true, letterRendering: true },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+      
+      html2pdf().set(opt).from(element).save();
+    } catch (error) {
+      console.error("Failed to generate PDF", error);
       window.print();
-    }, 100);
+    }
   };
 
   const resetForm = () => {
@@ -245,7 +253,7 @@ export default function App() {
         <section className="flex-1 p-6 md:p-8 xl:p-12 xl:overflow-y-auto print:h-auto print:overflow-visible flex justify-center bg-sand-100 print:bg-white print:p-0 print:block custom-scrollbar items-start relative z-0">
           <div className="bg-white shadow-xl shadow-stone-200/50 rounded-2xl print:shadow-none print:rounded-none w-full max-w-[210mm] max-h-min self-start print:max-w-none print:w-full overflow-hidden border border-sand-200 print:border-none">
             {/* Aspect ratio A4 for realistic preview */}
-            <div className="print-area min-h-[297mm] print:min-h-0">
+            <div id="document-preview-container" className="print-area min-h-[297mm] print:min-h-0 bg-white">
                <DocumentPreview data={data} />
             </div>
           </div>
