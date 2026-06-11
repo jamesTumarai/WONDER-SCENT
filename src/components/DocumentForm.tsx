@@ -441,8 +441,8 @@ export default function DocumentForm({ data, onChange }: Props) {
           <ExpandableField 
             label="หมายเหตุ"
             rows={3}
-            value={data.notes}
-            onChange={(e) => updateField('notes', e.target.value)}
+            value={data.type === 'QUOTATION' ? data.quotationNotes : data.type === 'INVOICE' ? data.invoiceNotes : data.receiptNotes}
+            onChange={(e) => updateField(data.type === 'QUOTATION' ? 'quotationNotes' : data.type === 'INVOICE' ? 'invoiceNotes' : 'receiptNotes', e.target.value)}
             className="w-full border-stone-200 outline-none rounded-2xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500 shadow-sm p-4 border text-sm resize-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] min-h-[70px] transition-all text-stone-700 bg-white" 
             placeholder="ข้อมูลเพิ่มเติมอื่นๆ (ถ้ามี)"
           />

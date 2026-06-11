@@ -15,6 +15,8 @@ export default function DocumentPreview({ data }: Props) {
     en: isQuotation ? 'quotation' : isInvoice ? 'invoice' : 'receipt'
   };
 
+  const notes = isQuotation ? data.quotationNotes : isInvoice ? data.invoiceNotes : data.receiptNotes;
+
   const formatDate = (dateStr: string) => {
     if (!dateStr) return '';
     const [y, m, d] = dateStr.split('-');
@@ -98,7 +100,7 @@ export default function DocumentPreview({ data }: Props) {
                 <tbody>
                   <tr>
                     <td className="w-px whitespace-nowrap pr-2 py-0.5 align-top">นามลูกค้า</td>
-                    <td className="py-0.5">บริษัท {data.to.name || ''}</td>
+                    <td className="py-0.5">{data.to.name || ''}</td>
                   </tr>
                   <tr>
                     <td className="w-px whitespace-nowrap pr-2 py-0.5 align-top">ที่อยู่</td>
@@ -180,12 +182,12 @@ export default function DocumentPreview({ data }: Props) {
                   </tr>
                 )}
 
-                {data.notes && (
+                {notes && (
                   <tr className="h-6">
                     <td className="border border-black"></td>
                     <td className="py-2 px-6 border text-stone-800 align-top break-words text-[11px] border-black">
                       <div className="font-bold italic underline mb-1">หมายเหตุ:</div>
-                      <div className="whitespace-pre-wrap leading-relaxed pb-2">{data.notes}</div>
+                      <div className="whitespace-pre-wrap leading-relaxed pb-2">{notes}</div>
                     </td>
                     <td className="border border-black"></td>
                     <td className="border border-black"></td>
@@ -264,7 +266,7 @@ export default function DocumentPreview({ data }: Props) {
           <div className="flex gap-2 text-[11px] print:break-inside-avoid">
             <div className="w-[60%] flex border-2 border-black">
               <div className="w-1/2 flex flex-col p-3 border-r border-black">
-                <div className="font-bold mb-4 text-center">{data.to.name ? `บริษัท ${data.to.name}` : 'บริษัท'}</div>
+                <div className="font-bold mb-4 text-center break-words min-h-[16px]">{data.to.name}</div>
                 <div className="mt-auto space-y-4 pt-12">
                   <div className="flex gap-2 items-end">
                     <span className="w-10">ผู้อนุมัติ</span>
@@ -406,6 +408,19 @@ export default function DocumentPreview({ data }: Props) {
                       <td className="border border-black"></td>
                    </tr>
                 ))}
+                 {notes && (
+                  <tr className="h-6">
+                    <td className="border border-black"></td>
+                    <td className="py-2 px-6 border text-stone-800 align-top break-words text-[11px] border-black">
+                      <div className="font-bold italic underline mb-1">หมายเหตุ:</div>
+                      <div className="whitespace-pre-wrap leading-relaxed pb-2">{notes}</div>
+                    </td>
+                    <td className="border border-black"></td>
+                    <td className="border border-black"></td>
+                    {data.columnSettings?.showPrice2 ? <td className="border border-black"></td> : null}
+                    <td className="border border-black"></td>
+                  </tr>
+                 )}
               </tbody>
               <tfoot className="font-semibold text-[11px] bg-white">
                 {(data.discount > 0 || data.includeTax) ? (
@@ -471,12 +486,12 @@ export default function DocumentPreview({ data }: Props) {
           </div>
 
           <div className="flex justify-end mt-16 pb-12 print:break-inside-avoid">
-            <div className="text-center text-[11px]">
-              <div className="flex items-end gap-2 mb-2">
-                <span>ลงชื่อ</span>
-                <span className="w-64 border-b border-black inline-block text-center text-transparent focus:text-stone-700">_</span>
+            <div className="text-[11px] flex items-start justify-end gap-2">
+              <span className="pt-2">ลงชื่อ</span>
+              <div className="flex flex-col items-center">
+                <span className="w-64 border-b border-black inline-block text-center text-transparent focus:text-stone-700 pt-2">_</span>
+                <span className="mt-3">ผู้รับเงิน</span>
               </div>
-              <div className="pr-4 text-center mt-3">ผู้รับเงิน</div>
             </div>
           </div>
 
@@ -649,6 +664,19 @@ export default function DocumentPreview({ data }: Props) {
                     </td>
                   </tr>
                 ))
+              )}
+              {notes && (
+                <tr>
+                  <td></td>
+                  <td className={`py-3 px-6 pb-6 text-stone-800 align-top break-words text-[11px]`}>
+                    <div className="font-bold underline mb-1">หมายเหตุ:</div>
+                    <div className="whitespace-pre-wrap leading-relaxed">{notes}</div>
+                  </td>
+                  <td></td>
+                  <td></td>
+                  {data.columnSettings?.showPrice2 && <td></td>}
+                  <td></td>
+                </tr>
               )}
             </tbody>
           </table>

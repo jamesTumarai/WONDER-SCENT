@@ -37,7 +37,9 @@ export interface DocumentData {
   items: LineItem[];
   columnSettings?: ColumnSettings;
   paymentTerms?: string;
-  notes: string;
+  quotationNotes: string;
+  invoiceNotes: string;
+  receiptNotes: string;
   additionalDetails?: string;
   discount: number;
   taxRate: number;
