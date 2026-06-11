@@ -80,21 +80,50 @@ export default function App() {
     localStorage.setItem('documentData', JSON.stringify(data));
   }, [data]);
 
-  const handlePrint = async () => {
+  const handlePrint = async (useNativePrint = false) => {
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    const inIframe = window !== window.parent;
+    
+    if (isIOS && inIframe) {
+      alert("⚠️ เนื่องจากข้อจำกัดของ iPad/iOS ในโหมดจำลองหน้าจอ\n\nกรุณากดไอคอน 'เปิดแท็บใหม่' (รูปลูกศรชี้ขึ้น) ที่มุมขวาบนของ AI Studio ก่อน เพื่อให้หน้ากระดาษไม่ติดขอบครับ");
+      return; 
+    }
+
+    if (useNativePrint) {
+      setTimeout(() => {
+        window.print();
+      }, 100);
+      return;
+    }
+
     try {
       const html2pdf = (await import('html2pdf.js')).default;
       const element = document.getElementById('document-preview-container');
       if (!element) return;
-      
+
+      // เพิ่ม overlay สีขาวให้ชั่วคราวเพื่อให้ภาพคมชัด และบังสิ่งรบกวนก่อนสร้าง PDF
+      const originalBg = element.style.backgroundColor;
+      element.style.backgroundColor = 'white';
+
       const opt = {
         margin:       0,
         filename:     `${data.documentNumber || 'เอกสาร'}.pdf`,
         image:        { type: 'jpeg', quality: 1 },
-        html2canvas:  { scale: 2, useCORS: true, letterRendering: true },
+        html2canvas:  { scale: 2, useCORS: true, letterRendering: true, logging: false },
         jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
-      
-      html2pdf().set(opt).from(element).save();
+
+      if (isIOS) {
+         // สำหรับ iOS/iPad (ที่เปิดแท็บใหม่แล้ว) ให้สร้างเป็น Blob URL และเปิดแท็บเพื่อให้ผู้ใช้กด แชร์ -> พิมพ์ หรือ บันทึก ได้
+         html2pdf().set(opt).from(element).output('bloburl').then(function(pdfBlobUrl: string) {
+           window.open(pdfBlobUrl, '_blank');
+           element.style.backgroundColor = originalBg;
+         });
+      } else {
+         html2pdf().set(opt).from(element).save().then(() => {
+           element.style.backgroundColor = originalBg;
+         });
+      }
     } catch (error) {
       console.error("Failed to generate PDF", error);
       window.print();
@@ -102,42 +131,38 @@ export default function App() {
   };
 
   const resetForm = () => {
-    if(window.confirm('คุณต้องการล้างข้อมูลเพื่อเริ่มต้นใหม่ทั้งหมดหรือไม่?')) {
-      const emptyData: DocumentData = {
-        type: 'QUOTATION',
-        documentNumber: '',
-        date: new Date().toISOString().split('T')[0],
-        dueDate: '',
-        from: { 
-          name: 'วอนเดอร์ เซ้นท์', 
-          address: 'เลขที่ 69 ซอย เฉลิมพระเกียรติร.9 ซ.8 แขวงหนองบอน เขตประเวศ กรุงเทพมหานคร 10250', 
-          taxId: '3350800908238', 
-          phone: '0962464280', 
-          email: 'wonderscent69@gmail.com', 
-          branch: '', 
-          contactPerson: '' 
-        },
-        to: { name: '', address: '', taxId: '', phone: '', email: '', branch: '', contactPerson: '' },
-        items: [{ id: crypto.randomUUID(), description: '', quantity: 1, unitPrice: 0 }],
-        paymentTerms: 'ช่องทางการชำระเงิน\nธนาคาร:\tกรุงไทย\tสาขา:\tซีคอนสแควร์\nชื่อบัญชี:\tวอนเดอร์ เซ้นท์\nเลขที่บัญชี:\t664-3-99101-3',
-        notes: '',
-        discount: 0,
-        taxRate: 7,
-        includeTax: false,
-      };
-      setData(emptyData);
-      setCurrentDocId(undefined);
-    }
+    const emptyData: DocumentData = {
+      type: 'QUOTATION',
+      documentNumber: '',
+      date: new Date().toISOString().split('T')[0],
+      dueDate: '',
+      from: { 
+        name: 'วอนเดอร์ เซ้นท์', 
+        address: 'เลขที่ 69 ซอย เฉลิมพระเกียรติร.9 ซ.8 แขวงหนองบอน เขตประเวศ กรุงเทพมหานคร 10250', 
+        taxId: '3350800908238', 
+        phone: '0962464280', 
+        email: 'wonderscent69@gmail.com', 
+        branch: '', 
+        contactPerson: '' 
+      },
+      to: { name: '', address: '', taxId: '', phone: '', email: '', branch: '', contactPerson: '' },
+      items: [{ id: crypto.randomUUID(), description: '', quantity: 1, unitPrice: 0 }],
+      paymentTerms: 'ช่องทางการชำระเงิน\nธนาคาร:\tกรุงไทย\tสาขา:\tซีคอนสแควร์\nชื่อบัญชี:\tวอนเดอร์ เซ้นท์\nเลขที่บัญชี:\t664-3-99101-3',
+      notes: '',
+      discount: 0,
+      taxRate: 7,
+      includeTax: false,
+    };
+    setData(emptyData);
+    setCurrentDocId(undefined);
   };
 
   const loadExample = () => {
-    if(window.confirm('แทนที่ข้อมูลปัจจุบันด้วยตัวอย่างเริ่มต้นหรือไม่?')) {
-      setData(initialData);
-      setCurrentDocId(undefined);
-    }
+    setData(initialData);
+    setCurrentDocId(undefined);
   };
 
-  const handleSaveToCloud = async () => {
+  const handleSaveToCloud = async (saveAsNew = false) => {
     if (!user) {
       setShowLogin(true);
       return;
@@ -145,11 +170,12 @@ export default function App() {
 
     try {
       setIsSaving(true);
-      const id = await saveDocument(data, currentDocId);
+      const idToSave = saveAsNew ? undefined : currentDocId;
+      const id = await saveDocument(data, idToSave);
       setCurrentDocId(id);
-      alert('บันทึกเอกสารลง Cloud สำเร็จ');
+      // Removed alert as it causes freezes on iOS PWAs
     } catch (error) {
-      alert('เกิดข้อผิดพลาดในการบันทึกเอกสาร: ' + (error instanceof Error ? error.message : 'Unknown error'));
+      console.error('Error saving: ', error);
     } finally {
       setIsSaving(false);
     }
@@ -160,7 +186,7 @@ export default function App() {
   }
 
   return (
-    <div className="flex flex-col min-h-[100dvh] xl:max-h-[100dvh] xl:overflow-hidden bg-sand-100 text-stone-800 font-sans print:bg-white print:block print:h-auto print:min-h-0">
+    <div className="flex flex-col min-h-screen xl:h-screen xl:overflow-hidden bg-sand-100 text-stone-800 font-sans print:bg-white print:block print:h-auto print:min-h-0">
       {/* Header */}
       <header className="bg-sand-50 border-b border-sand-200 px-4 md:px-6 py-3 flex flex-col md:flex-row md:items-center justify-between z-[100] no-print gap-4 shadow-sm shrink-0">
         <div className="flex items-center gap-4">
@@ -212,26 +238,52 @@ export default function App() {
             </button>
           )}
 
-          <button
-            onClick={handleSaveToCloud}
-            disabled={isSaving}
-            className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-leaf-700 bg-leaf-50 border border-leaf-200 hover:bg-leaf-100 rounded-xl transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-leaf-200"
-          >
-            {isSaving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
-            {user ? 'บันทึก Cloud' : 'เข้าสู่ระบบเพื่อบันทึก'}
-          </button>
+          {user && currentDocId ? (
+            <div className="flex gap-2 w-full md:w-auto">
+              <button
+                onClick={() => handleSaveToCloud(false)}
+                disabled={isSaving}
+                className="flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-medium text-leaf-700 bg-leaf-50 border border-leaf-200 hover:bg-leaf-100 active:bg-leaf-200 rounded-xl transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-leaf-200 flex-1 md:flex-none"
+              >
+                {isSaving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+                บันทึกทับ
+              </button>
+              <button
+                onClick={() => handleSaveToCloud(true)}
+                disabled={isSaving}
+                className="flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-medium text-leaf-700 bg-leaf-50 border border-leaf-200 hover:bg-leaf-100 active:bg-leaf-200 rounded-xl transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-leaf-200 flex-1 md:flex-none"
+              >
+                {isSaving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+                บันทึกใหม่
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => handleSaveToCloud(false)}
+              disabled={isSaving}
+              className="flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-medium text-leaf-700 bg-leaf-50 border border-leaf-200 hover:bg-leaf-100 active:bg-leaf-200 rounded-xl transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-leaf-200 flex-1 md:flex-none"
+            >
+              {isSaving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+              {user ? 'บันทึก Cloud' : 'เข้าสู่ระบบเพื่อบันทึก'}
+            </button>
+          )}
 
           <button
             type="button"
-            onClick={handlePrint}
-            onTouchEnd={(e) => {
-              e.preventDefault();
-              handlePrint();
-            }}
-            className="flex items-center justify-center gap-2 px-6 py-2 text-sm font-medium text-white bg-leaf-600 hover:bg-leaf-700 active:bg-leaf-800 rounded-xl transition-all shadow-sm shadow-leaf-500/20 focus:outline-none focus:ring-2 focus:ring-leaf-500 focus:ring-offset-2 flex-1 md:flex-none cursor-pointer"
+            onClick={() => handlePrint(true)}
+            className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-leaf-700 bg-leaf-50 hover:bg-leaf-100 active:bg-leaf-200 border border-leaf-200 rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-leaf-500 focus:ring-offset-2 flex-1 md:flex-none cursor-pointer"
           >
             <Printer size={18} />
-            พิมพ์ / PDF
+            พิมพ์
+          </button>
+          
+          <button
+            type="button"
+            onClick={() => handlePrint(false)}
+            className="flex items-center justify-center gap-2 px-6 py-2 text-sm font-medium text-white bg-leaf-600 hover:bg-leaf-700 active:bg-leaf-800 rounded-xl transition-all shadow-sm shadow-leaf-500/20 focus:outline-none focus:ring-2 focus:ring-leaf-500 focus:ring-offset-2 flex-1 md:flex-none cursor-pointer"
+          >
+            <FileText size={18} />
+            โหลด PDF
           </button>
         </div>
       </header>
