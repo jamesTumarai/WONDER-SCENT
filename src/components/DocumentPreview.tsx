@@ -1,4 +1,5 @@
 import { DocumentData } from '../types';
+import THBText from 'thai-baht-text';
 
 interface Props {
   data: DocumentData;
@@ -31,7 +32,12 @@ export default function DocumentPreview({ data }: Props) {
   };
 
   // Calculate totals
-  const subTotal = data.items.reduce((sum, item) => sum + (item.quantity * item.unitPrice), 0);
+  const subTotal = data.items.reduce((sum, item) => {
+    if (item.amount !== undefined) {
+      return sum + item.amount;
+    }
+    return sum + (item.quantity * item.unitPrice) + (data.columnSettings?.showPrice2 ? item.quantity * (item.unitPrice2 || 0) : 0);
+  }, 0);
   const afterDiscount = subTotal - (data.discount || 0);
   const taxAmount = data.includeTax ? (afterDiscount * (data.taxRate || 0)) / 100 : 0;
   const grandTotal = afterDiscount + taxAmount;
@@ -151,33 +157,42 @@ export default function DocumentPreview({ data }: Props) {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-sand-50">
-                <th className="py-2.5 px-4 font-semibold text-stone-500 text-center w-14 text-[11px] uppercase tracking-wider">#</th>
-                <th className="py-2.5 px-6 font-semibold text-stone-500 text-[11px] uppercase tracking-wider">รายการ (Description)</th>
-                <th className="py-2.5 px-4 text-center font-semibold text-stone-500 w-24 text-[11px] uppercase tracking-wider">จำนวน</th>
-                <th className="py-2.5 px-4 text-right font-semibold text-stone-500 w-36 text-[11px] uppercase tracking-wider">ราคา/หน่วย</th>
-                <th className="py-2.5 px-6 text-right font-semibold text-stone-500 w-40 text-[11px] uppercase tracking-wider">จำนวนเงิน</th>
+                <th className="py-2.5 px-3 font-semibold text-stone-500 text-center w-12 text-[11px] border-r border-stone-200 uppercase tracking-wider">ลำดับ</th>
+                <th className="py-2.5 px-6 font-semibold text-stone-500 text-[11px] border-r border-stone-200 uppercase tracking-wider">รายการ</th>
+                <th className="py-2.5 px-4 text-center font-semibold text-stone-500 w-20 text-[11px] border-r border-stone-200 uppercase tracking-wider">จำนวน</th>
+                <th className={`py-2.5 px-4 text-right font-semibold text-stone-500 w-28 text-[11px] uppercase tracking-wider ${data.columnSettings?.showPrice2 ? 'border-r border-stone-200' : ''}`}>{data.columnSettings?.price1Label || 'ราคา/หน่วย'}</th>
+                {data.columnSettings?.showPrice2 && (
+                  <th className="py-2.5 px-4 text-right font-semibold text-stone-500 w-28 text-[11px] border-r border-stone-200 uppercase tracking-wider">{data.columnSettings?.price2Label || 'ราคา/ปี'}</th>
+                )}
+                <th className="py-2.5 px-6 text-right font-semibold text-stone-500 w-32 text-[11px] uppercase tracking-wider">{data.columnSettings?.amountLabel || 'จำนวนเงิน'}</th>
               </tr>
             </thead>
             <tbody>
               {data.items.length === 0 ? (
                  <tr>
-                   <td className="py-6 px-4 text-center text-stone-300 border-t border-stone-100">1</td>
-                   <td className="py-6 px-6 text-stone-300 italic border-t border-stone-100">ยังไม่ระบุรายการ</td>
-                   <td className="py-6 px-4 text-center text-stone-800 border-t border-stone-100">1</td>
-                   <td className="py-6 px-4 text-right text-stone-800 border-t border-stone-100">฿0.00</td>
-                   <td className="py-6 px-6 text-right font-semibold text-stone-800 border-t border-stone-100">฿0.00</td>
+                   <td className="py-6 px-3 text-center text-stone-300 border-t border-stone-100 border-r border-stone-200">1</td>
+                   <td className="py-6 px-6 text-stone-300 italic border-t border-stone-100 text-[12px] border-r border-stone-200">ยังไม่ระบุรายการ</td>
+                   <td className="py-6 px-4 text-center text-stone-800 border-t border-stone-100 text-[12px] border-r border-stone-200">1</td>
+                   <td className={`py-6 px-4 text-right text-stone-800 border-t border-stone-100 text-[12px] ${data.columnSettings?.showPrice2 ? 'border-r border-stone-200' : ''}`}>฿0.00</td>
+                   {data.columnSettings?.showPrice2 && (
+                     <td className="py-6 px-4 text-right text-stone-800 border-t border-stone-100 text-[12px] border-r border-stone-200">฿0.00</td>
+                   )}
+                   <td className="py-6 px-6 text-right font-semibold text-stone-800 border-t border-stone-100 text-[12px]">฿0.00</td>
                  </tr>
               ) : (
                 data.items.map((item, index) => (
                   <tr key={item.id} className="group hover:bg-stone-50 transition-colors">
-                    <td className="py-2.5 px-4 text-stone-400 text-center border-t border-stone-100 text-[13px] align-top">{index + 1}</td>
-                    <td className="py-2.5 px-6 font-medium text-stone-800 border-t border-stone-100 leading-relaxed align-top break-words max-w-[200px]">
-                      {item.description || '-'}
+                    <td className="py-2.5 px-3 text-stone-400 text-center border-t border-stone-100 text-[12px] align-top border-r border-stone-200">{index + 1}</td>
+                    <td className="py-2.5 px-6 font-medium text-stone-800 border-t border-stone-100 leading-relaxed align-top break-words text-[12px] border-r border-stone-200">
+                      <div className="whitespace-pre-wrap">{item.description || '-'}</div>
                     </td>
-                    <td className="py-2.5 px-4 text-center text-stone-700 border-t border-stone-100 align-top">{item.quantity}</td>
-                    <td className="py-2.5 px-4 text-right text-stone-600 border-t border-stone-100 align-top">{formatCurrency(item.unitPrice)}</td>
-                    <td className="py-2.5 px-6 text-right font-semibold text-stone-800 border-t border-stone-100 align-top">
-                      {formatCurrency((item.quantity || 0) * (item.unitPrice || 0))}
+                    <td className="py-2.5 px-4 text-center text-stone-700 border-t border-stone-100 align-top text-[12px] border-r border-stone-200">{item.quantity}</td>
+                    <td className={`py-2.5 px-4 text-right text-stone-600 border-t border-stone-100 align-top text-[12px] ${data.columnSettings?.showPrice2 ? 'border-r border-stone-200' : ''}`}>{formatCurrency(item.unitPrice)}</td>
+                    {data.columnSettings?.showPrice2 && (
+                      <td className="py-2.5 px-4 text-right text-stone-600 border-t border-stone-100 align-top text-[12px] border-r border-stone-200">{formatCurrency(item.unitPrice2 || 0)}</td>
+                    )}
+                    <td className="py-2.5 px-6 text-right font-semibold text-stone-800 border-t border-stone-100 align-top text-[12px]">
+                      {formatCurrency(item.amount !== undefined ? item.amount : ((item.quantity || 0) * (item.unitPrice || 0) + (data.columnSettings?.showPrice2 ? (item.quantity || 0) * (item.unitPrice2 || 0) : 0)))}
                     </td>
                   </tr>
                 ))
@@ -236,7 +251,10 @@ export default function DocumentPreview({ data }: Props) {
                 )}
                 <tr>
                   <td className="pt-3 pb-0.5 text-stone-800 font-bold text-sm border-t border-stone-100 mt-1.5">ยอดรวมทั้งสิ้น</td>
-                  <td className={`pt-3 pb-0.5 text-right font-bold text-xl ${c.text} border-t border-stone-100 mt-1.5`}>{formatCurrency(grandTotal)}</td>
+                  <td className={`pt-3 pb-0.5 text-right font-bold text-xl ${c.text} border-t border-stone-100 mt-1.5`}>
+                    <div>{formatCurrency(grandTotal)}</div>
+                    <div className="text-[12px] font-medium text-stone-500 mt-0.5 whitespace-nowrap">({THBText(grandTotal)})</div>
+                  </td>
                 </tr>
               </tbody>
             </table>

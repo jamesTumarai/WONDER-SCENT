@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { DocumentData } from './types';
 import DocumentForm from './components/DocumentForm';
 import DocumentPreview from './components/DocumentPreview';
@@ -40,6 +40,12 @@ const initialData: DocumentData = {
       unitPrice: 2500,
     }
   ],
+  columnSettings: {
+    price1Label: 'ราคา/หน่วย',
+    showPrice2: false,
+    price2Label: 'ราคา/ปี',
+    amountLabel: 'จำนวนเงิน',
+  },
   paymentTerms: 'ช่องทางการชำระเงิน\nธนาคาร:\tกรุงไทย\tสาขา:\tซีคอนสแควร์\nชื่อบัญชี:\tวอนเดอร์ เซ้นท์\nเลขที่บัญชี:\t664-3-99101-3',
   notes: '',
   discount: 0,
@@ -88,9 +94,26 @@ export default function App() {
     }
   }, [showSavedDocs]);
 
+  const latestData = useRef(data);
   useEffect(() => {
-    localStorage.setItem('documentData', JSON.stringify(data));
+    latestData.current = data;
   }, [data]);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      localStorage.setItem('documentData', JSON.stringify(latestData.current));
+    }, 5000);
+
+    const handleBeforeUnload = () => {
+      localStorage.setItem('documentData', JSON.stringify(latestData.current));
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      clearInterval(intervalId);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
 
   const handlePrint = async (useNativePrint = false) => {
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
@@ -169,6 +192,12 @@ export default function App() {
       },
       to: { name: '', address: '', taxId: '', phone: '', email: '', branch: '', contactPerson: '' },
       items: [{ id: crypto.randomUUID(), description: '', quantity: 1, unitPrice: 0 }],
+      columnSettings: {
+        price1Label: 'ราคา/หน่วย',
+        showPrice2: false,
+        price2Label: 'ราคา/ปี',
+        amountLabel: 'จำนวนเงิน',
+      },
       paymentTerms: 'ช่องทางการชำระเงิน\nธนาคาร:\tกรุงไทย\tสาขา:\tซีคอนสแควร์\nชื่อบัญชี:\tวอนเดอร์ เซ้นท์\nเลขที่บัญชี:\t664-3-99101-3',
       notes: '',
       discount: 0,
@@ -259,14 +288,14 @@ export default function App() {
           {user ? (
             <button
               onClick={() => setShowSavedDocs(true)}
-              className="px-4 py-2 text-sm font-medium text-stone-600 bg-white border border-stone-200 hover:bg-sand-50 hover:text-stone-800 rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-stone-200 shadow-sm"
+              className="px-4 py-2 text-sm font-medium text-stone-600 bg-white border border-stone-200 hover:bg-sand-50 hover:text-stone-800 rounded-xl transition-all duration-200 active:scale-95 focus:outline-none focus:ring-2 focus:ring-stone-200 shadow-sm"
             >
               คลังเอกสาร
             </button>
           ) : (
             <button
               onClick={() => setShowLogin(true)}
-              className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-stone-600 bg-white border border-stone-200 hover:bg-sand-50 hover:text-stone-800 rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-stone-200 shadow-sm"
+              className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-stone-600 bg-white border border-stone-200 hover:bg-sand-50 hover:text-stone-800 rounded-xl transition-all duration-200 active:scale-95 focus:outline-none focus:ring-2 focus:ring-stone-200 shadow-sm"
             >
               <LogIn size={16} /> เข้าสู่ระบบ
             </button>
@@ -275,7 +304,7 @@ export default function App() {
           <button
             onClick={handleSaveClick}
             disabled={isSaving}
-            className="flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-medium text-leaf-700 bg-leaf-50 border border-leaf-200 hover:bg-leaf-100 active:bg-leaf-200 rounded-xl transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-leaf-200 flex-1 md:flex-none"
+            className="flex items-center justify-center gap-1.5 px-4 py-2 text-sm font-medium text-leaf-700 bg-leaf-50 border border-leaf-200 hover:bg-leaf-100 active:bg-leaf-200 rounded-xl transition-all duration-200 active:scale-95 shadow-sm focus:outline-none focus:ring-2 focus:ring-leaf-200 flex-1 md:flex-none"
           >
             {isSaving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
             {user ? 'บันทึก Cloud' : 'เข้าสู่ระบบเพื่อบันทึก'}
@@ -284,7 +313,7 @@ export default function App() {
           <button
             type="button"
             onClick={() => handlePrint(true)}
-            className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-leaf-700 bg-leaf-50 hover:bg-leaf-100 active:bg-leaf-200 border border-leaf-200 rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-leaf-500 focus:ring-offset-2 flex-1 md:flex-none cursor-pointer"
+            className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-leaf-700 bg-leaf-50 hover:bg-leaf-100 active:bg-leaf-200 border border-leaf-200 rounded-xl transition-all duration-200 active:scale-95 focus:outline-none focus:ring-2 focus:ring-leaf-500 focus:ring-offset-2 flex-1 md:flex-none cursor-pointer"
           >
             <Printer size={18} />
             พิมพ์
@@ -294,7 +323,7 @@ export default function App() {
             type="button"
             onClick={() => handlePrint(false)}
             disabled={isGeneratingPdf}
-            className="flex items-center justify-center gap-2 px-6 py-2 text-sm font-medium text-white bg-leaf-600 hover:bg-leaf-700 active:bg-leaf-800 disabled:opacity-70 disabled:cursor-not-allowed rounded-xl transition-all shadow-sm shadow-leaf-500 focus:outline-none focus:ring-2 focus:ring-leaf-500 focus:ring-offset-2 flex-1 md:flex-none cursor-pointer"
+            className="flex items-center justify-center gap-2 px-6 py-2 text-sm font-medium text-white bg-leaf-600 hover:bg-leaf-700 active:bg-leaf-800 disabled:opacity-70 disabled:cursor-not-allowed rounded-xl transition-all duration-200 active:scale-95 shadow-sm shadow-leaf-500 focus:outline-none focus:ring-2 focus:ring-leaf-500 focus:ring-offset-2 flex-1 md:flex-none cursor-pointer"
           >
             {isGeneratingPdf ? <Loader2 size={18} className="animate-spin" /> : <FileText size={18} />}
             {isGeneratingPdf ? 'กำลังโหลด...' : 'โหลด PDF'}

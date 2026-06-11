@@ -21,7 +21,7 @@ export default function SaveDocumentModal({ isOpen, onClose, onSaveAsNew, onOver
           </h2>
           <button 
             onClick={onClose}
-            className="p-2 hover:bg-stone-100 rounded-full transition-colors text-stone-500"
+            className="p-2 hover:bg-stone-100 rounded-full transition-all duration-200 active:scale-90 text-stone-500"
           >
             <X size={18} />
           </button>
@@ -36,7 +36,7 @@ export default function SaveDocumentModal({ isOpen, onClose, onSaveAsNew, onOver
             onClick={() => {
               onOverwrite();
             }}
-            className="flex items-center justify-center gap-2 w-full py-3 px-4 text-leaf-700 bg-leaf-50 hover:bg-leaf-100 border border-leaf-200 font-medium rounded-xl transition-colors shadow-sm"
+            className="flex items-center justify-center gap-2 w-full py-3 px-4 text-leaf-700 bg-leaf-50 hover:bg-leaf-100 active:bg-leaf-200 border border-leaf-200 font-medium rounded-xl transition-all duration-200 active:scale-[0.98] shadow-sm"
           >
             <Save size={18} />
             บันทึกแทนที่อันเดิม
@@ -46,7 +46,7 @@ export default function SaveDocumentModal({ isOpen, onClose, onSaveAsNew, onOver
             onClick={() => {
               onSaveAsNew();
             }}
-            className="flex items-center justify-center gap-2 w-full py-3 px-4 text-white bg-leaf-600 hover:bg-leaf-700 font-medium rounded-xl transition-colors shadow-sm"
+            className="flex items-center justify-center gap-2 w-full py-3 px-4 text-white bg-leaf-600 hover:bg-leaf-700 active:bg-leaf-800 font-medium rounded-xl transition-all duration-200 active:scale-[0.98] shadow-sm"
           >
             <Copy size={18} />
             บันทึกเป็นอันใหม่

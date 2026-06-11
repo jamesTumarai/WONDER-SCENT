@@ -43,7 +43,7 @@ export default function LoginModal({ onClose }: Props) {
           </h2>
           <button 
             onClick={onClose}
-            className="p-1.5 text-stone-400 hover:text-stone-600 hover:bg-stone-100 rounded-lg transition-colors"
+            className="p-1.5 text-stone-400 hover:text-stone-600 hover:bg-stone-100 rounded-lg transition-all duration-200 active:scale-90"
           >
             <X size={20} />
           </button>
@@ -83,7 +83,7 @@ export default function LoginModal({ onClose }: Props) {
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm font-bold text-white bg-leaf-600 hover:bg-leaf-700 disabled:opacity-70 disabled:cursor-not-allowed rounded-xl transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-leaf-500 focus:ring-offset-2 mt-2"
+            className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm font-bold text-white bg-leaf-600 hover:bg-leaf-700 active:bg-leaf-800 disabled:opacity-70 disabled:cursor-not-allowed rounded-xl transition-all duration-200 active:scale-[0.98] shadow-sm focus:outline-none focus:ring-2 focus:ring-leaf-500 focus:ring-offset-2 mt-2"
           >
             {loading ? <Loader2 size={18} className="animate-spin" /> : 'เข้าสู่ระบบ'}
           </button>

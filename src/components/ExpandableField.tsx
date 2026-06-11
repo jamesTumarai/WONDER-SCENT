@@ -31,7 +31,7 @@ export default function ExpandableField({ label, as = 'textarea', ...props }: Ex
               <h3 className="font-bold text-stone-800 tracking-tight ml-2">{displayLabel}</h3>
               <button
                 onClick={() => setIsExpanded(false)}
-                className="p-2 text-stone-400 hover:text-stone-600 hover:bg-stone-100 rounded-xl transition-colors"
+                className="p-2 text-stone-400 hover:text-stone-600 hover:bg-stone-100 rounded-xl transition-all duration-200 active:scale-90"
                 type="button"
               >
                 <X size={20} />
@@ -50,7 +50,7 @@ export default function ExpandableField({ label, as = 'textarea', ...props }: Ex
               <button
                 onClick={() => setIsExpanded(false)}
                 type="button"
-                className="px-6 py-2.5 bg-stone-800 text-white font-medium rounded-xl hover:bg-stone-900 transition-colors shadow-sm"
+                className="px-6 py-2.5 bg-stone-800 text-white font-medium rounded-xl hover:bg-stone-900 active:bg-black transition-all duration-200 active:scale-95 shadow-sm"
               >
                 เสร็จสิ้น
               </button>

@@ -34,7 +34,7 @@ export default function PdfDownloadModal({ isOpen, onClose, onConfirm, defaultFi
           </h2>
           <button 
             onClick={onClose}
-            className="p-2 hover:bg-stone-100 rounded-full transition-colors text-stone-500"
+            className="p-2 hover:bg-stone-100 rounded-full transition-all duration-200 active:scale-90 text-stone-500"
           >
             <X size={18} />
           </button>
@@ -59,13 +59,13 @@ export default function PdfDownloadModal({ isOpen, onClose, onConfirm, defaultFi
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2.5 px-4 text-stone-600 bg-stone-100 hover:bg-stone-200 font-medium rounded-xl transition-colors"
+              className="flex-1 py-2.5 px-4 text-stone-600 bg-stone-100 hover:bg-stone-200 active:bg-stone-300 font-medium rounded-xl transition-all duration-200 active:scale-95"
             >
               ยกเลิก
             </button>
             <button
               type="submit"
-              className="flex-1 py-2.5 px-4 text-white bg-leaf-600 hover:bg-leaf-700 font-medium rounded-xl transition-colors shadow-sm"
+              className="flex-1 py-2.5 px-4 text-white bg-leaf-600 hover:bg-leaf-700 active:bg-leaf-800 font-medium rounded-xl transition-all duration-200 active:scale-95 shadow-sm"
             >
               ดาวน์โหลด
             </button>

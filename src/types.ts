@@ -16,6 +16,15 @@ export interface LineItem {
   description: string;
   quantity: number;
   unitPrice: number;
+  unitPrice2?: number;
+  amount?: number;
+}
+
+export interface ColumnSettings {
+  price1Label: string;
+  showPrice2: boolean;
+  price2Label: string;
+  amountLabel?: string;
 }
 
 export interface DocumentData {
@@ -26,6 +35,7 @@ export interface DocumentData {
   from: Entity;
   to: Entity;
   items: LineItem[];
+  columnSettings?: ColumnSettings;
   paymentTerms?: string;
   notes: string;
   discount: number;
