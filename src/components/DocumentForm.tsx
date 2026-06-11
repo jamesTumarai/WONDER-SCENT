@@ -156,8 +156,8 @@ export default function DocumentForm({ data, onChange }: Props) {
             />
             {data.from.logo && (
               <div className="mt-3 flex items-center gap-3 bg-stone-50 p-2 rounded-xl border border-stone-100">
-                <div className="w-12 h-12 rounded-lg bg-white overflow-hidden shadow-sm flex items-center justify-center">
-                  <img src={data.from.logo} alt="Logo preview" className="max-w-full max-h-full object-contain" />
+                <div className="w-20 h-20 rounded-lg bg-white overflow-hidden shadow-sm flex items-center justify-center p-1 border border-stone-100">
+                  <img src={data.from.logo} alt="Logo preview" className="max-w-full max-h-full object-contain rounded-md" />
                 </div>
                 <button 
                   onClick={() => updateEntity('from', 'logo', '')}

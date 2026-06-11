@@ -51,8 +51,8 @@ export default function DocumentPreview({ data }: Props) {
               <div className="space-y-1.5 text-sm text-stone-600">
                 <div className="flex flex-col items-start gap-3 mb-4">
                   {data.from.logo ? (
-                    <div className="relative shrink-0 w-40 sm:w-48 max-h-40">
-                      <img src={data.from.logo} alt="Company Logo" className="w-full h-full object-contain object-left" />
+                    <div className="relative shrink-0">
+                      <img src={data.from.logo} alt="Company Logo" className="h-24 sm:h-28 object-contain object-left rounded-2xl" />
                     </div>
                   ) : (data.from.name.includes('วอนเดอร์ เซ้นท์') || data.from.name.toLowerCase().includes('wonder scent')) ? (
                     <div className="relative flex items-center justify-center bg-white w-12 h-12 rounded-full border border-leaf-200/60 shadow-[0_2px_10px_rgba(0,0,0,0.03)] shrink-0 overflow-hidden">

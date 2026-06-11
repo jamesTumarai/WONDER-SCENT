@@ -19,6 +19,7 @@ const initialData: DocumentData = {
     taxId: '3350800908238',
     phone: '0962464280',
     email: 'wonderscent69@gmail.com',
+    logo: '/33.png'
   },
   to: {
     name: 'บริษัท อิเทอนิตี้แอทวัน จำกัด',
