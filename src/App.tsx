@@ -61,6 +61,7 @@ export default function App() {
 
   const [currentDocId, setCurrentDocId] = useState<string | undefined>();
   const [isSaving, setIsSaving] = useState(false);
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
   const [showSavedDocs, setShowSavedDocs] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
 
@@ -97,11 +98,14 @@ export default function App() {
     }
 
     try {
+      setIsGeneratingPdf(true);
+      // พัก thread เล็กน้อยให้ UI อัพเดทสถานะ loading
+      await new Promise(resolve => setTimeout(resolve, 50));
+
       const html2pdf = (await import('html2pdf.js')).default;
       const element = document.getElementById('document-preview-container');
       if (!element) return;
 
-      // เพิ่ม overlay สีขาวให้ชั่วคราวเพื่อให้ภาพคมชัด และบังสิ่งรบกวนก่อนสร้าง PDF
       const originalBg = element.style.backgroundColor;
       element.style.backgroundColor = 'white';
 
@@ -109,24 +113,19 @@ export default function App() {
         margin:       0,
         filename:     `${data.documentNumber || 'เอกสาร'}.pdf`,
         image:        { type: 'jpeg', quality: 1 },
-        html2canvas:  { scale: 2, useCORS: true, letterRendering: true, logging: false },
+        // ลด scale บน iOS เพื่อป้องกันแอพค้างเนื่องจากเมมโมรี่ 
+        html2canvas:  { scale: isIOS ? 1.5 : 2, useCORS: true, letterRendering: true, logging: false },
         jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 
-      if (isIOS) {
-         // สำหรับ iOS/iPad (ที่เปิดแท็บใหม่แล้ว) ให้สร้างเป็น Blob URL และเปิดแท็บเพื่อให้ผู้ใช้กด แชร์ -> พิมพ์ หรือ บันทึก ได้
-         html2pdf().set(opt).from(element).output('bloburl').then(function(pdfBlobUrl: string) {
-           window.open(pdfBlobUrl, '_blank');
-           element.style.backgroundColor = originalBg;
-         });
-      } else {
-         html2pdf().set(opt).from(element).save().then(() => {
-           element.style.backgroundColor = originalBg;
-         });
-      }
+      await html2pdf().set(opt).from(element).save();
+      element.style.backgroundColor = originalBg;
     } catch (error) {
       console.error("Failed to generate PDF", error);
+      alert("ไม่สามารถสร้างไฟล์ PDF ได้ ระบบจะทำการพิมพ์แบบปกติแทน");
       window.print();
+    } finally {
+      setIsGeneratingPdf(false);
     }
   };
 
@@ -280,10 +279,11 @@ export default function App() {
           <button
             type="button"
             onClick={() => handlePrint(false)}
-            className="flex items-center justify-center gap-2 px-6 py-2 text-sm font-medium text-white bg-leaf-600 hover:bg-leaf-700 active:bg-leaf-800 rounded-xl transition-all shadow-sm shadow-leaf-500/20 focus:outline-none focus:ring-2 focus:ring-leaf-500 focus:ring-offset-2 flex-1 md:flex-none cursor-pointer"
+            disabled={isGeneratingPdf}
+            className="flex items-center justify-center gap-2 px-6 py-2 text-sm font-medium text-white bg-leaf-600 hover:bg-leaf-700 active:bg-leaf-800 disabled:opacity-70 disabled:cursor-not-allowed rounded-xl transition-all shadow-sm shadow-leaf-500/20 focus:outline-none focus:ring-2 focus:ring-leaf-500 focus:ring-offset-2 flex-1 md:flex-none cursor-pointer"
           >
-            <FileText size={18} />
-            โหลด PDF
+            {isGeneratingPdf ? <Loader2 size={18} className="animate-spin" /> : <FileText size={18} />}
+            {isGeneratingPdf ? 'กำลังโหลด...' : 'โหลด PDF'}
           </button>
         </div>
       </header>
