@@ -1,5 +1,6 @@
 import { DocumentData, DocumentType, LineItem } from '../types';
 import { Plus, Trash2, FileText, FileSpreadsheet, Receipt, Building2, User } from 'lucide-react';
+import ExpandableTextarea from './ExpandableTextarea';
 
 interface Props {
   data: DocumentData;
@@ -125,7 +126,7 @@ export default function DocumentForm({ data, onChange }: Props) {
         </h3>
         <div className="space-y-3">
           <input placeholder="ชื่อบริษัท / ชื่อผู้ส่ง" value={data.from.name} onChange={(e) => updateEntity('from', 'name', e.target.value)} className="w-full border-stone-200 rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500/10 shadow-sm p-3 border outline-none text-sm font-medium placeholder:text-stone-400 placeholder:font-normal transition-all bg-white" />
-          <textarea placeholder="ที่อยู่บริษัท" value={data.from.address} onChange={(e) => updateEntity('from', 'address', e.target.value)} className="w-full border-stone-200 rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500/10 shadow-sm p-3 border outline-none text-sm placeholder:text-stone-400 resize-y min-h-[60px] transition-all bg-white" rows={2} />
+          <ExpandableTextarea label="ที่อยู่บริษัท" placeholder="ที่อยู่บริษัท" value={data.from.address} onChange={(e) => updateEntity('from', 'address', e.target.value)} className="w-full border-stone-200 rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500/10 shadow-sm p-3 border outline-none text-sm placeholder:text-stone-400 resize-y min-h-[60px] transition-all bg-white" rows={2} />
           
           <div className="grid grid-cols-2 gap-3">
              <input placeholder="เลขประจำตัวผู้เสียภาษี" value={data.from.taxId} onChange={(e) => updateEntity('from', 'taxId', e.target.value)} className="w-full border-stone-200 rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500/10 shadow-sm p-3 border outline-none text-sm placeholder:text-stone-400 transition-all bg-white" />
@@ -179,7 +180,7 @@ export default function DocumentForm({ data, onChange }: Props) {
         </h3>
         <div className="space-y-3">
           <input placeholder="ชื่อลูกค้า / ชื่อบริษัท" value={data.to.name} onChange={(e) => updateEntity('to', 'name', e.target.value)} className="w-full border-stone-200 rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500/10 shadow-sm p-3 border outline-none text-sm font-medium placeholder:text-stone-400 placeholder:font-normal transition-all bg-white" />
-          <textarea placeholder="ที่อยู่ลูกค้า" value={data.to.address} onChange={(e) => updateEntity('to', 'address', e.target.value)} className="w-full border-stone-200 rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500/10 shadow-sm p-3 border outline-none text-sm placeholder:text-stone-400 resize-y min-h-[60px] transition-all bg-white" rows={2} />
+          <ExpandableTextarea label="ที่อยู่ลูกค้า" placeholder="ที่อยู่ลูกค้า" value={data.to.address} onChange={(e) => updateEntity('to', 'address', e.target.value)} className="w-full border-stone-200 rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500/10 shadow-sm p-3 border outline-none text-sm placeholder:text-stone-400 resize-y min-h-[60px] transition-all bg-white" rows={2} />
           
           <div className="grid grid-cols-2 gap-3">
              <input placeholder="เลขประจำตัวผู้เสียภาษี" value={data.to.taxId} onChange={(e) => updateEntity('to', 'taxId', e.target.value)} className="w-full border-stone-200 rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500/10 shadow-sm p-3 border outline-none text-sm placeholder:text-stone-400 transition-all bg-white" />
@@ -296,7 +297,8 @@ export default function DocumentForm({ data, onChange }: Props) {
 
         <div className="mt-4">
           <label className="block text-[11px] font-bold text-stone-500 mb-1.5 uppercase tracking-wider ml-1">ช่องทางการชำระเงิน</label>
-          <textarea 
+          <ExpandableTextarea 
+            label="ช่องทางการชำระเงิน"
             rows={3}
             value={data.paymentTerms || ''}
             onChange={(e) => updateField('paymentTerms', e.target.value)}
@@ -307,7 +309,8 @@ export default function DocumentForm({ data, onChange }: Props) {
         
         <div className="mt-4">
           <label className="block text-[11px] font-bold text-stone-500 mb-1.5 uppercase tracking-wider ml-1">หมายเหตุ</label>
-          <textarea 
+          <ExpandableTextarea 
+            label="หมายเหตุ"
             rows={3}
             value={data.notes}
             onChange={(e) => updateField('notes', e.target.value)}
