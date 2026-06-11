@@ -135,13 +135,8 @@ export default function App() {
       {/* Header */}
       <header className="bg-sand-50 border-b border-sand-200 px-4 md:px-6 py-3 flex flex-col md:flex-row md:items-center justify-between sticky top-0 z-10 no-print gap-4 shadow-sm">
         <div className="flex items-center gap-4">
-          <div className="relative flex items-center justify-center w-12 h-12 bg-white rounded-full shadow-[0_2px_10px_rgba(0,0,0,0.04)] border border-leaf-200/50 group overflow-hidden shrink-0">
-            <div className="absolute inset-0 bg-gradient-to-tr from-leaf-100/40 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-500"></div>
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="relative z-10 text-leaf-600 transform group-hover:rotate-12 transition-transform duration-500">
-              <path d="M12 2C12 2 14.5 9 19 12C14.5 15 12 22 12 22C12 22 9.5 15 5 12C9.5 9 12 2 12 2Z" fill="currentColor" fillOpacity="0.15" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
-              <path d="M18 5C18 5 19 7.5 21 8C19 8.5 18 11 18 11C18 11 17 8.5 15 8C17 7.5 18 5 18 5Z" fill="currentColor" fillOpacity="0.3" stroke="currentColor" strokeWidth="1" strokeLinejoin="round"/>
-              <path d="M7 3C7 3 7.5 4.5 8.5 4.75C7.5 5 7 6.5 7 6.5C7 6.5 6.5 5 5.5 4.75C6.5 4.5 7 3 7 3Z" fill="currentColor" fillOpacity="0.5" stroke="currentColor" strokeWidth="0.8" strokeLinejoin="round"/>
-            </svg>
+          <div className="relative flex items-center justify-center w-12 h-12 bg-white rounded-xl shadow-[0_2px_10px_rgba(0,0,0,0.04)] border border-leaf-200/50 group overflow-hidden shrink-0 p-1">
+            <img src="/33.png" alt="Wonder Scent" className="w-full h-full object-contain" />
           </div>
           <div>
             <div className="flex items-center gap-2">
