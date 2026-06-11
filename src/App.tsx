@@ -65,6 +65,18 @@ export default function App() {
   const [showLogin, setShowLogin] = useState(false);
 
   useEffect(() => {
+    if (showSavedDocs && window.innerWidth < 1280) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    
+    return () => {
+      document.body.style.overflow = '';
+    }
+  }, [showSavedDocs]);
+
+  useEffect(() => {
     localStorage.setItem('documentData', JSON.stringify(data));
   }, [data]);
 
