@@ -117,7 +117,7 @@ export default function DocumentForm({ data, onChange }: Props) {
                 <button
                   key={font.id}
                   onClick={() => updateField('fontFamily', font.id)}
-                  className={`px-4 py-1.5 rounded-full text-sm font-medium border ${data.fontFamily === font.id || (!data.fontFamily && font.id === 'sans') ? 'border-leaf-400 bg-leaf-50 text-leaf-700' : 'border-stone-200 bg-white text-stone-600 hover:bg-stone-50'} transition-all duration-200 active:scale-95`}
+                  className={`px-4 py-1.5 rounded-full text-sm font-medium border ${data.fontFamily === font.id || (!data.fontFamily && font.id === 'prompt') ? 'border-leaf-400 bg-leaf-50 text-leaf-700' : 'border-stone-200 bg-white text-stone-600 hover:bg-stone-50'} transition-all duration-200 active:scale-95`}
                   style={{ fontFamily: font.id === 'sans' ? 'sans-serif' : `"${font.id === 'prompt' ? 'Prompt' : 'Sarabun'}", sans-serif` }}
                 >
                   {font.label}

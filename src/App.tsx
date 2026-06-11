@@ -46,7 +46,7 @@ const initialData: DocumentData = {
     price2Label: 'ราคา/ปี',
     amountLabel: 'จำนวนเงิน',
   },
-  paymentTerms: 'ช่องทางการชำระเงิน\nธนาคาร:\tกรุงไทย\tสาขา:\tซีคอนสแควร์\nชื่อบัญชี:\tวอนเดอร์ เซ้นท์\nเลขที่บัญชี:\t664-3-99101-3',
+  paymentTerms: 'ธนาคาร:\tกรุงไทย\tสาขา:\tซีคอนสแควร์\nชื่อบัญชี:\tวอนเดอร์ เซ้นท์\nเลขที่บัญชี:\t664-3-99101-3',
   quotationNotes: '',
   invoiceNotes: '',
   receiptNotes: '',
@@ -54,6 +54,7 @@ const initialData: DocumentData = {
   discount: 0,
   taxRate: 0,
   includeTax: false,
+  fontFamily: 'prompt',
 };
 
 export default function App() {
@@ -201,7 +202,7 @@ export default function App() {
         price2Label: 'ราคา/ปี',
         amountLabel: 'จำนวนเงิน',
       },
-      paymentTerms: 'ช่องทางการชำระเงิน\nธนาคาร:\tกรุงไทย\tสาขา:\tซีคอนสแควร์\nชื่อบัญชี:\tวอนเดอร์ เซ้นท์\nเลขที่บัญชี:\t664-3-99101-3',
+      paymentTerms: 'ธนาคาร:\tกรุงไทย\tสาขา:\tซีคอนสแควร์\nชื่อบัญชี:\tวอนเดอร์ เซ้นท์\nเลขที่บัญชี:\t664-3-99101-3',
       quotationNotes: '',
       invoiceNotes: '',
       receiptNotes: '',
@@ -209,6 +210,7 @@ export default function App() {
       discount: 0,
       taxRate: 7,
       includeTax: false,
+      fontFamily: 'prompt',
     };
     setData(emptyData);
     setCurrentDocId(undefined);

@@ -56,7 +56,7 @@ export default function DocumentPreview({ data }: Props) {
   const labelColor = c.label;
   const valueColor = c.value;
 
-  const fontStyle = data.fontFamily === 'prompt' ? '"Prompt", sans-serif' : data.fontFamily === 'sarabun' ? '"Sarabun", sans-serif' : 'sans-serif';
+  const fontStyle = data.fontFamily === 'sans' ? 'sans-serif' : data.fontFamily === 'sarabun' ? '"Sarabun", sans-serif' : '"Prompt", sans-serif';
 
   if (isQuotation) {
     return (
@@ -173,7 +173,8 @@ export default function DocumentPreview({ data }: Props) {
                   <tr className="h-6">
                     <td className="border border-black"></td>
                     <td className="py-2 px-6 border text-stone-800 align-top break-words text-[11px] border-black">
-                      <div className="whitespace-pre-wrap py-2">{data.paymentTerms}</div>
+                      <div className="font-bold underline mb-1">ช่องทางการชำระเงิน</div>
+                      <div className="whitespace-pre-wrap pb-2">{data.paymentTerms.replace(/^ช่องทางการชำระเงิน\s*\n?/, '')}</div>
                     </td>
                     <td className="border border-black"></td>
                     <td className="border border-black"></td>
@@ -733,7 +734,7 @@ export default function DocumentPreview({ data }: Props) {
               {data.paymentTerms && (
                 <>
                   <div className={`font-bold ${valueColor}`}>ช่องทางการชำระเงิน</div>
-                  <div className={`whitespace-pre-line leading-relaxed ${valueColor}`}>{data.paymentTerms}</div>
+                  <div className={`whitespace-pre-line leading-relaxed ${valueColor}`}>{data.paymentTerms.replace(/^ช่องทางการชำระเงิน\s*\n?/, '')}</div>
                 </>
               )}
             </div>
