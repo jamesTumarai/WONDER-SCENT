@@ -39,6 +39,7 @@ export interface SavedDocument extends DocumentData {
   userId: string;
   createdAt: number;
   updatedAt: number;
+  starred?: boolean;
 }
 
 const DOCUMENTS_PATH = 'documents';
@@ -65,11 +66,25 @@ export async function saveDocument(data: DocumentData, docId?: string): Promise<
       await setDoc(docRef, {
         ...payload,
         createdAt: Date.now(),
+        starred: false,
       });
     }
     return id;
   } catch (error) {
     throw handleFirestoreError(error, docId ? OperationType.UPDATE : OperationType.CREATE, path);
+  }
+}
+
+export async function toggleDocumentStar(id: string, currentStarredStatus: boolean): Promise<void> {
+  if (!db || !auth) throw new Error('โปรดตรวจสอบการตั้งค่า Firebase ใน Environment Variables');
+  const path = `${DOCUMENTS_PATH}/${id}`;
+  const docRef = doc(db, DOCUMENTS_PATH, id);
+  try {
+    await updateDoc(docRef, {
+      starred: !currentStarredStatus
+    });
+  } catch (error) {
+    throw handleFirestoreError(error, OperationType.UPDATE, path);
   }
 }
 

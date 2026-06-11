@@ -15,9 +15,9 @@ const initialData: DocumentData = {
   dueDate: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
   from: {
     name: 'วอนเดอร์ เซ้นท์',
-    address: 'เลขที่ 69 ซอย เฉลิมพระเกียรติร.9 ซ.8 แขวงหนองบอน\nเขตประเวศ กรุงเทพมหานคร 10250',
-    taxId: '3-3508-00908-23-8',
-    phone: '0962464080',
+    address: 'เลขที่ 69 ซอย เฉลิมพระเกียรติร.9 ซ.8 แขวงหนองบอน เขตประเวศ กรุงเทพมหานคร 10250',
+    taxId: '3350800908238',
+    phone: '0962464280',
     email: 'wonderscent69@gmail.com',
   },
   to: {
@@ -78,10 +78,18 @@ export default function App() {
         documentNumber: '',
         date: new Date().toISOString().split('T')[0],
         dueDate: '',
-        from: { name: '', address: '', taxId: '', phone: '', email: '', branch: '', contactPerson: '' },
+        from: { 
+          name: 'วอนเดอร์ เซ้นท์', 
+          address: 'เลขที่ 69 ซอย เฉลิมพระเกียรติร.9 ซ.8 แขวงหนองบอน เขตประเวศ กรุงเทพมหานคร 10250', 
+          taxId: '3350800908238', 
+          phone: '0962464280', 
+          email: 'wonderscent69@gmail.com', 
+          branch: '', 
+          contactPerson: '' 
+        },
         to: { name: '', address: '', taxId: '', phone: '', email: '', branch: '', contactPerson: '' },
         items: [{ id: crypto.randomUUID(), description: '', quantity: 1, unitPrice: 0 }],
-        paymentTerms: '',
+        paymentTerms: 'ช่องทางการชำระเงิน\nธนาคาร:\tกรุงไทย\tสาขา:\tซีคอนสแควร์\nชื่อบัญชี:\tวอนเดอร์ เซ้นท์\nเลขที่บัญชี:\t664-3-99101-3',
         notes: '',
         discount: 0,
         taxRate: 7,
