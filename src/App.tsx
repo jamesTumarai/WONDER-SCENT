@@ -133,7 +133,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-sand-100 text-stone-800 font-sans print:bg-white flex flex-col print:block print:h-auto print:min-h-0">
       {/* Header */}
-      <header className="bg-sand-50 border-b border-sand-200 px-4 md:px-6 py-3 flex flex-col md:flex-row md:items-center justify-between sticky top-0 z-10 no-print gap-4 shadow-sm">
+      <header className="bg-sand-50 border-b border-sand-200 px-4 md:px-6 py-3 flex flex-col md:flex-row md:items-center justify-between sticky top-0 z-[100] no-print gap-4 shadow-sm">
         <div className="flex items-center gap-4">
           <div className="relative flex items-center justify-center w-12 h-12 bg-white rounded-xl shadow-[0_2px_10px_rgba(0,0,0,0.04)] border border-leaf-200/50 group overflow-hidden shrink-0 p-1">
             <img src="/33.png" alt="Wonder Scent" className="w-full h-full object-contain" />
@@ -193,8 +193,9 @@ export default function App() {
           </button>
 
           <button
+            type="button"
             onClick={handlePrint}
-            className="flex items-center justify-center gap-2 px-6 py-2 text-sm font-medium text-white bg-leaf-600 hover:bg-leaf-700 rounded-xl transition-all shadow-sm shadow-leaf-500/20 focus:outline-none focus:ring-2 focus:ring-leaf-500 focus:ring-offset-2 flex-1 md:flex-none"
+            className="flex items-center justify-center gap-2 px-6 py-2 text-sm font-medium text-white bg-leaf-600 hover:bg-leaf-700 active:bg-leaf-800 rounded-xl transition-all shadow-sm shadow-leaf-500/20 focus:outline-none focus:ring-2 focus:ring-leaf-500 focus:ring-offset-2 flex-1 md:flex-none cursor-pointer"
           >
             <Printer size={18} />
             พิมพ์ / PDF
@@ -203,10 +204,10 @@ export default function App() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col xl:flex-row w-full mx-auto relative overflow-hidden print:overflow-visible print:block">
+      <main className="flex-1 flex flex-col xl:flex-row w-full mx-auto relative xl:overflow-hidden print:overflow-visible print:block">
         
         {/* Form Panel (Left) */}
-        <section className={`w-full xl:w-[450px] 2xl:w-[500px] flex-shrink-0 bg-sand-50 border-r border-sand-200 no-print h-[calc(100vh-73px)] overflow-y-auto custom-scrollbar transition-all duration-300 ${showSavedDocs ? '-ml-[500px]' : 'ml-0'}`}>
+        <section className={`w-full xl:w-[450px] 2xl:w-[500px] flex-shrink-0 bg-sand-50 border-r border-sand-200 no-print xl:h-[calc(100vh-73px)] xl:overflow-y-auto custom-scrollbar transition-all duration-300 ${showSavedDocs ? '-ml-[500px]' : 'ml-0'}`}>
           <div className="p-6 md:p-8">
             <DocumentForm data={data} onChange={setData} />
           </div>
@@ -214,7 +215,7 @@ export default function App() {
 
         {/* Saved Docs Panel (Slide in from left) */}
         {user && showSavedDocs && (
-          <section className="absolute left-0 top-0 bottom-0 w-full xl:w-[450px] 2xl:w-[500px] bg-white border-r border-stone-200 z-20 shadow-2xl animate-in slide-in-from-left">
+          <section className="fixed xl:absolute left-0 top-[73px] xl:top-0 bottom-0 w-full xl:w-[450px] 2xl:w-[500px] bg-white border-r border-stone-200 z-20 shadow-2xl animate-in slide-in-from-left xl:h-[calc(100vh-73px)] overflow-y-auto">
             <SavedDocumentsList 
               onClose={() => setShowSavedDocs(false)} 
               onSelect={(docData) => {
@@ -228,7 +229,7 @@ export default function App() {
         )}
 
         {/* Preview Panel (Right) */}
-        <section className="flex-1 p-6 md:p-8 xl:p-12 h-[calc(100vh-73px)] print:h-auto print:overflow-visible overflow-y-auto flex justify-center bg-sand-100 print:bg-white print:p-0 print:block custom-scrollbar items-start relative z-0">
+        <section className="flex-1 p-6 md:p-8 xl:p-12 xl:h-[calc(100vh-73px)] xl:overflow-y-auto print:h-auto print:overflow-visible flex justify-center bg-sand-100 print:bg-white print:p-0 print:block custom-scrollbar items-start relative z-0">
           <div className="bg-white shadow-xl shadow-stone-200/50 rounded-2xl print:shadow-none print:rounded-none w-full max-w-[210mm] max-h-min self-start print:max-w-none print:w-full overflow-hidden border border-sand-200 print:border-none">
             {/* Aspect ratio A4 for realistic preview */}
             <div className="print-area min-h-[297mm] print:min-h-0">
