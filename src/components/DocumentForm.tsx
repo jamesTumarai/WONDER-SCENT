@@ -89,12 +89,12 @@ export default function DocumentForm({ data, onChange }: Props) {
             <label className="block text-[11px] font-bold text-stone-500 mb-2 uppercase tracking-wider">สีหลักของเลย์เอาต์</label>
             <div className="flex gap-2">
               {[
-                { id: 'stone', class: 'bg-stone-800' },
+                { id: 'stone', class: 'bg-[#703030]' },
                 { id: 'slate', class: 'bg-slate-700' },
-                { id: 'zinc', class: 'bg-zinc-600' },
-                { id: 'leaf', class: 'bg-leaf-600' },
-                { id: 'clay', class: 'bg-clay-600' },
-                { id: 'blue', class: 'bg-blue-600' },
+                { id: 'zinc', class: 'bg-zinc-700' },
+                { id: 'leaf', class: 'bg-emerald-700' },
+                { id: 'clay', class: 'bg-amber-700' },
+                { id: 'blue', class: 'bg-blue-700' },
               ].map(theme => (
                 <button
                   key={theme.id}

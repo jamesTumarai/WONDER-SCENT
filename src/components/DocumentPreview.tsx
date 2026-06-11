@@ -43,19 +43,16 @@ export default function DocumentPreview({ data }: Props) {
 
   const theme = data.themeColor || 'stone';
   const colorMap = {
-    stone: { bg: 'bg-[#703030]', text: 'text-[#703030]', border: 'border-[#703030]', label: 'text-[#0e7490]' },
-    slate: { bg: 'bg-slate-700', text: 'text-slate-700', border: 'border-slate-700', label: 'text-slate-600' },
-    zinc: { bg: 'bg-zinc-700', text: 'text-zinc-700', border: 'border-zinc-700', label: 'text-zinc-600' },
-    leaf: { bg: 'bg-leaf-700', text: 'text-leaf-700', border: 'border-leaf-700', label: 'text-leaf-600' },
-    clay: { bg: 'bg-clay-700', text: 'text-clay-700', border: 'border-clay-700', label: 'text-clay-600' },
-    blue: { bg: 'bg-blue-700', text: 'text-blue-700', border: 'border-blue-700', label: 'text-blue-600' },
+    stone: { bg: 'bg-[#703030]', text: 'text-[#703030]', border: 'border-[#703030]', label: 'text-cyan-800', value: 'text-cyan-900', receiptBg: 'bg-[#2A939C]', secBg: 'bg-[#DEEAEB]' },
+    slate: { bg: 'bg-slate-700', text: 'text-slate-700', border: 'border-slate-700', label: 'text-slate-600', value: 'text-slate-800', receiptBg: 'bg-slate-700', secBg: 'bg-slate-100' },
+    zinc:  { bg: 'bg-zinc-700',  text: 'text-zinc-700',  border: 'border-zinc-700',  label: 'text-zinc-600',  value: 'text-zinc-800',  receiptBg: 'bg-zinc-700',  secBg: 'bg-zinc-100' },
+    leaf:  { bg: 'bg-emerald-700', text: 'text-emerald-700', border: 'border-emerald-700', label: 'text-emerald-600', value: 'text-emerald-800', receiptBg: 'bg-emerald-600', secBg: 'bg-emerald-50' },
+    clay:  { bg: 'bg-amber-700',   text: 'text-amber-700',   border: 'border-amber-700',   label: 'text-amber-600',   value: 'text-amber-800',   receiptBg: 'bg-amber-600',   secBg: 'bg-amber-50' },
+    blue:  { bg: 'bg-blue-700',    text: 'text-blue-700',    border: 'border-blue-700',    label: 'text-blue-600',    value: 'text-blue-800',    receiptBg: 'bg-blue-600',    secBg: 'bg-blue-50' },
   };
   const c = colorMap[theme as keyof typeof colorMap] || colorMap.stone;
-  
-  // Custom label color for matching the image (cyan-ish), but use theme color if preferred.
-  // The image uses a cyan-teal color for labels, and dark brown for headers.
-  const labelColor = "text-cyan-800";
-  const valueColor = "text-cyan-900";
+  const labelColor = c.label;
+  const valueColor = c.value;
 
   const fontStyle = data.fontFamily === 'prompt' ? '"Prompt", sans-serif' : data.fontFamily === 'sarabun' ? '"Sarabun", sans-serif' : 'sans-serif';
 
@@ -88,7 +85,7 @@ export default function DocumentPreview({ data }: Props) {
 
           {/* Title Box */}
           <div className="flex justify-center mb-6">
-            <div className="border-2 border-[#703030] rounded-xl px-12 py-1.5 text-center text-[#703030]">
+            <div className={`border-2 ${c.border} rounded-xl px-12 py-1.5 text-center ${c.text}`}>
               <h2 className="text-lg font-bold">ใบเสนอราคา</h2>
               <h3 className="font-bold">Quotation</h3>
             </div>
@@ -140,7 +137,7 @@ export default function DocumentPreview({ data }: Props) {
           <div className="mb-4 flex-1">
             <table className="w-full text-left border-collapse border-2 border-black">
               <thead>
-                <tr className="bg-[#703030] text-white">
+                <tr className={`${c.bg} text-white`}>
                   <th className="py-2.5 px-3 font-medium text-center w-12 text-[11px] border border-black">ลำดับ</th>
                   <th className="py-2.5 px-6 font-medium text-[11px] border border-black text-center">รายการ</th>
                   <th className="py-2.5 px-4 text-center font-medium w-24 text-[11px] border border-black">จำนวน</th>
@@ -214,24 +211,31 @@ export default function DocumentPreview({ data }: Props) {
                   </tr>
                 ))}
               </tbody>
+              <tfoot className="font-semibold text-[11px]">
+                <tr>
+                   <td colSpan={2} rowSpan={2} className="border border-black p-0 align-top bg-white">
+                      <div className="px-4 py-2 flex items-center h-full gap-8">
+                         <span className="font-bold">ตัวอักษร.</span>
+                         <span className="flex-1 text-center font-normal">({THBText(grandTotal)})</span>
+                      </div>
+                   </td>
+                   <td colSpan={data.columnSettings?.showPrice2 ? 3 : 2} className="border border-black px-4 py-2 bg-white">
+                       รวมเงิน
+                   </td>
+                   <td className={`border border-black px-6 py-2 text-right font-normal ${c.secBg} text-black`}>
+                       {formatCurrency(subTotal)}
+                   </td>
+                </tr>
+                <tr>
+                   <td colSpan={data.columnSettings?.showPrice2 ? 3 : 2} className="border border-black px-4 py-2 bg-white">
+                       จำนวนเงินทั้งสิ้น
+                   </td>
+                   <td className={`border border-black px-6 py-2 text-right font-bold ${c.secBg} text-black`}>
+                       {formatCurrency(grandTotal)}
+                   </td>
+                </tr>
+              </tfoot>
             </table>
-            
-            <div className="flex border-b-2 border-l-2 border-r-2 border-black font-semibold text-[11px]">
-               <div className="flex-1 flex flex-col justify-center border-r border-black">
-                  <div className="px-4 py-2 flex items-center h-full gap-8">
-                     <span className="font-bold">ตัวอักษร.</span>
-                     <span className="flex-1 text-center font-normal">({THBText(grandTotal)})</span>
-                  </div>
-               </div>
-               <div className="w-56 flex flex-col border-r border-black bg-white">
-                  <div className="border-b border-black px-4 py-2 h-1/2 flex items-center">รวมเงิน</div>
-                  <div className="px-4 py-2 h-1/2 flex items-center">จำนวนเงินทั้งสิ้น</div>
-               </div>
-               <div className="w-32 flex flex-col bg-[#DEEAEB] text-black">
-                  <div className="border-b border-black px-6 py-2 h-1/2 flex items-center justify-end font-normal bg-white">{formatCurrency(subTotal)}</div>
-                  <div className="px-6 py-2 h-1/2 flex items-center justify-end font-bold bg-white">{formatCurrency(grandTotal)}</div>
-               </div>
-            </div>
           </div>
 
           {/* Signatures */}
@@ -330,7 +334,7 @@ export default function DocumentPreview({ data }: Props) {
           <div className="mb-12 flex-1">
             <table className="w-full text-left border-collapse border-2 border-black">
               <thead>
-                <tr className="bg-[#2A939C] text-white">
+                <tr className={`${c.receiptBg} text-white`}>
                   <th className="py-2 px-3 font-medium text-center w-16 text-[11px] border border-black">ลำดับ</th>
                   <th className="py-2 px-6 font-medium text-[11px] border border-black text-center">รายการ (ชนิด/ชื่อ)</th>
                   <th className="py-2 px-4 text-center font-medium w-20 text-[11px] border border-black">จำนวน</th>
@@ -381,19 +385,20 @@ export default function DocumentPreview({ data }: Props) {
                    </tr>
                 ))}
               </tbody>
+              <tfoot className="font-semibold text-[11px] bg-white">
+                <tr>
+                   <td colSpan={2} className={`border border-black p-2 text-center ${c.secBg}`}>
+                       ( {THBText(grandTotal)} )
+                   </td>
+                   <td colSpan={data.columnSettings?.showPrice2 ? 3 : 2} className="border border-black p-2 text-center bg-white">
+                      รวมทั้งสิ้น
+                   </td>
+                   <td className={`border border-black px-6 py-2 text-right text-black ${c.secBg}`}>
+                      {formatCurrency(grandTotal)}
+                   </td>
+                </tr>
+              </tfoot>
             </table>
-            
-            <div className="flex border-b-2 border-l-2 border-r-2 border-black font-semibold">
-               <div className="flex-1 bg-[#DEEAEB] flex items-center justify-center border-r border-black p-2 text-center">
-                  ( {THBText(grandTotal)} )
-               </div>
-               <div className="w-28 flex items-center justify-center p-2 border-r border-black bg-white">
-                  รวมทั้งสิ้น
-               </div>
-               <div className="w-32 flex items-center justify-end px-6 py-2 bg-[#DEEAEB]">
-                  {formatCurrency(grandTotal)}
-               </div>
-            </div>
           </div>
 
           <div className="flex justify-end mt-16 pb-12 print:break-inside-avoid">
