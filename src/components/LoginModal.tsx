@@ -35,7 +35,7 @@ export default function LoginModal({ onClose }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/50 backdrop-blur-sm animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#1c191766] backdrop-blur-sm animate-in fade-in duration-200">
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-hidden animate-in zoom-in-95 duration-200">
         <div className="flex items-center justify-between p-5 border-b border-stone-100">
           <h2 className="text-xl font-bold text-stone-800 flex items-center gap-2">
@@ -63,7 +63,7 @@ export default function LoginModal({ onClose }: Props) {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full border-stone-200 rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500/10 shadow-sm p-3 border outline-none text-sm transition-all bg-stone-50/50"
+              className="w-full border-stone-200 rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500 shadow-sm p-3 border outline-none text-sm transition-all bg-stone-50"
               placeholder="example@company.com"
             />
           </div>
@@ -75,7 +75,7 @@ export default function LoginModal({ onClose }: Props) {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full border-stone-200 rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500/10 shadow-sm p-3 border outline-none text-sm transition-all bg-stone-50/50"
+              className="w-full border-stone-200 rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500 shadow-sm p-3 border outline-none text-sm transition-all bg-stone-50"
               placeholder="••••••••"
             />
           </div>

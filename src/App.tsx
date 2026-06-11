@@ -4,6 +4,7 @@ import DocumentForm from './components/DocumentForm';
 import DocumentPreview from './components/DocumentPreview';
 import SavedDocumentsList from './components/SavedDocumentsList';
 import LoginModal from './components/LoginModal';
+import PdfDownloadModal from './components/PdfDownloadModal';
 import { FileText, Printer, Cloud, LogIn, LogOut, Loader2, Save } from 'lucide-react';
 import { useAuth } from './AuthContext';
 import { saveDocument, getUserDocuments, deleteUserDocument, SavedDocument } from './db';
@@ -62,6 +63,7 @@ export default function App() {
   const [currentDocId, setCurrentDocId] = useState<string | undefined>();
   const [isSaving, setIsSaving] = useState(false);
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+  const [showPdfModal, setShowPdfModal] = useState(false);
   const [showSavedDocs, setShowSavedDocs] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
 
@@ -97,6 +99,18 @@ export default function App() {
       return;
     }
 
+    // Open Modal instead of window.prompt
+    setShowPdfModal(true);
+  };
+
+  const executePdfGeneration = async (filename: string) => {
+    setShowPdfModal(false);
+    
+    // Ensure filename has .pdf extension
+    const finalFilename = filename.endsWith('.pdf') ? filename : filename + '.pdf';
+    
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
     try {
       setIsGeneratingPdf(true);
       // พัก thread เล็กน้อยให้ UI อัพเดทสถานะ loading
@@ -109,9 +123,9 @@ export default function App() {
       const originalBg = element.style.backgroundColor;
       element.style.backgroundColor = 'white';
 
-      const opt = {
+      const opt: any = {
         margin:       0,
-        filename:     `${data.documentNumber || 'เอกสาร'}.pdf`,
+        filename:     finalFilename,
         image:        { type: 'jpeg', quality: 1 },
         // ลด scale บน iOS เพื่อป้องกันแอพค้างเนื่องจากเมมโมรี่ 
         html2canvas:  { scale: isIOS ? 1.5 : 2, useCORS: true, letterRendering: true, logging: false },
@@ -189,7 +203,7 @@ export default function App() {
       {/* Header */}
       <header className="bg-sand-50 border-b border-sand-200 px-4 md:px-6 py-3 flex flex-col md:flex-row md:items-center justify-between z-[100] no-print gap-4 shadow-sm shrink-0">
         <div className="flex items-center gap-4">
-          <div className="relative flex items-center justify-center w-12 h-12 bg-white rounded-xl shadow-[0_2px_10px_rgba(0,0,0,0.04)] border border-leaf-200/50 group overflow-hidden shrink-0 p-1">
+          <div className="relative flex items-center justify-center w-12 h-12 bg-white rounded-xl shadow-[0_2px_10px_rgba(0,0,0,0.04)] border border-leaf-200 group overflow-hidden shrink-0 p-1">
             <img src="/33.png" alt="Wonder Scent" className="w-full h-full object-contain" />
           </div>
           <div>
@@ -280,7 +294,7 @@ export default function App() {
             type="button"
             onClick={() => handlePrint(false)}
             disabled={isGeneratingPdf}
-            className="flex items-center justify-center gap-2 px-6 py-2 text-sm font-medium text-white bg-leaf-600 hover:bg-leaf-700 active:bg-leaf-800 disabled:opacity-70 disabled:cursor-not-allowed rounded-xl transition-all shadow-sm shadow-leaf-500/20 focus:outline-none focus:ring-2 focus:ring-leaf-500 focus:ring-offset-2 flex-1 md:flex-none cursor-pointer"
+            className="flex items-center justify-center gap-2 px-6 py-2 text-sm font-medium text-white bg-leaf-600 hover:bg-leaf-700 active:bg-leaf-800 disabled:opacity-70 disabled:cursor-not-allowed rounded-xl transition-all shadow-sm shadow-leaf-500 focus:outline-none focus:ring-2 focus:ring-leaf-500 focus:ring-offset-2 flex-1 md:flex-none cursor-pointer"
           >
             {isGeneratingPdf ? <Loader2 size={18} className="animate-spin" /> : <FileText size={18} />}
             {isGeneratingPdf ? 'กำลังโหลด...' : 'โหลด PDF'}
@@ -303,7 +317,7 @@ export default function App() {
           <>
             {/* Backdrop for mobile/tablet */}
             <div 
-              className="fixed inset-0 bg-stone-900/40 z-[110] xl:hidden backdrop-blur-sm animate-in fade-in transition-opacity"
+              className="fixed inset-0 bg-[#1c191766] z-[110] xl:hidden backdrop-blur-sm animate-in fade-in transition-opacity"
               onClick={() => setShowSavedDocs(false)}
             />
             <section className="fixed inset-y-0 left-0 z-[120] xl:absolute xl:inset-auto xl:left-0 xl:top-0 xl:bottom-0 xl:z-20 w-[85%] max-w-[400px] sm:max-w-[450px] xl:w-[450px] 2xl:w-[500px] bg-white border-r border-stone-200 shadow-2xl animate-in slide-in-from-left xl:h-full overflow-hidden flex flex-col">
@@ -322,7 +336,7 @@ export default function App() {
 
         {/* Preview Panel (Right) */}
         <section className="flex-1 p-6 md:p-8 xl:p-12 xl:overflow-y-auto print:h-auto print:overflow-visible flex justify-center bg-sand-100 print:bg-white print:p-0 print:block custom-scrollbar items-start relative z-0">
-          <div className="bg-white shadow-xl shadow-stone-200/50 rounded-2xl print:shadow-none print:rounded-none w-full max-w-[210mm] max-h-min self-start print:max-w-none print:w-full overflow-hidden border border-sand-200 print:border-none">
+          <div className="bg-white shadow-xl shadow-stone-200 rounded-2xl print:shadow-none print:rounded-none w-full max-w-[210mm] max-h-min self-start print:max-w-none print:w-full overflow-hidden border border-sand-200 print:border-none">
             {/* Aspect ratio A4 for realistic preview */}
             <div id="document-preview-container" className="print-area min-h-[297mm] print:min-h-0 bg-white">
                <DocumentPreview data={data} />
@@ -333,6 +347,12 @@ export default function App() {
       </main>
 
       {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
+      <PdfDownloadModal 
+        isOpen={showPdfModal} 
+        onClose={() => setShowPdfModal(false)} 
+        onConfirm={executePdfGeneration}
+        defaultFilename={data.documentNumber ? `${data.documentNumber}` : 'เอกสาร'}
+      />
     </div>
   );
 }

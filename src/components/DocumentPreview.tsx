@@ -41,16 +41,16 @@ export default function DocumentPreview({ data }: Props) {
     stone: { bg: 'bg-stone-500', text: 'text-stone-800', textLight: 'text-stone-500', hoverBorder: 'group-hover:border-stone-400' },
     slate: { bg: 'bg-slate-500', text: 'text-slate-800', textLight: 'text-slate-500', hoverBorder: 'group-hover:border-slate-400' },
     zinc: { bg: 'bg-zinc-500', text: 'text-zinc-800', textLight: 'text-zinc-500', hoverBorder: 'group-hover:border-zinc-400' },
-    leaf: { bg: 'bg-leaf-500', text: 'text-leaf-600', textLight: 'text-leaf-600/60', hoverBorder: 'group-hover:border-leaf-400' },
-    clay: { bg: 'bg-clay-500', text: 'text-clay-600', textLight: 'text-clay-600/60', hoverBorder: 'group-hover:border-clay-400' },
-    blue: { bg: 'bg-blue-500', text: 'text-blue-600', textLight: 'text-blue-500/60', hoverBorder: 'group-hover:border-blue-400' },
+    leaf: { bg: 'bg-leaf-500', text: 'text-leaf-600', textLight: 'text-leaf-600 opacity-60', hoverBorder: 'group-hover:border-leaf-400' },
+    clay: { bg: 'bg-clay-500', text: 'text-clay-600', textLight: 'text-clay-600 opacity-60', hoverBorder: 'group-hover:border-clay-400' },
+    blue: { bg: 'bg-blue-500', text: 'text-blue-600', textLight: 'text-blue-500 opacity-60', hoverBorder: 'group-hover:border-blue-400' },
   };
   const c = colorMap[theme as keyof typeof colorMap] || colorMap.stone;
 
   const fontStyle = data.fontFamily === 'prompt' ? '"Prompt", sans-serif' : data.fontFamily === 'sarabun' ? '"Sarabun", sans-serif' : 'sans-serif';
 
   return (
-    <div className={`text-[13px] md:text-[14px] text-stone-800 bg-white min-h-[297mm] print:min-h-0 relative flex flex-col justify-between shadow-inner print:block`} style={{ fontFamily: fontStyle }}>
+    <div className={`text-[13px] md:text-[14px] text-stone-800 bg-white min-h-[297mm] print:min-h-0 relative flex flex-col justify-between print:block`} style={{ fontFamily: fontStyle }}>
       {/* Top Border Bar */}
       <div className={`h-2 w-full ${c.bg} absolute top-0 left-0 right-0 print:hidden`}></div>
 
@@ -126,7 +126,7 @@ export default function DocumentPreview({ data }: Props) {
         </div>
 
         {/* Customer Information Section */}
-        <div className="mb-6 p-4 bg-sand-50/50 rounded-2xl border border-stone-100/80 w-full max-w-xl">
+        <div className="mb-6 p-4 bg-sand-50 rounded-2xl border border-stone-100 w-full max-w-xl">
           <h4 className={`font-bold ${c.text} text-[10px] tracking-wider uppercase mb-2 flex items-center gap-2`}>
             ลูกค้า (Customer)
           </h4>
@@ -150,7 +150,7 @@ export default function DocumentPreview({ data }: Props) {
         <div className="mb-4 rounded-2xl overflow-hidden border border-stone-100">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-sand-50/80">
+              <tr className="bg-sand-50">
                 <th className="py-2.5 px-4 font-semibold text-stone-500 text-center w-14 text-[11px] uppercase tracking-wider">#</th>
                 <th className="py-2.5 px-6 font-semibold text-stone-500 text-[11px] uppercase tracking-wider">รายการ (Description)</th>
                 <th className="py-2.5 px-4 text-center font-semibold text-stone-500 w-24 text-[11px] uppercase tracking-wider">จำนวน</th>
@@ -169,7 +169,7 @@ export default function DocumentPreview({ data }: Props) {
                  </tr>
               ) : (
                 data.items.map((item, index) => (
-                  <tr key={item.id} className="group hover:bg-stone-50/50 transition-colors">
+                  <tr key={item.id} className="group hover:bg-stone-50 transition-colors">
                     <td className="py-2.5 px-4 text-stone-400 text-center border-t border-stone-100 text-[13px] align-top">{index + 1}</td>
                     <td className="py-2.5 px-6 font-medium text-stone-800 border-t border-stone-100 leading-relaxed align-top">
                       {item.description || '-'}
@@ -191,7 +191,7 @@ export default function DocumentPreview({ data }: Props) {
           {/* Notes & Payment Terms */}
           <div className="w-full md:w-1/2 space-y-2">
             {data.paymentTerms && (
-               <div className="text-sm bg-stone-50/50 p-3.5 rounded-2xl border border-stone-100/80">
+               <div className="text-sm bg-stone-50 p-3.5 rounded-2xl border border-stone-100">
                  <h4 className="font-semibold text-stone-500 mb-1.5 flex items-center gap-2 text-[10px] uppercase tracking-wider">
                    ช่องทางการชำระเงิน
                  </h4>
@@ -199,7 +199,7 @@ export default function DocumentPreview({ data }: Props) {
                </div>
             )}
             {data.notes && (
-              <div className="text-sm bg-stone-50/50 p-3.5 rounded-2xl border border-stone-100/80">
+              <div className="text-sm bg-stone-50 p-3.5 rounded-2xl border border-stone-100">
                 <h4 className="font-semibold text-stone-500 mb-1.5 flex items-center gap-2 text-[10px] uppercase tracking-wider">
                   หมายเหตุ
                 </h4>

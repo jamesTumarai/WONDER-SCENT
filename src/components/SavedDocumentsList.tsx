@@ -122,7 +122,7 @@ export default function SavedDocumentsList({ onClose, onSelect }: Props) {
               placeholder="ค้นหาชื่อลูกค้า, วันที่, เลขที่เอกสาร..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-stone-50 border border-stone-200 rounded-xl py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-leaf-500/20 focus:border-leaf-400 transition-all text-stone-700"
+              className="w-full bg-stone-50 border border-stone-200 rounded-xl py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-leaf-500 focus:border-leaf-400 transition-all text-stone-700"
             />
           </div>
           
@@ -167,7 +167,7 @@ export default function SavedDocumentsList({ onClose, onSelect }: Props) {
             <select
               value={sortOrder}
               onChange={(e) => setSortOrder(e.target.value as 'NEWEST' | 'OLDEST')}
-              className="text-xs bg-stone-50 border border-stone-200 text-stone-600 rounded-full px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-leaf-500/20"
+              className="text-xs bg-stone-50 border border-stone-200 text-stone-600 rounded-full px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-leaf-500"
             >
               <option value="NEWEST">ใหม่สุด</option>
               <option value="OLDEST">เก่าสุด</option>
@@ -214,7 +214,7 @@ export default function SavedDocumentsList({ onClose, onSelect }: Props) {
                       <div 
                         key={doc.id}
                         onClick={() => onSelect(doc)}
-                        className="p-4 rounded-2xl border border-stone-200 active:border-leaf-300 md:hover:border-leaf-300 active:shadow-md md:hover:shadow-md transition-all cursor-pointer group bg-stone-50/50 active:bg-white md:hover:bg-white flex flex-col gap-2"
+                        className="p-4 rounded-2xl border border-stone-200 active:border-leaf-300 md:hover:border-leaf-300 active:shadow-md md:hover:shadow-md transition-all cursor-pointer group bg-stone-50 active:bg-white md:hover:bg-white flex flex-col gap-2"
                       >
                         <div className="flex items-start justify-between">
                           <div>
@@ -261,8 +261,8 @@ export default function SavedDocumentsList({ onClose, onSelect }: Props) {
       </div>
 
       {docToDelete && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-stone-900/40 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 border border-stone-200/50">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[#1c191766] backdrop-blur-sm">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 border border-stone-200">
             <h3 className="text-lg font-bold text-stone-800 mb-2">ยืนยันการลบเอกสาร</h3>
             <p className="text-sm text-stone-600 mb-6 leading-relaxed">คุณแน่ใจหรือไม่ว่าต้องการลบเอกสารนี้? การดำเนินการนี้ไม่สามารถยกเลิกได้</p>
             <div className="flex items-center gap-3 justify-end">

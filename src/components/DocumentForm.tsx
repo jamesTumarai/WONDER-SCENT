@@ -65,13 +65,13 @@ export default function DocumentForm({ data, onChange }: Props) {
                 className={`p-4 rounded-2xl border flex flex-col items-center justify-center gap-2 transition-all duration-200
                   ${isActive 
                     ? 'border-leaf-400 bg-leaf-50 text-leaf-700 shadow-[0_0_0_1px_rgba(124,131,99,0.2)]' 
-                    : 'border-stone-200 hover:border-stone-300 text-stone-600 hover:bg-white bg-sand-50/50'
+                    : 'border-stone-200 hover:border-stone-300 text-stone-600 hover:bg-white bg-sand-50'
                   }`}
               >
                 <Icon size={24} className={isActive ? "text-leaf-600" : "text-stone-400"} strokeWidth={1.5} />
                 <div className="text-center">
                   <p className="font-semibold text-sm">{type.label}</p>
-                  <p className={`text-[10px] ${isActive ? 'text-leaf-600/70' : 'text-stone-400'}`}>{type.en}</p>
+                  <p className={`text-[10px] ${isActive ? 'text-leaf-600' : 'text-stone-400'}`}>{type.en}</p>
                 </div>
               </button>
             )
@@ -81,7 +81,7 @@ export default function DocumentForm({ data, onChange }: Props) {
 
       {/* Setting Theme */}
       <section className="space-y-4">
-        <h3 className="text-sm font-bold text-stone-700 pb-2 border-b border-stone-200/60 flex items-center justify-between">
+        <h3 className="text-sm font-bold text-stone-700 pb-2 border-b border-stone-200 flex items-center justify-between">
           <span>รูปแบบและการแสดงผล</span>
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -130,7 +130,7 @@ export default function DocumentForm({ data, onChange }: Props) {
 
       {/* Doc Specific Info */}
       <section className="space-y-4">
-        <h3 className="text-sm font-bold text-stone-700 pb-2 border-b border-stone-200/60 flex items-center justify-between">
+        <h3 className="text-sm font-bold text-stone-700 pb-2 border-b border-stone-200 flex items-center justify-between">
           <span>รายละเอียดเอกสาร</span>
         </h3>
         <div className="grid grid-cols-2 gap-4">
@@ -141,7 +141,7 @@ export default function DocumentForm({ data, onChange }: Props) {
               type="text" 
               value={data.documentNumber}
               onChange={(e) => updateField('documentNumber', e.target.value)}
-              className="w-full border-stone-200 rounded-xl shadow-sm focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500/10 p-3 border outline-none transition-all text-sm font-medium bg-white"
+              className="w-full border-stone-200 rounded-xl shadow-sm focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500 p-3 border outline-none transition-all text-sm font-medium bg-white"
               placeholder="เช่น INV-2026-001"
             />
           </div>
@@ -151,7 +151,7 @@ export default function DocumentForm({ data, onChange }: Props) {
               type="date" 
               value={data.date}
               onChange={(e) => updateField('date', e.target.value)}
-              className="w-full border-stone-200 rounded-xl shadow-sm focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500/10 p-3 border outline-none transition-all text-sm text-stone-700 bg-white"
+              className="w-full border-stone-200 rounded-xl shadow-sm focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500 p-3 border outline-none transition-all text-sm text-stone-700 bg-white"
             />
           </div>
           <div>
@@ -162,7 +162,7 @@ export default function DocumentForm({ data, onChange }: Props) {
               type="date" 
               value={data.dueDate}
               onChange={(e) => updateField('dueDate', e.target.value)}
-              className="w-full border-stone-200 rounded-xl shadow-sm focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500/10 p-3 border outline-none transition-all text-sm text-stone-700 bg-white"
+              className="w-full border-stone-200 rounded-xl shadow-sm focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500 p-3 border outline-none transition-all text-sm text-stone-700 bg-white"
             />
           </div>
         </div>
@@ -170,22 +170,22 @@ export default function DocumentForm({ data, onChange }: Props) {
 
       {/* From Info */}
       <section className="space-y-4">
-        <h3 className="text-sm font-bold text-stone-700 pb-2 border-b border-stone-200/60 flex items-center gap-2">
+        <h3 className="text-sm font-bold text-stone-700 pb-2 border-b border-stone-200 flex items-center gap-2">
           <Building2 size={18} className="text-clay-500" />
           ข้อมูลผู้ออกเอกสาร (ผู้ขาย)
         </h3>
         <div className="space-y-3">
-          <ExpandableField as="input" placeholder="ชื่อบริษัท / ชื่อผู้ส่ง" value={data.from.name} onChange={(e) => updateEntity('from', 'name', e.target.value)} className="w-full border-stone-200 rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500/10 shadow-sm p-3 border outline-none text-sm font-medium placeholder:text-stone-400 placeholder:font-normal transition-all bg-white" />
-          <ExpandableField label="ที่อยู่บริษัท" placeholder="ที่อยู่บริษัท" value={data.from.address} onChange={(e) => updateEntity('from', 'address', e.target.value)} className="w-full border-stone-200 rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500/10 shadow-sm p-3 border outline-none text-sm placeholder:text-stone-400 resize-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] min-h-[60px] transition-all bg-white" rows={2} />
+          <ExpandableField as="input" placeholder="ชื่อบริษัท / ชื่อผู้ส่ง" value={data.from.name} onChange={(e) => updateEntity('from', 'name', e.target.value)} className="w-full border-stone-200 rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500 shadow-sm p-3 border outline-none text-sm font-medium placeholder:text-stone-400 placeholder:font-normal transition-all bg-white" />
+          <ExpandableField label="ที่อยู่บริษัท" placeholder="ที่อยู่บริษัท" value={data.from.address} onChange={(e) => updateEntity('from', 'address', e.target.value)} className="w-full border-stone-200 rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500 shadow-sm p-3 border outline-none text-sm placeholder:text-stone-400 resize-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] min-h-[60px] transition-all bg-white" rows={2} />
           
           <div className="grid grid-cols-2 gap-3">
-             <ExpandableField as="input" placeholder="เลขประจำตัวผู้เสียภาษี" value={data.from.taxId} onChange={(e) => updateEntity('from', 'taxId', e.target.value)} className="w-full border-stone-200 rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500/10 shadow-sm p-3 border outline-none text-sm placeholder:text-stone-400 transition-all bg-white" />
-             <ExpandableField as="input" placeholder="สาขา (เช่น สำนักงานใหญ่)" value={data.from.branch || ''} onChange={(e) => updateEntity('from', 'branch', e.target.value)} className="w-full border-stone-200 rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500/10 shadow-sm p-3 border outline-none text-sm placeholder:text-stone-400 transition-all bg-white" />
+             <ExpandableField as="input" placeholder="เลขประจำตัวผู้เสียภาษี" value={data.from.taxId} onChange={(e) => updateEntity('from', 'taxId', e.target.value)} className="w-full border-stone-200 rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500 shadow-sm p-3 border outline-none text-sm placeholder:text-stone-400 transition-all bg-white" />
+             <ExpandableField as="input" placeholder="สาขา (เช่น สำนักงานใหญ่)" value={data.from.branch || ''} onChange={(e) => updateEntity('from', 'branch', e.target.value)} className="w-full border-stone-200 rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500 shadow-sm p-3 border outline-none text-sm placeholder:text-stone-400 transition-all bg-white" />
           </div>
           
           <div className="grid grid-cols-2 gap-3">
-            <ExpandableField as="input" placeholder="เบอร์โทรศัพท์" value={data.from.phone} onChange={(e) => updateEntity('from', 'phone', e.target.value)} className="w-full border-stone-200 rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500/10 shadow-sm p-3 border outline-none text-sm placeholder:text-stone-400 transition-all bg-white" />
-            <ExpandableField as="input" placeholder="อีเมล" value={data.from.email} onChange={(e) => updateEntity('from', 'email', e.target.value)} className="w-full border-stone-200 rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500/10 shadow-sm p-3 border outline-none text-sm placeholder:text-stone-400 transition-all bg-white" />
+            <ExpandableField as="input" placeholder="เบอร์โทรศัพท์" value={data.from.phone} onChange={(e) => updateEntity('from', 'phone', e.target.value)} className="w-full border-stone-200 rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500 shadow-sm p-3 border outline-none text-sm placeholder:text-stone-400 transition-all bg-white" />
+            <ExpandableField as="input" placeholder="อีเมล" value={data.from.email} onChange={(e) => updateEntity('from', 'email', e.target.value)} className="w-full border-stone-200 rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500 shadow-sm p-3 border outline-none text-sm placeholder:text-stone-400 transition-all bg-white" />
           </div>
 
           <div className="pt-2">
@@ -224,29 +224,29 @@ export default function DocumentForm({ data, onChange }: Props) {
 
       {/* To Info */}
       <section className="space-y-4">
-        <h3 className="text-sm font-bold text-stone-700 pb-2 border-b border-stone-200/60 flex items-center gap-2">
+        <h3 className="text-sm font-bold text-stone-700 pb-2 border-b border-stone-200 flex items-center gap-2">
           <User size={18} className="text-clay-500" />
           ข้อมูลลูกค้า (ผู้ซื้อ)
         </h3>
         <div className="space-y-3">
-          <ExpandableField as="input" placeholder="ชื่อลูกค้า / ชื่อบริษัท" value={data.to.name} onChange={(e) => updateEntity('to', 'name', e.target.value)} className="w-full border-stone-200 rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500/10 shadow-sm p-3 border outline-none text-sm font-medium placeholder:text-stone-400 placeholder:font-normal transition-all bg-white" />
-          <ExpandableField label="ที่อยู่ลูกค้า" placeholder="ที่อยู่ลูกค้า" value={data.to.address} onChange={(e) => updateEntity('to', 'address', e.target.value)} className="w-full border-stone-200 rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500/10 shadow-sm p-3 border outline-none text-sm placeholder:text-stone-400 resize-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] min-h-[60px] transition-all bg-white" rows={2} />
+          <ExpandableField as="input" placeholder="ชื่อลูกค้า / ชื่อบริษัท" value={data.to.name} onChange={(e) => updateEntity('to', 'name', e.target.value)} className="w-full border-stone-200 rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500 shadow-sm p-3 border outline-none text-sm font-medium placeholder:text-stone-400 placeholder:font-normal transition-all bg-white" />
+          <ExpandableField label="ที่อยู่ลูกค้า" placeholder="ที่อยู่ลูกค้า" value={data.to.address} onChange={(e) => updateEntity('to', 'address', e.target.value)} className="w-full border-stone-200 rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500 shadow-sm p-3 border outline-none text-sm placeholder:text-stone-400 resize-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] min-h-[60px] transition-all bg-white" rows={2} />
           
           <div className="grid grid-cols-2 gap-3">
-             <ExpandableField as="input" placeholder="เลขประจำตัวผู้เสียภาษี" value={data.to.taxId} onChange={(e) => updateEntity('to', 'taxId', e.target.value)} className="w-full border-stone-200 rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500/10 shadow-sm p-3 border outline-none text-sm placeholder:text-stone-400 transition-all bg-white" />
-             <ExpandableField as="input" placeholder="สาขา" value={data.to.branch || ''} onChange={(e) => updateEntity('to', 'branch', e.target.value)} className="w-full border-stone-200 rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500/10 shadow-sm p-3 border outline-none text-sm placeholder:text-stone-400 transition-all bg-white" />
+             <ExpandableField as="input" placeholder="เลขประจำตัวผู้เสียภาษี" value={data.to.taxId} onChange={(e) => updateEntity('to', 'taxId', e.target.value)} className="w-full border-stone-200 rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500 shadow-sm p-3 border outline-none text-sm placeholder:text-stone-400 transition-all bg-white" />
+             <ExpandableField as="input" placeholder="สาขา" value={data.to.branch || ''} onChange={(e) => updateEntity('to', 'branch', e.target.value)} className="w-full border-stone-200 rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500 shadow-sm p-3 border outline-none text-sm placeholder:text-stone-400 transition-all bg-white" />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            <ExpandableField as="input" placeholder="เบอร์โทรศัพท์" value={data.to.phone} onChange={(e) => updateEntity('to', 'phone', e.target.value)} className="w-full border-stone-200 rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500/10 shadow-sm p-3 border outline-none text-sm placeholder:text-stone-400 transition-all bg-white" />
-            <ExpandableField as="input" placeholder="ผู้ติดต่อ" value={data.to.contactPerson || ''} onChange={(e) => updateEntity('to', 'contactPerson', e.target.value)} className="w-full border-stone-200 rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500/10 shadow-sm p-3 border outline-none text-sm placeholder:text-stone-400 transition-all bg-white" />
+            <ExpandableField as="input" placeholder="เบอร์โทรศัพท์" value={data.to.phone} onChange={(e) => updateEntity('to', 'phone', e.target.value)} className="w-full border-stone-200 rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500 shadow-sm p-3 border outline-none text-sm placeholder:text-stone-400 transition-all bg-white" />
+            <ExpandableField as="input" placeholder="ผู้ติดต่อ" value={data.to.contactPerson || ''} onChange={(e) => updateEntity('to', 'contactPerson', e.target.value)} className="w-full border-stone-200 rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500 shadow-sm p-3 border outline-none text-sm placeholder:text-stone-400 transition-all bg-white" />
           </div>
         </div>
       </section>
 
       {/* Items */}
       <section className="space-y-4">
-        <h3 className="text-sm font-bold text-stone-700 pb-2 border-b border-stone-200/60 flex items-center justify-between">
+        <h3 className="text-sm font-bold text-stone-700 pb-2 border-b border-stone-200 flex items-center justify-between">
           <span>รายการสินค้า / บริการ</span>
         </h3>
         
@@ -264,7 +264,7 @@ export default function DocumentForm({ data, onChange }: Props) {
                   placeholder="รายละเอียดสินค้า/บริการ" 
                   value={item.description} 
                   onChange={(e) => updateItem(item.id, 'description', e.target.value)} 
-                  className="w-full border-stone-200 outline-none rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500/10 shadow-sm p-3 border text-sm transition-all text-stone-800 font-medium" 
+                  className="w-full border-stone-200 outline-none rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500 shadow-sm p-3 border text-sm transition-all text-stone-800 font-medium" 
                 />
                 <div className="grid grid-cols-2 gap-3">
                   <div>
@@ -274,7 +274,7 @@ export default function DocumentForm({ data, onChange }: Props) {
                       min="1"
                       value={item.quantity === 0 ? '' : item.quantity} 
                       onChange={(e) => updateItem(item.id, 'quantity', Number(e.target.value))} 
-                      className="w-full border-stone-200 outline-none rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500/10 shadow-sm p-3 border text-sm transition-all" 
+                      className="w-full border-stone-200 outline-none rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500 shadow-sm p-3 border text-sm transition-all" 
                     />
                   </div>
                   <div>
@@ -284,7 +284,7 @@ export default function DocumentForm({ data, onChange }: Props) {
                       min="0"
                       value={item.unitPrice === 0 ? '' : item.unitPrice} 
                       onChange={(e) => updateItem(item.id, 'unitPrice', Number(e.target.value))} 
-                      className="w-full border-stone-200 outline-none rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500/10 shadow-sm p-3 border text-sm transition-all" 
+                      className="w-full border-stone-200 outline-none rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500 shadow-sm p-3 border text-sm transition-all" 
                     />
                   </div>
                 </div>
@@ -304,11 +304,11 @@ export default function DocumentForm({ data, onChange }: Props) {
 
       {/* Totals & Notes */}
       <section className="space-y-4">
-        <h3 className="text-sm font-bold text-stone-700 pb-2 border-b border-stone-200/60 flex items-center justify-between">
+        <h3 className="text-sm font-bold text-stone-700 pb-2 border-b border-stone-200 flex items-center justify-between">
           <span>สรุป & หมายเหตุ</span>
         </h3>
         
-        <div className="bg-sand-50/80 p-5 rounded-2xl border border-stone-200 space-y-4">
+        <div className="bg-sand-50 p-5 rounded-2xl border border-stone-200 space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-[10px] font-bold text-stone-500 mb-1 uppercase tracking-wider ml-1">ส่วนลด (บาท)</label>
@@ -317,7 +317,7 @@ export default function DocumentForm({ data, onChange }: Props) {
                 min="0"
                 value={data.discount === 0 ? '' : data.discount} 
                 onChange={(e) => updateField('discount', Number(e.target.value))} 
-                className="w-full border-stone-200 outline-none rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500/10 shadow-sm p-3 border text-sm bg-white transition-all" 
+                className="w-full border-stone-200 outline-none rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500 shadow-sm p-3 border text-sm bg-white transition-all" 
               />
             </div>
             <div>
@@ -328,7 +328,7 @@ export default function DocumentForm({ data, onChange }: Props) {
                 max="100"
                 value={data.taxRate === 0 ? '' : data.taxRate} 
                 onChange={(e) => updateField('taxRate', Number(e.target.value))} 
-                className="w-full border-stone-200 outline-none rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500/10 shadow-sm p-3 border text-sm bg-white transition-all" 
+                className="w-full border-stone-200 outline-none rounded-xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500 shadow-sm p-3 border text-sm bg-white transition-all" 
               />
             </div>
           </div>
@@ -337,7 +337,7 @@ export default function DocumentForm({ data, onChange }: Props) {
               type="checkbox" 
               checked={data.includeTax}
               onChange={(e) => updateField('includeTax', e.target.checked)}
-              className="rounded border-stone-300 text-leaf-500 shadow-sm focus:border-leaf-400 focus:ring focus:ring-leaf-500/20 w-4 h-4 cursor-pointer accent-leaf-500 transition-all"
+              className="rounded border-stone-300 text-leaf-500 shadow-sm focus:border-leaf-400 focus:ring focus:ring-leaf-500 w-4 h-4 cursor-pointer accent-leaf-500 transition-all"
             />
             <span className="text-sm font-semibold text-stone-700 select-none">
               รวมภาษีมูลค่าเพิ่ม 7% ลงในยอดรวม
@@ -352,7 +352,7 @@ export default function DocumentForm({ data, onChange }: Props) {
             rows={3}
             value={data.paymentTerms || ''}
             onChange={(e) => updateField('paymentTerms', e.target.value)}
-            className="w-full border-stone-200 outline-none rounded-2xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500/10 shadow-sm p-4 border text-sm resize-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] min-h-[70px] transition-all text-stone-700 bg-white" 
+            className="w-full border-stone-200 outline-none rounded-2xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500 shadow-sm p-4 border text-sm resize-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] min-h-[70px] transition-all text-stone-700 bg-white" 
             placeholder="เช่น โอนเงินเข้าบัญชีธนาคาร..."
           />
         </div>
@@ -364,7 +364,7 @@ export default function DocumentForm({ data, onChange }: Props) {
             rows={3}
             value={data.notes}
             onChange={(e) => updateField('notes', e.target.value)}
-            className="w-full border-stone-200 outline-none rounded-2xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500/10 shadow-sm p-4 border text-sm resize-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] min-h-[70px] transition-all text-stone-700 bg-white" 
+            className="w-full border-stone-200 outline-none rounded-2xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500 shadow-sm p-4 border text-sm resize-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] min-h-[70px] transition-all text-stone-700 bg-white" 
             placeholder="ข้อมูลเพิ่มเติมอื่นๆ (ถ้ามี)"
           />
         </div>
