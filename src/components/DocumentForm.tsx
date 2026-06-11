@@ -447,6 +447,18 @@ export default function DocumentForm({ data, onChange }: Props) {
             placeholder="ข้อมูลเพิ่มเติมอื่นๆ (ถ้ามี)"
           />
         </div>
+
+        <div className="mt-4">
+          <label className="block text-[11px] font-bold text-stone-500 mb-1.5 uppercase tracking-wider ml-1">รายละเอียดเพิ่มเติมใต้ตาราง</label>
+          <ExpandableField 
+            label="รายละเอียดเพิ่มเติมใต้ตาราง"
+            rows={2}
+            value={data.additionalDetails || ''}
+            onChange={(e) => updateField('additionalDetails', e.target.value)}
+            className="w-full border-stone-200 outline-none rounded-2xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500 shadow-sm p-4 border text-sm resize-none [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] min-h-[50px] transition-all text-stone-700 bg-white" 
+            placeholder="รายละเอียดเพิ่มเติม ......................"
+          />
+        </div>
       </section>
     </div>
   );

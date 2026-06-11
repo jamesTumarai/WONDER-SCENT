@@ -38,6 +38,7 @@ export interface DocumentData {
   columnSettings?: ColumnSettings;
   paymentTerms?: string;
   notes: string;
+  additionalDetails?: string;
   discount: number;
   taxRate: number;
   includeTax: boolean;

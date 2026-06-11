@@ -97,20 +97,20 @@ export default function DocumentPreview({ data }: Props) {
               <table className="w-full">
                 <tbody>
                   <tr>
-                    <td className="w-[120px] py-0.5 align-top">นามลูกค้า</td>
-                    <td className="py-0.5">{data.to.name || ''}</td>
+                    <td className="w-px whitespace-nowrap pr-2 py-0.5 align-top">นามลูกค้า</td>
+                    <td className="py-0.5">บริษัท {data.to.name || ''}</td>
                   </tr>
                   <tr>
-                    <td className="w-[120px] py-0.5 align-top">ที่อยู่</td>
+                    <td className="w-px whitespace-nowrap pr-2 py-0.5 align-top">ที่อยู่</td>
                     <td className="py-0.5">{data.to.address || ''}</td>
                   </tr>
                   <tr>
-                    <td className="w-[120px] py-0.5 align-top"></td>
+                    <td className="w-px whitespace-nowrap pr-2 py-0.5 align-top"></td>
                     <td className="py-0.5">ผู้ติดต่อ: {data.to.contactPerson || '-'} เบอร์โทร: {data.to.phone || '-'}</td>
                   </tr>
                   <tr>
-                    <td className="w-[120px] py-0.5 align-top whitespace-nowrap">เลขประจำตัวผู้เสียภาษี</td>
-                    <td className="py-0.5 pl-4">
+                    <td className="w-px whitespace-nowrap pr-2 py-0.5 align-top">เลขประจำตัวผู้เสียภาษี</td>
+                    <td className="py-0.5">
                       <div className="flex items-center gap-6">
                         <span>{data.to.taxId || ''}</span>
                         <span>สาขา {data.to.branch || ''}</span>
@@ -251,13 +251,20 @@ export default function DocumentPreview({ data }: Props) {
                 </tr>
               </tfoot>
             </table>
+
+            {data.additionalDetails && (
+              <div className="mt-2 text-[11px] px-0 flex text-black">
+                <span className="shrink-0 mr-2">รายละเอียดเพิ่มเติม</span>
+                <span className="flex-1 font-bold whitespace-pre-wrap">{data.additionalDetails}</span>
+              </div>
+            )}
           </div>
 
           {/* Signatures */}
           <div className="flex gap-2 text-[11px] print:break-inside-avoid">
             <div className="w-[60%] flex border-2 border-black">
               <div className="w-1/2 flex flex-col p-3 border-r border-black">
-                <div className="font-bold mb-4">{data.to.name || ''}</div>
+                <div className="font-bold mb-4 text-center">{data.to.name ? `บริษัท ${data.to.name}` : 'บริษัท'}</div>
                 <div className="mt-auto space-y-4 pt-12">
                   <div className="flex gap-2 items-end">
                     <span className="w-10">ผู้อนุมัติ</span>
@@ -314,34 +321,34 @@ export default function DocumentPreview({ data }: Props) {
              </div>
           </div>
 
-          <div className="text-[12px] leading-relaxed mb-6 space-y-4">
-            <div className="flex gap-2 items-end">
-              <span className="w-[130px] pb-0.5">ชื่อกิจการ</span>
+          <div className="text-[12px] leading-relaxed mb-6 space-y-3">
+            <div className="flex items-end">
+              <span className="shrink-0 pr-2 pb-0.5">ชื่อกิจการ</span>
               <span className="flex-1 font-bold border-b border-dashed border-stone-800 text-center pb-0.5">{data.from.name}</span>
-              <span className="w-48 text-stone-800 text-right pb-0.5">(ผู้ขายสินค้า/ให้บริการ)</span>
+              <span className="shrink-0 pl-2 text-stone-800 text-right pb-0.5">(ผู้ขายสินค้า/ให้บริการ)</span>
             </div>
             
-            <div className="flex gap-2 items-end">
-              <span className="w-[130px] pb-0.5">เลขประจำตัวผู้เสียภาษี</span>
+            <div className="flex items-end">
+              <span className="shrink-0 pr-2 pb-0.5">เลขประจำตัวผู้เสียภาษี</span>
               <span className="flex-1 font-bold border-b border-dashed border-stone-800 text-center pb-0.5">{data.from.taxId}</span>
-              <span className="w-16 text-center pb-0.5">โทรศัพท์</span>
+              <span className="shrink-0 px-2 text-center pb-0.5">โทรศัพท์</span>
               <span className="w-48 font-bold border-b border-dashed border-stone-800 text-center pb-0.5">{data.from.phone}</span>
             </div>
 
-            <div className="flex gap-2 items-end">
-              <span className="w-[130px] pb-0.5">ที่อยู่</span>
-              <span className="flex-1 font-bold border-b border-dashed border-stone-800 pb-0.5 px-8 whitespace-pre-wrap break-words">{data.from.address}</span>
+            <div className="flex items-end">
+              <span className="shrink-0 pr-2 pb-0.5">ที่อยู่</span>
+              <span className="flex-1 font-bold border-b border-dashed border-stone-800 pb-0.5 px-8 whitespace-pre-wrap break-words text-center">{data.from.address}</span>
             </div>
             
-            <div className="flex gap-2 items-end pt-2">
-              <span className="w-[130px] pb-0.5">ได้รับเงินจาก</span>
+            <div className="flex items-end pt-2">
+              <span className="shrink-0 pr-2 pb-0.5">ได้รับเงินจาก</span>
               <span className="flex-1 font-bold border-b border-dashed border-stone-800 text-center pb-0.5">{data.to.name}</span>
-              <span className="w-64 text-stone-800 text-right pb-0.5">(ผู้ซื้อ/ผู้รับบริการ) ดังรายการต่อไปนี้</span>
+              <span className="shrink-0 pl-2 text-stone-800 text-right pb-0.5">(ผู้ซื้อ/ผู้รับบริการ) ดังรายการต่อไปนี้</span>
             </div>
             
-            <div className="flex gap-2 items-end">
-              <span className="w-[130px] pb-0.5">ที่อยู่</span>
-              <span className="flex-1 font-bold border-b border-dashed border-stone-800 pb-0.5 px-8 whitespace-pre-wrap break-words">{data.to.address}</span>
+            <div className="flex items-end">
+              <span className="shrink-0 pr-2 pb-0.5">ที่อยู่</span>
+              <span className="flex-1 font-bold border-b border-dashed border-stone-800 pb-0.5 px-8 whitespace-pre-wrap break-words text-center">{data.to.address}</span>
             </div>
           </div>
 
@@ -465,12 +472,11 @@ export default function DocumentPreview({ data }: Props) {
 
           <div className="flex justify-end mt-16 pb-12 print:break-inside-avoid">
             <div className="text-center text-[11px]">
-              <div className="flex items-end gap-2 mb-1">
+              <div className="flex items-end gap-2 mb-2">
                 <span>ลงชื่อ</span>
                 <span className="w-64 border-b border-black inline-block text-center text-transparent focus:text-stone-700">_</span>
               </div>
-              <div className="mb-2 w-64 ml-8 text-center">( บุษยาพร สามารถ )</div>
-              <div className="pr-4">ผู้รับเงิน</div>
+              <div className="pr-4 text-center mt-3">ผู้รับเงิน</div>
             </div>
           </div>
 
@@ -507,32 +513,32 @@ export default function DocumentPreview({ data }: Props) {
         {/* Info Grid */}
         <div className="flex justify-between items-start mb-6 text-[11px] leading-relaxed">
           {/* Left: Customer Info */}
-          <div className="w-[60%] pr-8">
+          <div className="w-2/3 pr-8">
             <table className="w-full">
               <tbody>
                 <tr>
-                  <td className={`w-[88px] pb-1 ${labelColor} whitespace-nowrap`}>ชื่อลูกค้า</td>
+                  <td className={`w-[120px] whitespace-nowrap pb-1 ${labelColor}`}>ชื่อลูกค้า</td>
                   <td className={`pb-1 ${valueColor} font-bold`}>{data.to.name || ''}</td>
                   {data.to.branch && (
                     <>
-                      <td className={`w-12 pb-1 ${labelColor} pl-2`}>สาขา</td>
+                      <td className={`w-[80px] whitespace-nowrap pb-1 ${labelColor} pl-4`}>สาขา</td>
                       <td className={`pb-1 ${valueColor} font-bold`}>{data.to.branch}</td>
                     </>
                   )}
                 </tr>
                 <tr>
-                  <td className={`align-top pb-1 ${labelColor}`}>ที่อยู่</td>
+                  <td className={`w-[120px] align-top whitespace-nowrap pb-1 ${labelColor}`}>ที่อยู่</td>
                   <td colSpan={3} className={`pb-1 ${valueColor} whitespace-pre-wrap`}>{data.to.address || ''}</td>
                 </tr>
                 <tr>
-                  <td className={`pb-1 ${labelColor} whitespace-nowrap`}>เลขผู้เสียภาษี</td>
+                  <td className={`w-[120px] whitespace-nowrap pb-1 ${labelColor}`}>เลขผู้เสียภาษี</td>
                   <td className={`pb-1 ${valueColor}`}>{data.to.taxId || ''}</td>
-                  <td className={`pb-1 ${labelColor} pl-2 whitespace-nowrap`}>เบอร์โทรศัพท์</td>
+                  <td className={`w-[100px] whitespace-nowrap pb-1 ${labelColor} pl-4`}>เบอร์โทรศัพท์</td>
                   <td className={`pb-1 ${valueColor}`}>{data.to.phone || ''}</td>
                 </tr>
                 {data.to.contactPerson && (
                   <tr>
-                    <td className={`pb-1 ${labelColor}`}>ผู้ติดต่อ</td>
+                    <td className={`w-[120px] whitespace-nowrap pb-1 ${labelColor}`}>ผู้ติดต่อ</td>
                     <td colSpan={3} className={`pb-1 ${valueColor}`}>{data.to.contactPerson}</td>
                   </tr>
                 )}
@@ -541,20 +547,20 @@ export default function DocumentPreview({ data }: Props) {
           </div>
 
           {/* Right: Document Info */}
-          <div className="w-[40%]">
+          <div className="w-1/3">
             <table className="w-full">
               <tbody>
                 <tr>
-                  <td className={`w-[60px] pb-1 ${labelColor} whitespace-nowrap`}>เลขที่</td>
+                  <td className={`w-[90px] whitespace-nowrap pb-1 ${labelColor}`}>เลขที่</td>
                   <td className={`pb-1 ${valueColor} font-bold`}>{data.documentNumber || ''}</td>
                 </tr>
                 <tr>
-                  <td className={`pb-1 ${labelColor}`}>วันที่</td>
+                  <td className={`w-[90px] whitespace-nowrap pb-1 ${labelColor}`}>วันที่</td>
                   <td className={`pb-1 ${valueColor} font-bold`}>{formatDate(data.date)}</td>
                 </tr>
                 {data.dueDate && (
                   <tr>
-                    <td className={`pb-1 ${labelColor}`}>{data.type === 'QUOTATION' ? 'ยืนยันราคาถึง' : 'ครบกำหนด'}</td>
+                    <td className={`w-[90px] whitespace-nowrap pb-1 ${labelColor}`}>{data.type === 'QUOTATION' ? 'ยืนยันราคาถึง' : 'ครบกำหนด'}</td>
                     <td className={`pb-1 ${valueColor} font-bold`}>{formatDate(data.dueDate)}</td>
                   </tr>
                 )}
@@ -569,11 +575,11 @@ export default function DocumentPreview({ data }: Props) {
             <table className="w-full">
               <tbody>
                 <tr>
-                  <td className={`w-[88px] pb-1 ${labelColor} whitespace-nowrap`}>ผู้ออก</td>
+                  <td className={`w-[120px] whitespace-nowrap pb-1 ${labelColor}`}>ผู้ออก</td>
                   <td className={`pb-1 ${valueColor} font-bold`}>{data.from.name || ''}</td>
                 </tr>
                 <tr>
-                  <td className={`align-top pb-1 ${labelColor} whitespace-nowrap`}>ที่อยู่</td>
+                  <td className={`w-[120px] align-top whitespace-nowrap pb-1 ${labelColor}`}>ที่อยู่</td>
                   <td className={`pb-1 ${valueColor} whitespace-pre-wrap`}>{data.from.address || ''}</td>
                 </tr>
               </tbody>
@@ -583,15 +589,15 @@ export default function DocumentPreview({ data }: Props) {
             <table className="w-full">
               <tbody>
                 <tr>
-                  <td className={`w-[130px] pb-1 ${labelColor} whitespace-nowrap`}>เลขประจำตัวผู้เสียภาษี</td>
+                  <td className={`w-[140px] whitespace-nowrap pb-1 ${labelColor}`}>เลขประจำตัวผู้เสียภาษี</td>
                   <td className={`pb-1 ${valueColor} font-bold`}>{data.from.taxId || ''}</td>
                 </tr>
                 <tr>
-                  <td className={`pb-1 ${labelColor} whitespace-nowrap w-[60px]`}>เบอร์โทร</td>
+                  <td className={`w-[140px] whitespace-nowrap pb-1 ${labelColor}`}>เบอร์โทร</td>
                   <td className={`pb-1 ${valueColor} font-bold`}>{data.from.phone || ''}</td>
                 </tr>
                 <tr>
-                  <td className={`pb-1 ${labelColor} whitespace-nowrap w-[60px]`}>อีเมล์</td>
+                  <td className={`w-[140px] whitespace-nowrap pb-1 ${labelColor}`}>อีเมล์</td>
                   <td className={`pb-1 ${valueColor} font-bold`}>{data.from.email || ''}</td>
                 </tr>
               </tbody>
@@ -695,7 +701,7 @@ export default function DocumentPreview({ data }: Props) {
 
           {/* Footer details: Payment and Signatures */}
           <div className="flex justify-between items-start text-[11px]">
-            <div className="w-1/2 pr-4 space-y-2">
+            <div className="w-[45%] pr-4 space-y-2">
               {data.paymentTerms && (
                 <>
                   <div className={`font-bold ${valueColor}`}>ช่องทางการชำระเงิน</div>
@@ -703,30 +709,40 @@ export default function DocumentPreview({ data }: Props) {
                 </>
               )}
             </div>
-            <div className="w-1/2 flex justify-between px-4">
+            <div className="w-[55%] flex justify-between pl-2">
               {/* Signature 1 */}
-              <div className="flex flex-col items-center">
-                <div className={`w-40 border-b border-stone-400 border-dashed mb-2 text-center pb-1 ${labelColor}`}>
-                  {data.type === 'QUOTATION' ? 'ผู้อนุมัติ' : 'ผู้อนุมัติ'}
+              <div className="flex flex-col pt-6">
+                <div className="flex items-end mb-1">
+                  <div className="flex flex-col items-center">
+                    <div className="w-[120px] border-b border-stone-400 border-dashed"></div>
+                    <div className={`text-center mt-1 ${labelColor}`}>
+                      (บุษยาพร สามารถ)
+                    </div>
+                  </div>
+                  <div className={`ml-2 mb-5 whitespace-nowrap ${labelColor}`}>
+                    ผู้อนุมัติ
+                  </div>
                 </div>
-                <div className={`text-center ${labelColor}`}>
-                  (บุษยาพร สามารถ)
-                </div>
-                <div className={`mt-4 flex gap-4 ${labelColor}`}>
+                <div className={`mt-4 flex gap-4 items-end pl-2 ${labelColor}`}>
                   <span>วันที่</span>
                   <span className="w-24 border-b border-stone-300 border-dashed inline-block text-center">{formatDate(data.date)}</span>
                 </div>
               </div>
               
               {/* Signature 2 */}
-              <div className="flex flex-col items-center">
-                <div className={`w-40 border-b border-stone-400 border-dashed mb-2 text-center pb-1 ${labelColor}`}>
-                  {data.type === 'QUOTATION' ? 'ผู้รับใบเสนอราคา' : isInvoice ? 'ผู้รับใบแจ้งหนี้' : 'ผู้รับใบเสร็จรับเงิน'}
+              <div className="flex flex-col pt-6">
+                <div className="flex items-end mb-1">
+                  <div className="flex flex-col items-center">
+                    <div className="w-[120px] border-b border-stone-400 border-dashed"></div>
+                    <div className={`text-center mt-1 w-[120px] break-words ${labelColor}`}>
+                      {data.to.name ? `(${data.to.name})` : '(                          )'}
+                    </div>
+                  </div>
+                  <div className={`ml-2 mb-5 whitespace-nowrap ${labelColor}`}>
+                    {data.type === 'QUOTATION' ? 'ผู้รับใบเสนอราคา' : isInvoice ? 'ผู้รับใบแจ้งหนี้' : 'ผู้รับใบเสร็จรับเงิน'}
+                  </div>
                 </div>
-                <div className={`text-center ${labelColor} w-48 break-words`}>
-                  {data.to.name ? `(${data.to.name})` : '(                          )'}
-                </div>
-                <div className={`mt-4 flex gap-4 ${labelColor}`}>
+                <div className={`mt-4 flex gap-4 items-end pl-2 ${labelColor}`}>
                   <span>วันที่</span>
                   <span className="w-24 border-b border-stone-300 border-dashed inline-block text-center text-transparent focus:text-stone-700">_</span>
                 </div>
