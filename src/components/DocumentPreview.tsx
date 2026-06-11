@@ -49,7 +49,19 @@ export default function DocumentPreview({ data }: Props) {
           <div className="flex-1 pr-8">
             {data.from.name ? (
               <div className="space-y-1.5 text-sm text-stone-600">
-                <h1 className="text-2xl font-bold text-stone-800 mb-4">{data.from.name}</h1>
+                <div className="flex items-center gap-3 mb-4">
+                  {(data.from.name.includes('วอนเดอร์ เซ้นท์') || data.from.name.toLowerCase().includes('wonder scent')) ? (
+                    <div className="relative flex items-center justify-center bg-white w-12 h-12 rounded-full border border-leaf-200/60 shadow-[0_2px_10px_rgba(0,0,0,0.03)] shrink-0 overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-tr from-leaf-100/30 to-transparent"></div>
+                      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="relative z-10 text-leaf-600">
+                        <path d="M12 2C12 2 14.5 9 19 12C14.5 15 12 22 12 22C12 22 9.5 15 5 12C9.5 9 12 2 12 2Z" fill="currentColor" fillOpacity="0.15" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
+                        <path d="M18 5C18 5 19 7.5 21 8C19 8.5 18 11 18 11C18 11 17 8.5 15 8C17 7.5 18 5 18 5Z" fill="currentColor" fillOpacity="0.4" stroke="currentColor" strokeWidth="1" strokeLinejoin="round"/>
+                        <path d="M7 3C7 3 7.5 4.5 8.5 4.75C7.5 5 7 6.5 7 6.5C7 6.5 6.5 5 5.5 4.75C6.5 4.5 7 3 7 3Z" fill="currentColor" fillOpacity="0.6" stroke="currentColor" strokeWidth="0.8" strokeLinejoin="round"/>
+                      </svg>
+                    </div>
+                  ) : null}
+                  <h1 className="text-2xl font-bold text-stone-800 tracking-tight">{data.from.name}</h1>
+                </div>
                 <p className="whitespace-pre-line leading-relaxed">{data.from.address}</p>
                 <div className="pt-2 space-y-0.5 text-[13px]">
                   {data.from.taxId && <p><span className="text-stone-400 w-32 inline-block">เลขประจำตัวผู้เสียภาษี:</span> <span className="text-stone-700 font-medium">{data.from.taxId}</span></p>}

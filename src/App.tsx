@@ -123,15 +123,22 @@ export default function App() {
     <div className="min-h-screen bg-sand-100 text-stone-800 font-sans print:bg-white flex flex-col print:block print:h-auto print:min-h-0">
       {/* Header */}
       <header className="bg-sand-50 border-b border-sand-200 px-4 md:px-6 py-3 flex flex-col md:flex-row md:items-center justify-between sticky top-0 z-10 no-print gap-4 shadow-sm">
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-clay-50/80 rounded-xl text-clay-600 border border-clay-100/50 shadow-sm">
-             <FileText size={22} />
+        <div className="flex items-center gap-4">
+          <div className="relative flex items-center justify-center w-12 h-12 bg-white rounded-full shadow-[0_2px_10px_rgba(0,0,0,0.04)] border border-leaf-200/50 group overflow-hidden shrink-0">
+            <div className="absolute inset-0 bg-gradient-to-tr from-leaf-100/40 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="relative z-10 text-leaf-600 transform group-hover:rotate-12 transition-transform duration-500">
+              <path d="M12 2C12 2 14.5 9 19 12C14.5 15 12 22 12 22C12 22 9.5 15 5 12C9.5 9 12 2 12 2Z" fill="currentColor" fillOpacity="0.15" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
+              <path d="M18 5C18 5 19 7.5 21 8C19 8.5 18 11 18 11C18 11 17 8.5 15 8C17 7.5 18 5 18 5Z" fill="currentColor" fillOpacity="0.3" stroke="currentColor" strokeWidth="1" strokeLinejoin="round"/>
+              <path d="M7 3C7 3 7.5 4.5 8.5 4.75C7.5 5 7 6.5 7 6.5C7 6.5 6.5 5 5.5 4.75C6.5 4.5 7 3 7 3Z" fill="currentColor" fillOpacity="0.5" stroke="currentColor" strokeWidth="0.8" strokeLinejoin="round"/>
+            </svg>
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h1 className="text-xl font-bold text-stone-800 leading-tight">ระบบออกเอกสารทางธุรกิจ</h1>
+              <h1 className="text-xl font-bold text-stone-800 tracking-tight flex items-baseline gap-1.5 uppercase font-serif">
+                WONDER <span className="text-leaf-600 font-medium">SCENT</span>
+              </h1>
               {user ? (
-                <span className="bg-leaf-50 text-leaf-700 border border-leaf-200 text-[10px] px-2 py-0.5 rounded-full font-semibold uppercase tracking-wider flex items-center gap-1"><Cloud size={12}/> Cloud Sync</span>
+                <span className="bg-leaf-50 text-leaf-700 border border-leaf-200 text-[10px] px-2 py-0.5 rounded-full font-semibold uppercase tracking-wider flex items-center gap-1"><Cloud size={12}/> Cloud</span>
               ) : (
                 <span className="bg-stone-100 text-stone-600 border border-stone-200 text-[10px] px-2 py-0.5 rounded-full font-semibold uppercase tracking-wider">Local</span>
               )}
@@ -142,7 +149,7 @@ export default function App() {
                 <button onClick={logOut} className="text-[10px] text-clay-500 hover:text-clay-700 underline">ออกจากระบบ</button>
               </div>
             ) : (
-              <p className="text-xs text-stone-500 font-medium mt-0.5">กรอกข้อมูลซ้าย • ดูตัวอย่างขวา</p>
+              <p className="text-xs text-stone-500 font-medium mt-0.5 tracking-wide">DOCUMENT GENERATOR</p>
             )}
           </div>
         </div>
