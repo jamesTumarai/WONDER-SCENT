@@ -37,7 +37,8 @@ const initialData: DocumentData = {
       unitPrice: 2500,
     }
   ],
-  notes: 'ช่องทางการชำระเงิน\nธนาคาร:\tกรุงไทย\tสาขา:\tซีคอนสแควร์\nชื่อบัญชี:\tวอนเดอร์ เซ้นท์\nเลขที่บัญชี:\t664-3-99101-3',
+  paymentTerms: 'ช่องทางการชำระเงิน\nธนาคาร:\tกรุงไทย\tสาขา:\tซีคอนสแควร์\nชื่อบัญชี:\tวอนเดอร์ เซ้นท์\nเลขที่บัญชี:\t664-3-99101-3',
+  notes: '',
   discount: 0,
   taxRate: 0,
   includeTax: false,
@@ -80,6 +81,7 @@ export default function App() {
         from: { name: '', address: '', taxId: '', phone: '', email: '', branch: '', contactPerson: '' },
         to: { name: '', address: '', taxId: '', phone: '', email: '', branch: '', contactPerson: '' },
         items: [{ id: crypto.randomUUID(), description: '', quantity: 1, unitPrice: 0 }],
+        paymentTerms: '',
         notes: '',
         discount: 0,
         taxRate: 7,

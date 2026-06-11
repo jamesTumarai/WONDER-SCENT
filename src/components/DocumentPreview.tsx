@@ -168,12 +168,20 @@ export default function DocumentPreview({ data }: Props) {
 
         {/* Totals & Notes Section */}
         <div className="flex flex-col md:flex-row justify-between items-start gap-12 mt-auto print:mt-12 pt-4 print:break-inside-avoid print:flex-nowrap print:flex-row">
-          {/* Notes */}
-          <div className="w-full md:w-1/2">
+          {/* Notes & Payment Terms */}
+          <div className="w-full md:w-1/2 space-y-4">
+            {data.paymentTerms && (
+               <div className="text-sm bg-stone-50/50 p-5 rounded-2xl border border-stone-100/80">
+                 <h4 className="font-semibold text-stone-500 mb-2.5 flex items-center gap-2 text-[11px] uppercase tracking-wider">
+                   เงื่อนไขการชำระเงิน
+                 </h4>
+                 <p className="whitespace-pre-line text-stone-600 leading-relaxed text-[13px]">{data.paymentTerms}</p>
+               </div>
+            )}
             {data.notes && (
               <div className="text-sm bg-stone-50/50 p-5 rounded-2xl border border-stone-100/80">
                 <h4 className="font-semibold text-stone-500 mb-2.5 flex items-center gap-2 text-[11px] uppercase tracking-wider">
-                  หมายเหตุ / เงื่อนไข
+                  หมายเหตุ
                 </h4>
                 <p className="whitespace-pre-line text-stone-600 leading-relaxed text-[13px]">{data.notes}</p>
               </div>

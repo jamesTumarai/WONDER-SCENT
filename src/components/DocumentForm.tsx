@@ -263,13 +263,24 @@ export default function DocumentForm({ data, onChange }: Props) {
         </div>
 
         <div className="mt-4">
-          <label className="block text-[11px] font-bold text-stone-500 mb-1.5 uppercase tracking-wider ml-1">เงื่อนไขการชำระเงิน / หมายเหตุ</label>
+          <label className="block text-[11px] font-bold text-stone-500 mb-1.5 uppercase tracking-wider ml-1">เงื่อนไขการชำระเงิน</label>
           <textarea 
-            rows={4}
+            rows={3}
+            value={data.paymentTerms || ''}
+            onChange={(e) => updateField('paymentTerms', e.target.value)}
+            className="w-full border-stone-200 outline-none rounded-2xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500/10 shadow-sm p-4 border text-sm resize-y min-h-[70px] transition-all text-stone-700 bg-white" 
+            placeholder="เช่น โอนเงินเข้าบัญชีธนาคาร..."
+          />
+        </div>
+        
+        <div className="mt-4">
+          <label className="block text-[11px] font-bold text-stone-500 mb-1.5 uppercase tracking-wider ml-1">หมายเหตุ</label>
+          <textarea 
+            rows={3}
             value={data.notes}
             onChange={(e) => updateField('notes', e.target.value)}
-            className="w-full border-stone-200 outline-none rounded-2xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500/10 shadow-sm p-4 border text-sm resize-y min-h-[90px] transition-all text-stone-700 bg-white" 
-            placeholder="เช่น ชำระเงินภายใน 30 วัน นับจากวันที่ออกใบแจ้งหนี้"
+            className="w-full border-stone-200 outline-none rounded-2xl focus:border-leaf-400 focus:ring-4 focus:ring-leaf-500/10 shadow-sm p-4 border text-sm resize-y min-h-[70px] transition-all text-stone-700 bg-white" 
+            placeholder="ข้อมูลเพิ่มเติมอื่นๆ (ถ้ามี)"
           />
         </div>
       </section>

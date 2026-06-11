@@ -25,6 +25,7 @@ export interface DocumentData {
   from: Entity;
   to: Entity;
   items: LineItem[];
+  paymentTerms?: string;
   notes: string;
   discount: number;
   taxRate: number;
