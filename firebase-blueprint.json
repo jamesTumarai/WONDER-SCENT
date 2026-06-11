@@ -1,0 +1,64 @@
+{
+  "entities": {
+    "Document": {
+      "title": "Document",
+      "description": "A business document (Quotation, Invoice, Receipt) created by the user.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Auth UID of the owner"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["QUOTATION", "INVOICE", "RECEIPT"]
+        },
+        "documentNumber": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string"
+        },
+        "dueDate": {
+          "type": "string"
+        },
+        "from": {
+          "type": "object"
+        },
+        "to": {
+          "type": "object"
+        },
+        "items": {
+          "type": "array"
+        },
+        "notes": {
+          "type": "string"
+        },
+        "discount": {
+          "type": "number"
+        },
+        "taxRate": {
+          "type": "number"
+        },
+        "includeTax": {
+          "type": "boolean"
+        },
+        "createdAt": {
+          "type": "number",
+          "description": "Timestamp of creation"
+        },
+        "updatedAt": {
+          "type": "number",
+          "description": "Timestamp of last update"
+        }
+      },
+      "required": ["userId", "type", "documentNumber", "date", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/documents/{documentId}": {
+      "schema": "Document",
+      "description": "All documents created by users"
+    }
+  }
+}

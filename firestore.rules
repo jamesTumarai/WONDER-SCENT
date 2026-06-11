@@ -1,0 +1,50 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null; // Will not use email_verified for now as we use Google Auth which is generally verified, but sometimes user wants simpler rules
+    }
+
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isValidDocument(data) {
+      return data.keys().hasAll(['userId', 'type', 'documentNumber', 'date', 'to', 'from', 'items', 'createdAt', 'updatedAt'])
+        && data.userId == request.auth.uid
+        && data.type in ['QUOTATION', 'INVOICE', 'RECEIPT']
+        && data.documentNumber is string && data.documentNumber.size() <= 100
+        && data.date is string && data.date.size() <= 100
+        && data.to is map
+        && data.from is map
+        && data.items is list
+        && (data.items.size() == 0 || (data.items.size() > 0 && data.items.size() <= 100));
+    }
+
+    match /documents/{documentId} {
+      allow get: if isSignedIn() && isValidId(documentId) && existing().userId == request.auth.uid;
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      
+      allow create: if isSignedIn() && isValidId(documentId)
+                    && isValidDocument(incoming())
+                    && incoming().createdAt == request.time
+                    && incoming().updatedAt == request.time;
+      
+      allow update: if isSignedIn() && isValidId(documentId) 
+                    && existing().userId == request.auth.uid
+                    && isValidDocument(incoming())
+                    && incoming().userId == existing().userId
+                    && incoming().createdAt == existing().createdAt
+                    && incoming().updatedAt == request.time;
+
+      allow delete: if isSignedIn() && isValidId(documentId) && existing().userId == request.auth.uid;
+    }
+  }
+}

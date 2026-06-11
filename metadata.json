@@ -1,0 +1,6 @@
+{
+  "name": "Invoice Generator",
+  "description": "Create professional Quotations, Invoices, and Receipts easily. Built with React and Tailwind CSS.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

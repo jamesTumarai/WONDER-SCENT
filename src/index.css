@@ -1,0 +1,69 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Kanit", ui-sans-serif, system-ui, sans-serif;
+
+  --color-leaf-400: #8F9776;
+  --color-leaf-500: #7C8363;
+  --color-leaf-600: #6A7054;
+  --color-leaf-700: #555A43;
+  --color-leaf-50: #F4F5F0;
+  --color-leaf-100: #E5E8DF;
+
+  --color-clay-400: #D09476;
+  --color-clay-500: #BA7E60;
+  --color-clay-600: #A06B50;
+  --color-clay-50: #F8F3F0;
+  --color-clay-100: #EBDAD1;
+  
+  --color-sand-50: #FCFAF8;
+  --color-sand-100: #F5F2EB;
+  --color-sand-200: #EAE6DF;
+}
+
+@layer utilities {
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 20px;
+  }
+}
+
+@media print {
+  @page {
+    size: A4;
+    margin: 10mm;
+  }
+  
+  html, body {
+    width: 210mm;
+    height: 297mm;
+    background: white;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+  
+  .print-only {
+    display: block !important;
+  }
+
+  .print-area {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    min-height: auto !important;
+  }
+}
