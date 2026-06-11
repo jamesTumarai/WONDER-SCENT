@@ -120,7 +120,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-sand-100 text-stone-800 font-sans print:bg-white flex flex-col">
+    <div className="min-h-screen bg-sand-100 text-stone-800 font-sans print:bg-white flex flex-col print:block print:h-auto print:min-h-0">
       {/* Header */}
       <header className="bg-sand-50 border-b border-sand-200 px-4 md:px-6 py-3 flex flex-col md:flex-row md:items-center justify-between sticky top-0 z-10 no-print gap-4 shadow-sm">
         <div className="flex items-center gap-3">
@@ -190,7 +190,7 @@ export default function App() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col xl:flex-row w-full mx-auto relative overflow-hidden">
+      <main className="flex-1 flex flex-col xl:flex-row w-full mx-auto relative overflow-hidden print:overflow-visible print:block">
         
         {/* Form Panel (Left) */}
         <section className={`w-full xl:w-[450px] 2xl:w-[500px] flex-shrink-0 bg-sand-50 border-r border-sand-200 no-print h-[calc(100vh-73px)] overflow-y-auto custom-scrollbar transition-all duration-300 ${showSavedDocs ? '-ml-[500px]' : 'ml-0'}`}>
@@ -215,10 +215,10 @@ export default function App() {
         )}
 
         {/* Preview Panel (Right) */}
-        <section className="flex-1 p-6 md:p-8 xl:p-12 h-[calc(100vh-73px)] overflow-y-auto flex justify-center bg-sand-100 print:bg-white print:p-0 print:block custom-scrollbar items-start relative z-0">
+        <section className="flex-1 p-6 md:p-8 xl:p-12 h-[calc(100vh-73px)] print:h-auto print:overflow-visible overflow-y-auto flex justify-center bg-sand-100 print:bg-white print:p-0 print:block custom-scrollbar items-start relative z-0">
           <div className="bg-white shadow-xl shadow-stone-200/50 rounded-2xl print:shadow-none print:rounded-none w-full max-w-[210mm] max-h-min self-start print:max-w-none print:w-full overflow-hidden border border-sand-200 print:border-none">
             {/* Aspect ratio A4 for realistic preview */}
-            <div className="print-area min-h-[297mm]">
+            <div className="print-area min-h-[297mm] print:min-h-0">
                <DocumentPreview data={data} />
             </div>
           </div>
