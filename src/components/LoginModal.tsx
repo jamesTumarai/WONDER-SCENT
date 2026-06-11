@@ -4,9 +4,10 @@ import { LogIn, Loader2, X } from 'lucide-react';
 
 interface Props {
   onClose: () => void;
+  closable?: boolean;
 }
 
-export default function LoginModal({ onClose }: Props) {
+export default function LoginModal({ onClose, closable = true }: Props) {
   const { signIn } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -41,12 +42,14 @@ export default function LoginModal({ onClose }: Props) {
           <h2 className="text-xl font-bold text-stone-800 flex items-center gap-2">
             <LogIn size={20} className="text-leaf-600" /> เข้าสู่ระบบ
           </h2>
-          <button 
-            onClick={onClose}
-            className="p-1.5 text-stone-400 hover:text-stone-600 hover:bg-stone-100 rounded-lg transition-all duration-200 active:scale-90"
-          >
-            <X size={20} />
-          </button>
+          {closable && (
+            <button 
+              onClick={onClose}
+              className="p-1.5 text-stone-400 hover:text-stone-600 hover:bg-stone-100 rounded-lg transition-all duration-200 active:scale-90"
+            >
+              <X size={20} />
+            </button>
+          )}
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">

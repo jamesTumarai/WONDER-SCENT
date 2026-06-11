@@ -12,14 +12,13 @@ export default function DocumentPreview({ data }: Props) {
 
   const title = {
     th: isQuotation ? 'ใบเสนอราคา' : isInvoice ? 'ใบแจ้งหนี้' : 'ใบเสร็จรับเงิน',
-    en: isQuotation ? 'Quotation' : isInvoice ? 'Invoice' : 'Receipt'
+    en: isQuotation ? 'quotation' : isInvoice ? 'invoice' : 'receipt'
   };
 
   const formatDate = (dateStr: string) => {
-    if (!dateStr) return '-';
-    // Format to DD/MM/YYYY
+    if (!dateStr) return '';
     const [y, m, d] = dateStr.split('-');
-    return `${d} ${getMonthName(m)} ${parseInt(y) + 543}`;
+    return `${parseInt(d)} ${getMonthName(m)} ${parseInt(y) + 543}`;
   };
 
   const getMonthName = (m: string) => {
@@ -28,7 +27,7 @@ export default function DocumentPreview({ data }: Props) {
   };
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(amount).replace('THB', '฿');
+    return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(amount);
   };
 
   // Calculate totals
@@ -44,86 +43,451 @@ export default function DocumentPreview({ data }: Props) {
 
   const theme = data.themeColor || 'stone';
   const colorMap = {
-    stone: { bg: 'bg-stone-500', text: 'text-stone-800', textLight: 'text-stone-500', hoverBorder: 'group-hover:border-stone-400' },
-    slate: { bg: 'bg-slate-500', text: 'text-slate-800', textLight: 'text-slate-500', hoverBorder: 'group-hover:border-slate-400' },
-    zinc: { bg: 'bg-zinc-500', text: 'text-zinc-800', textLight: 'text-zinc-500', hoverBorder: 'group-hover:border-zinc-400' },
-    leaf: { bg: 'bg-leaf-500', text: 'text-leaf-600', textLight: 'text-leaf-600 opacity-60', hoverBorder: 'group-hover:border-leaf-400' },
-    clay: { bg: 'bg-clay-500', text: 'text-clay-600', textLight: 'text-clay-600 opacity-60', hoverBorder: 'group-hover:border-clay-400' },
-    blue: { bg: 'bg-blue-500', text: 'text-blue-600', textLight: 'text-blue-500 opacity-60', hoverBorder: 'group-hover:border-blue-400' },
+    stone: { bg: 'bg-[#703030]', text: 'text-[#703030]', border: 'border-[#703030]', label: 'text-[#0e7490]' },
+    slate: { bg: 'bg-slate-700', text: 'text-slate-700', border: 'border-slate-700', label: 'text-slate-600' },
+    zinc: { bg: 'bg-zinc-700', text: 'text-zinc-700', border: 'border-zinc-700', label: 'text-zinc-600' },
+    leaf: { bg: 'bg-leaf-700', text: 'text-leaf-700', border: 'border-leaf-700', label: 'text-leaf-600' },
+    clay: { bg: 'bg-clay-700', text: 'text-clay-700', border: 'border-clay-700', label: 'text-clay-600' },
+    blue: { bg: 'bg-blue-700', text: 'text-blue-700', border: 'border-blue-700', label: 'text-blue-600' },
   };
   const c = colorMap[theme as keyof typeof colorMap] || colorMap.stone;
+  
+  // Custom label color for matching the image (cyan-ish), but use theme color if preferred.
+  // The image uses a cyan-teal color for labels, and dark brown for headers.
+  const labelColor = "text-cyan-800";
+  const valueColor = "text-cyan-900";
 
   const fontStyle = data.fontFamily === 'prompt' ? '"Prompt", sans-serif' : data.fontFamily === 'sarabun' ? '"Sarabun", sans-serif' : 'sans-serif';
 
-  return (
-    <div className={`text-[14px] text-stone-800 bg-white min-h-[295mm] print:min-h-0 relative flex flex-col justify-between print:block font-medium`} style={{ fontFamily: fontStyle }}>
-      {/* Top Border Bar */}
-      <div className={`h-2 w-full ${c.bg} absolute top-0 left-0 right-0 print:hidden`}></div>
+  if (isQuotation) {
+    return (
+      <div className={`text-[12px] text-stone-800 bg-white min-h-[295mm] print:min-h-0 relative flex flex-col justify-between print:block font-medium`} style={{ fontFamily: fontStyle }}>
+        <div className="pt-12 pb-12 px-12 flex flex-col flex-1 print:block">
+          
+          {/* Header */}
+          <div className="flex gap-6 mb-6">
+            <div className="w-32 h-32 shrink-0">
+              {data.from.logo || data.from.name.includes('วอนเดอร์') ? (
+                <img src={data.from.logo || '/33.png'} alt="Logo" className="w-full h-full object-contain object-left-top" />
+              ) : (
+                <div className="text-xl font-bold">{data.from.name}</div>
+              )}
+            </div>
+            <div className="flex-1 pt-1">
+              <h1 className="text-xl font-bold">{data.from.name}</h1>
+              {!data.from.name.toLowerCase().includes('wonder') && (
+                 <h2 className="text-xl font-bold uppercase tracking-wide">WONDER SCENT</h2>
+              )}
+              <div className="text-[11px] mt-2 leading-relaxed">
+                <div>ที่อยู่: {data.from.address || ''}</div>
+                <div>เบอร์โทร: {data.from.phone || ''} อีเมล: {data.from.email || ''}</div>
+                <div>หมายเลขประจำตัวผู้เสียภาษี: {data.from.taxId || ''}</div>
+              </div>
+            </div>
+          </div>
 
-      <div className="pt-10 pb-8 px-12 flex flex-col flex-1 print:block">
-        
-        {/* Top Header: Sender Left, Title Right */}
-        <div className="flex justify-between items-start mb-6">
-          {/* Sender */}
-          <div className="flex-1 pr-8">
-            {data.from.name ? (
-              <div className="space-y-1.5 text-sm text-stone-600">
-                <div className="flex flex-col items-start gap-2 mb-2">
-                  {data.from.logo ? (
-                    <div className="relative shrink-0">
-                      <img src={data.from.logo} alt="Company Logo" className="h-16 sm:h-20 object-contain object-left rounded-xl" />
-                    </div>
-                  ) : (data.from.name.replace(/\s/g, '').toLowerCase().includes('วอนเดอร์เซ้นท์') || data.from.name.replace(/\s/g, '').toLowerCase().includes('wonderscent')) ? (
-                    <div className="relative shrink-0">
-                      <img src="/33.png" alt="Company Logo" className="h-16 sm:h-20 object-contain object-left rounded-xl" />
-                    </div>
-                  ) : null}
-                  {!(data.from.logo || data.from.name.replace(/\s/g, '').toLowerCase().includes('วอนเดอร์เซ้นท์') || data.from.name.replace(/\s/g, '').toLowerCase().includes('wonderscent')) && <h1 className={`text-xl font-bold ${c.text} tracking-tight`}>{data.from.name}</h1>}
-                </div>
-                {(data.from.logo || data.from.name.replace(/\s/g, '').toLowerCase().includes('วอนเดอร์เซ้นท์') || data.from.name.replace(/\s/g, '').toLowerCase().includes('wonderscent')) && (
-                  <div className="pb-1">
-                    <h1 className={`text-base font-bold text-stone-800 tracking-tight`}>{data.from.name}</h1>
-                    {!data.from.name.toLowerCase().includes('wonder scent') && (
-                      <h2 className="text-sm font-bold text-stone-600 tracking-tight uppercase mt-0.5">WONDER SCENT</h2>
-                    )}
-                  </div>
+          {/* Title Box */}
+          <div className="flex justify-center mb-6">
+            <div className="border-2 border-[#703030] rounded-xl px-12 py-1.5 text-center text-[#703030]">
+              <h2 className="text-lg font-bold">ใบเสนอราคา</h2>
+              <h3 className="font-bold">Quotation</h3>
+            </div>
+          </div>
+
+          {/* Customer Info */}
+          <div className="text-[11px] flex justify-between mb-2">
+            <div className="flex-1 pr-4">
+              <table className="w-full">
+                <tbody>
+                  <tr>
+                    <td className="w-16 py-0.5 align-top">นามลูกค้า</td>
+                    <td className="py-0.5">บริษัท {data.to.name || ''}</td>
+                  </tr>
+                  <tr>
+                    <td className="w-16 py-0.5 align-top">ที่อยู่</td>
+                    <td className="py-0.5">{data.to.address || ''}</td>
+                  </tr>
+                  <tr>
+                    <td className="w-16 py-0.5 align-top"></td>
+                    <td className="py-0.5">ผู้ติดต่อ: {data.to.contactPerson || '-'} เบอร์โทร: {data.to.phone || '-'}</td>
+                  </tr>
+                  <tr>
+                    <td className="w-16 py-0.5 align-top whitespace-nowrap">เลขประจำตัวผู้เสียภาษี</td>
+                    <td className="py-0.5 pl-[72px] flex items-center gap-6">
+                      <span>{data.to.taxId || ''}</span>
+                      <div className="flex items-center gap-2">
+                        <div className={`w-3.5 h-3.5 border border-black flex items-center justify-center font-bold pb-0.5 ${!data.to.branch || data.to.branch === 'สำนักงานใหญ่' ? 'text-black' : 'text-transparent'}`}>X</div> 
+                        <span>สำนักงานใหญ่</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className={`w-3.5 h-3.5 border border-black flex items-center justify-center font-bold pb-0.5 ${data.to.branch && data.to.branch !== 'สำนักงานใหญ่' ? 'text-black' : 'text-transparent'}`}>X</div> 
+                        <span>สาขาที่ {data.to.branch && data.to.branch !== 'สำนักงานใหญ่' ? <span className="border-b border-dashed border-black px-2 inline-block min-w-[60px] text-center">{data.to.branch}</span> : '....................'}</span>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div className="w-48 text-[11px]">
+               <div className="flex justify-end gap-4 py-0.5">
+                 <span>วันที่</span>
+                 <span>{formatDate(data.date)}</span>
+               </div>
+            </div>
+          </div>
+
+          {/* Table */}
+          <div className="mb-4 flex-1">
+            <table className="w-full text-left border-collapse border-2 border-black">
+              <thead>
+                <tr className="bg-[#703030] text-white">
+                  <th className="py-2.5 px-3 font-medium text-center w-12 text-[11px] border border-black">ลำดับ</th>
+                  <th className="py-2.5 px-6 font-medium text-[11px] border border-black text-center">รายการ</th>
+                  <th className="py-2.5 px-4 text-center font-medium w-24 text-[11px] border border-black">จำนวน</th>
+                  <th className="py-2.5 px-4 text-center font-medium w-28 text-[11px] border border-black">{data.columnSettings?.price1Label || 'ราคา/เดือน'}</th>
+                  {data.columnSettings?.showPrice2 && (
+                    <th className="py-2.5 px-4 text-center font-medium w-28 text-[11px] border border-black">{data.columnSettings?.price2Label || 'ราคา/ปี'}</th>
+                  )}
+                  <th className="py-2.5 px-6 text-center font-medium w-32 text-[11px] border border-black">ราคารวม</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.items.length === 0 ? (
+                  <tr className="h-6">
+                    <td className="py-4 border border-black"></td><td className="border border-black"></td><td className="border border-black"></td><td className="border border-black"></td>
+                    {data.columnSettings?.showPrice2 && <td className="border border-black"></td>}
+                    <td className="border border-black"></td>
+                  </tr>
+                ) : (
+                  data.items.map((item, index) => (
+                    <tr key={item.id} className="h-6">
+                      <td className="py-2 px-3 text-center border border-black text-[11px] align-top">{index + 1}</td>
+                      <td className="py-2 px-6 border text-stone-800 align-top break-words text-[11px] border-black">
+                        <div className="whitespace-pre-wrap">{item.description || ''}</div>
+                      </td>
+                      <td className="py-2 px-4 text-center align-top text-[11px] border border-black">{item.quantity}</td>
+                      <td className="py-2 px-4 text-right align-top text-[11px] border border-black">{formatCurrency(item.unitPrice)}</td>
+                      {data.columnSettings?.showPrice2 && (
+                        <td className="py-2 px-4 text-right align-top text-[11px] border border-black">{formatCurrency(item.unitPrice2 || 0)}</td>
+                      )}
+                      <td className="py-2 px-6 text-right align-top text-[11px] border border-black">{formatCurrency(item.amount !== undefined ? item.amount : ((item.quantity || 0) * (item.unitPrice || 0) + (data.columnSettings?.showPrice2 ? (item.quantity || 0) * (item.unitPrice2 || 0) : 0)))}</td>
+                    </tr>
+                  ))
                 )}
-                <p className="whitespace-pre-line break-words leading-relaxed text-xs">{data.from.address}</p>
-                <div className="pt-1 space-y-0 text-xs">
-                  {data.from.taxId && <p><span className="text-stone-400 w-28 inline-block">เลขประจำตัวผู้เสียภาษี:</span> <span className="text-stone-700 font-medium">{data.from.taxId}</span></p>}
-                  {data.from.branch && <p><span className="text-stone-400 w-28 inline-block">สาขา:</span> <span className="text-stone-700 font-medium">{data.from.branch}</span></p>}
-                  {data.from.phone && <p><span className="text-stone-400 w-28 inline-block">เบอร์โทรศัพท์:</span> <span className="text-stone-700 font-medium">{data.from.phone}</span></p>}
-                  {data.from.email && <p><span className="text-stone-400 w-28 inline-block">อีเมล:</span> <span className="text-stone-700 font-medium">{data.from.email}</span></p>}
+                
+                {data.paymentTerms && (
+                  <tr className="h-6">
+                    <td className="border border-black"></td>
+                    <td className="py-2 px-6 border text-stone-800 align-top break-words text-[11px] border-black">
+                      <div className="whitespace-pre-wrap py-2">{data.paymentTerms}</div>
+                    </td>
+                    <td className="border border-black"></td>
+                    <td className="border border-black"></td>
+                    {data.columnSettings?.showPrice2 && <td className="border border-black"></td>}
+                    <td className="border border-black"></td>
+                  </tr>
+                )}
+
+                {data.notes && (
+                  <tr className="h-6">
+                    <td className="border border-black"></td>
+                    <td className="py-2 px-6 border text-stone-800 align-top break-words text-[11px] border-black">
+                      <div className="font-bold italic underline mb-1">หมายเหตุ:</div>
+                      <div className="whitespace-pre-wrap leading-relaxed pb-2">{data.notes}</div>
+                    </td>
+                    <td className="border border-black"></td>
+                    <td className="border border-black"></td>
+                    {data.columnSettings?.showPrice2 && <td className="border border-black"></td>}
+                    <td className="border border-black"></td>
+                  </tr>
+                )}
+
+                {/* Fill empty rows visually */}
+                {Array.from({ length: Math.max(0, 5 - data.items.length) }).map((_, i) => (
+                  <tr key={`empty-${i}`} className="h-8">
+                    <td className="border border-black"></td>
+                    <td className="border border-black"></td>
+                    <td className="border border-black"></td>
+                    <td className="border border-black"></td>
+                    {data.columnSettings?.showPrice2 && <td className="border border-black"></td>}
+                    <td className="border border-black"></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            
+            <div className="flex border-b-2 border-l-2 border-r-2 border-black font-semibold text-[11px]">
+               <div className="flex-1 flex flex-col justify-center border-r border-black">
+                  <div className="px-4 py-2 flex items-center h-full gap-8">
+                     <span className="font-bold">ตัวอักษร.</span>
+                     <span className="flex-1 text-center font-normal">({THBText(grandTotal)})</span>
+                  </div>
+               </div>
+               <div className="w-56 flex flex-col border-r border-black bg-white">
+                  <div className="border-b border-black px-4 py-2 h-1/2 flex items-center">รวมเงิน</div>
+                  <div className="px-4 py-2 h-1/2 flex items-center">จำนวนเงินทั้งสิ้น</div>
+               </div>
+               <div className="w-32 flex flex-col bg-[#DEEAEB] text-black">
+                  <div className="border-b border-black px-6 py-2 h-1/2 flex items-center justify-end font-normal bg-white">{formatCurrency(subTotal)}</div>
+                  <div className="px-6 py-2 h-1/2 flex items-center justify-end font-bold bg-white">{formatCurrency(grandTotal)}</div>
+               </div>
+            </div>
+          </div>
+
+          {/* Signatures */}
+          <div className="flex gap-2 text-[11px] print:break-inside-avoid">
+            <div className="w-[60%] flex border-2 border-black">
+              <div className="w-1/2 flex flex-col p-3 border-r border-black">
+                <div className="font-bold mb-4">{data.to.name ? `บริษัท ${data.to.name}` : 'บริษัท'}</div>
+                <div className="mt-auto space-y-4 pt-12">
+                  <div className="flex gap-2 items-end">
+                    <span className="w-10">ผู้อนุมัติ</span>
+                    <span className="flex-1 border-b border-dashed border-black"></span>
+                  </div>
+                  <div className="flex gap-2 items-end">
+                    <span className="w-10">วันที่</span>
+                    <span className="flex-1 border-b border-dashed border-black text-transparent focus:text-stone-700">_</span>
+                  </div>
                 </div>
               </div>
-            ) : (
-              <div className="w-32 h-32 bg-stone-50 border border-stone-100 rounded-2xl flex items-center justify-center text-stone-300 italic text-sm">
-                โลโก้บริษัท
+              <div className="w-1/2 flex flex-col p-3">
+                <div className="mt-auto space-y-4 pt-12">
+                  <div className="flex gap-2 items-end">
+                    <span className="w-16">ผู้เสนอราคา</span>
+                    <span className="flex-1 text-center border-b border-dashed border-black">{data.from.name || ''}</span>
+                  </div>
+                  <div className="flex gap-2 items-end">
+                    <span className="w-16">วันที่</span>
+                    <span className="flex-1 text-center border-b border-dashed border-black">{formatDate(data.date)}</span>
+                  </div>
+                </div>
               </div>
+            </div>
+            
+            <div className="flex-1 flex flex-col border-2 border-black p-3 text-center justify-between">
+              <div className="font-bold uppercase tracking-wide">{(data.from.name && data.from.name.toLowerCase().includes('wonder') ? 'WONDER SCENT' : data.from.name)}</div>
+              <div className="mt-auto w-full px-6 pt-12">
+                <div className="border-b border-dashed border-black w-full mb-1.5"></div>
+                <div>ผู้มีอำนาจลงนาม</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    );
+  }
+
+  if (isReceipt) {
+    return (
+      <div className={`text-[12px] text-stone-800 bg-white min-h-[295mm] print:min-h-0 relative flex flex-col justify-between print:block font-medium`} style={{ fontFamily: fontStyle }}>
+        <div className="pt-16 pb-12 px-16 flex flex-col flex-1 print:block">
+          
+          <div className="text-center relative mb-12">
+             <h1 className="text-2xl font-bold">ใบเสร็จรับเงิน</h1>
+             <div className="absolute right-0 top-0 text-left text-[11px] leading-relaxed">
+               <div className="grid grid-cols-[max-content_1fr] gap-x-2 gap-y-1">
+                 <span className="w-8">เลขที่</span>
+                 <span className="min-w-[120px] inline-block">{data.documentNumber}</span>
+                 <span className="w-8">วันที่</span>
+                 <span className="min-w-[120px] inline-block">{formatDate(data.date)}</span>
+               </div>
+             </div>
+          </div>
+
+          <div className="text-[12px] leading-relaxed mb-6 space-y-4">
+            <div className="flex gap-2 items-end">
+              <span className="w-[130px] pb-0.5">ชื่อกิจการ</span>
+              <span className="flex-1 font-bold border-b border-dashed border-stone-800 text-center pb-0.5">{data.from.name}</span>
+              <span className="w-48 text-stone-800 text-right pb-0.5">(ผู้ขายสินค้า/ให้บริการ)</span>
+            </div>
+            
+            <div className="flex gap-2 items-end">
+              <span className="w-[130px] pb-0.5">เลขประจำตัวผู้เสียภาษี</span>
+              <span className="flex-1 font-bold border-b border-dashed border-stone-800 text-center pb-0.5">{data.from.taxId}</span>
+              <span className="w-16 text-center pb-0.5">โทรศัพท์</span>
+              <span className="w-48 font-bold border-b border-dashed border-stone-800 text-center pb-0.5">{data.from.phone}</span>
+            </div>
+
+            <div className="flex gap-2 items-end">
+              <span className="w-[130px] pb-0.5">ที่อยู่</span>
+              <span className="flex-1 font-bold border-b border-dashed border-stone-800 pb-0.5 px-8 whitespace-pre-wrap break-words">{data.from.address}</span>
+            </div>
+            
+            <div className="flex gap-2 items-end pt-2">
+              <span className="w-[130px] pb-0.5">ได้รับเงินจาก</span>
+              <span className="flex-1 font-bold border-b border-dashed border-stone-800 text-center pb-0.5">{data.to.name}</span>
+              <span className="w-64 text-stone-800 text-right pb-0.5">(ผู้ซื้อ/ผู้รับบริการ) ดังรายการต่อไปนี้</span>
+            </div>
+            
+            <div className="flex gap-2 items-end">
+              <span className="w-[130px] pb-0.5">ที่อยู่</span>
+              <span className="flex-1 font-bold border-b border-dashed border-stone-800 pb-0.5 px-8 whitespace-pre-wrap break-words">{data.to.address}</span>
+            </div>
+          </div>
+
+          {/* Table */}
+          <div className="mb-12 flex-1">
+            <table className="w-full text-left border-collapse border-2 border-black">
+              <thead>
+                <tr className="bg-[#2A939C] text-white">
+                  <th className="py-2 px-3 font-medium text-center w-16 text-[11px] border border-black">ลำดับ</th>
+                  <th className="py-2 px-6 font-medium text-[11px] border border-black text-center">รายการ (ชนิด/ชื่อ)</th>
+                  <th className="py-2 px-4 text-center font-medium w-20 text-[11px] border border-black">จำนวน</th>
+                  <th className="py-2 px-4 text-center font-medium w-28 text-[11px] border border-black">{data.columnSettings?.price1Label || 'ราคา/หน่วย'}</th>
+                  {data.columnSettings?.showPrice2 && (
+                    <th className="py-2 px-4 text-center font-medium w-28 text-[11px] border border-black">{data.columnSettings?.price2Label || 'ราคา/ปี'}</th>
+                  )}
+                  <th className="py-2 px-6 text-center font-medium w-32 text-[11px] border border-black">จำนวนเงิน</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.items.length === 0 ? (
+                  <tr>
+                    <td className={`py-4 px-3 text-center border border-black text-[11px]`}>1</td>
+                    <td className={`py-4 px-6 border border-black text-[11px]`}></td>
+                    <td className={`py-4 px-4 text-center border border-black text-[11px]`}></td>
+                    <td className={`py-4 px-4 text-center border border-black text-[11px]`}></td>
+                    {data.columnSettings?.showPrice2 && <td className={`py-4 px-4 text-center border border-black text-[11px]`}></td>}
+                    <td className={`py-4 px-6 text-center border border-black text-[11px]`}></td>
+                  </tr>
+                ) : (
+                  data.items.map((item, index) => (
+                    <tr key={item.id} className="h-6">
+                      <td className={`py-2 px-3 text-center border border-black text-[11px] align-top`}>{index + 1}</td>
+                      <td className={`py-2 px-6 border text-stone-800 align-top break-words text-[11px] border-black`}>
+                        <div className="whitespace-pre-wrap">{item.description || ''}</div>
+                      </td>
+                      <td className={`py-2 px-4 text-center align-top text-[11px] border border-black`}>{item.quantity}</td>
+                      <td className={`py-2 px-4 text-right align-top text-[11px] border border-black`}>{formatCurrency(item.unitPrice)}</td>
+                      {data.columnSettings?.showPrice2 && (
+                        <td className={`py-2 px-4 text-right align-top text-[11px] border border-black`}>{formatCurrency(item.unitPrice2 || 0)}</td>
+                      )}
+                      <td className={`py-2 px-6 text-right align-top text-[11px] border border-black`}>
+                        {formatCurrency(item.amount !== undefined ? item.amount : ((item.quantity || 0) * (item.unitPrice || 0) + (data.columnSettings?.showPrice2 ? (item.quantity || 0) * (item.unitPrice2 || 0) : 0)))}
+                      </td>
+                    </tr>
+                  ))
+                )}
+                {/* Fill empty rows to make the table look full if there are few items */}
+                {data.items.length > 0 && Array.from({ length: Math.max(0, 15 - data.items.length) }).map((_, i) => (
+                   <tr key={`empty-${i}`} className="h-6">
+                      <td className="border border-black"></td>
+                      <td className="border border-black"></td>
+                      <td className="border border-black"></td>
+                      <td className="border border-black"></td>
+                      {data.columnSettings?.showPrice2 && <td className="border border-black"></td>}
+                      <td className="border border-black"></td>
+                   </tr>
+                ))}
+              </tbody>
+            </table>
+            
+            <div className="flex border-b-2 border-l-2 border-r-2 border-black font-semibold">
+               <div className="flex-1 bg-[#DEEAEB] flex items-center justify-center border-r border-black p-2 text-center">
+                  ( {THBText(grandTotal)} )
+               </div>
+               <div className="w-28 flex items-center justify-center p-2 border-r border-black bg-white">
+                  รวมทั้งสิ้น
+               </div>
+               <div className="w-32 flex items-center justify-end px-6 py-2 bg-[#DEEAEB]">
+                  {formatCurrency(grandTotal)}
+               </div>
+            </div>
+          </div>
+
+          <div className="flex justify-end mt-16 pb-12 print:break-inside-avoid">
+            <div className="text-center text-[11px]">
+              <div className="flex items-end gap-2 mb-3">
+                <span>ลงชื่อ</span>
+                <span className="w-64 border-b border-black inline-block"></span>
+              </div>
+              <div className="pr-4">ผู้รับเงิน</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={`text-[12px] text-stone-800 bg-white min-h-[295mm] print:min-h-0 relative flex flex-col justify-between print:block font-medium`} style={{ fontFamily: fontStyle }}>
+      
+      <div className="pt-8 pb-8 px-12 flex flex-col flex-1 print:block">
+        
+        {/* Header: Logo and Title */}
+        <div className="flex justify-between items-start mb-4">
+          <div>
+            {data.from.logo ? (
+              <img src={data.from.logo} alt="Company Logo" className="h-24 object-contain object-left" />
+            ) : (data.from.name.replace(/\s/g, '').toLowerCase().includes('วอนเดอร์เซ้นท์') || data.from.name.replace(/\s/g, '').toLowerCase().includes('wonderscent')) ? (
+              <img src="/33.png" alt="Company Logo" className="h-24 object-contain object-left" />
+            ) : (
+              <h1 className={`text-2xl font-bold ${c.text}`}>{data.from.name}</h1>
             )}
           </div>
-          
-          {/* Document Details */}
-          <div className="text-right w-64">
-            <h1 className={`text-3xl font-bold ${c.text} mb-1`}>{title.th}</h1>
-            <h2 className={`font-semibold ${c.textLight} tracking-[0.2em] text-[10px] uppercase mb-4`}>{title.en}</h2>
-            
-            <table className="w-full text-xs">
+          <div className="text-right flex items-baseline gap-2 pt-4">
+            <h1 className={`text-5xl font-bold ${c.text} tracking-tighter lowercase`}>{title.en}</h1>
+            <span className={`text-2xl font-bold ${c.text}`}>/ {title.th}</span>
+          </div>
+        </div>
+
+        {/* Separator */}
+        <div className={`w-full border-b border-stone-800 mb-4`}></div>
+
+        {/* Info Grid */}
+        <div className="flex justify-between items-start mb-6 text-[11px] leading-relaxed">
+          {/* Left: Customer Info */}
+          <div className="w-2/3 pr-8">
+            <table className="w-full">
               <tbody>
                 <tr>
-                  <td className="py-1.5 text-stone-400 font-medium">เลขที่</td>
-                  <td className="py-1.5 font-bold text-stone-800">{data.documentNumber || '-'}</td>
+                  <td className={`w-28 pb-1 ${labelColor}`}>ชื่อลูกค้า</td>
+                  <td className={`pb-1 ${valueColor} font-bold`}>{data.to.name || ''}</td>
+                  {data.to.branch && (
+                    <>
+                      <td className={`w-16 pb-1 ${labelColor} pl-2`}>สาขา</td>
+                      <td className={`pb-1 ${valueColor} font-bold`}>{data.to.branch}</td>
+                    </>
+                  )}
                 </tr>
                 <tr>
-                  <td className="py-1.5 text-stone-400 font-medium">วันที่ออก</td>
-                  <td className="py-1.5 font-medium text-stone-800">{formatDate(data.date)}</td>
+                  <td className={`align-top pb-1 ${labelColor}`}>ที่อยู่</td>
+                  <td colSpan={3} className={`pb-1 ${valueColor} whitespace-pre-wrap`}>{data.to.address || ''}</td>
+                </tr>
+                <tr>
+                  <td className={`pb-1 ${labelColor}`}>เลขผู้เสียภาษี</td>
+                  <td className={`pb-1 ${valueColor}`}>{data.to.taxId || ''}</td>
+                  <td className={`pb-1 ${labelColor} pl-2`}>เบอร์โทรศัพท์</td>
+                  <td className={`pb-1 ${valueColor}`}>{data.to.phone || ''}</td>
+                </tr>
+                {data.to.contactPerson && (
+                  <tr>
+                    <td className={`pb-1 ${labelColor}`}>ผู้ติดต่อ</td>
+                    <td colSpan={3} className={`pb-1 ${valueColor}`}>{data.to.contactPerson}</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Right: Document Info */}
+          <div className="w-1/3">
+            <table className="w-full">
+              <tbody>
+                <tr>
+                  <td className={`w-24 pb-1 ${labelColor}`}>เลขที่</td>
+                  <td className={`pb-1 ${valueColor} font-bold`}>{data.documentNumber || ''}</td>
+                </tr>
+                <tr>
+                  <td className={`pb-1 ${labelColor}`}>วันที่</td>
+                  <td className={`pb-1 ${valueColor} font-bold`}>{formatDate(data.date)}</td>
                 </tr>
                 {data.dueDate && (
                   <tr>
-                    <td className="py-1.5 text-stone-400 font-medium">
-                      {data.type === 'QUOTATION' ? 'ยืนยันราคาถึง' : 'วันครบกำหนด'}
-                    </td>
-                    <td className="py-1.5 font-medium text-stone-800">{formatDate(data.dueDate)}</td>
+                    <td className={`pb-1 ${labelColor}`}>{data.type === 'QUOTATION' ? 'ยืนยันราคาถึง' : 'ครบกำหนด'}</td>
+                    <td className={`pb-1 ${valueColor} font-bold`}>{formatDate(data.dueDate)}</td>
                   </tr>
                 )}
               </tbody>
@@ -131,67 +495,82 @@ export default function DocumentPreview({ data }: Props) {
           </div>
         </div>
 
-        {/* Customer Information Section */}
-        <div className="mb-6 p-4 bg-sand-50 rounded-2xl border border-stone-100 w-full max-w-xl">
-          <h4 className={`font-bold ${c.text} text-[10px] tracking-wider uppercase mb-2 flex items-center gap-2`}>
-            ลูกค้า (Customer)
-          </h4>
-          {data.to.name ? (
-             <div className="space-y-0.5 text-[12px] text-stone-600">
-               <p className="font-bold text-stone-800 text-sm mb-1">{data.to.name}</p>
-               <p className="whitespace-pre-line break-words leading-relaxed pb-1">{data.to.address}</p>
-               <div className="grid grid-cols-2 gap-x-4 gap-y-1 pt-1">
-                 {data.to.taxId && <p className="col-span-2 sm:col-span-1"><span className="text-stone-400">ผู้เสียภาษี:</span> <span className="text-stone-700 font-medium">{data.to.taxId}</span></p>}
-                 {data.to.branch && <p className="col-span-2 sm:col-span-1"><span className="text-stone-400">สาขา:</span> <span className="text-stone-700 font-medium">{data.to.branch}</span></p>}
-                 {data.to.phone && <p className="col-span-2 sm:col-span-1"><span className="text-stone-400">โทร:</span> <span className="text-stone-700 font-medium">{data.to.phone}</span></p>}
-                 {data.to.contactPerson && <p className="col-span-2 sm:col-span-1"><span className="text-stone-400">ผู้ติดต่อ:</span> <span className="text-stone-700 font-medium">{data.to.contactPerson}</span></p>}
-               </div>
-             </div>
-          ) : (
-            <p className="text-stone-300 italic text-sm">ยังไม่ได้ระบุข้อมูลลูกค้า</p>
-          )}
+        {/* Sender Info Grid */}
+        <div className="flex justify-between items-start mb-4 text-[11px] leading-relaxed">
+          <div className="w-1/2 pr-4">
+            <table className="w-full">
+              <tbody>
+                <tr>
+                  <td className={`w-28 pb-1 ${labelColor}`}>ผู้ออก</td>
+                  <td className={`pb-1 ${valueColor} font-bold`}>{data.from.name || ''}</td>
+                </tr>
+                <tr>
+                  <td className={`align-top pb-1 ${labelColor}`}>ที่อยู่</td>
+                  <td className={`pb-1 ${valueColor} whitespace-pre-wrap`}>{data.from.address || ''}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div className="w-1/2">
+            <table className="w-full">
+              <tbody>
+                <tr>
+                  <td className={`w-40 pb-1 ${labelColor}`}>เลขประจำตัวผู้เสียภาษี</td>
+                  <td className={`pb-1 ${valueColor} font-bold`}>{data.from.taxId || ''}</td>
+                </tr>
+                <tr>
+                  <td className={`pb-1 ${labelColor} w-24`}>เบอร์โทร</td>
+                  <td className={`pb-1 ${valueColor} font-bold`}>{data.from.phone || ''}</td>
+                </tr>
+                <tr>
+                  <td className={`pb-1 ${labelColor} w-24`}>อีเมล์</td>
+                  <td className={`pb-1 ${valueColor} font-bold`}>{data.from.email || ''}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
 
         {/* Items Table */}
-        <div className="mb-4 rounded-2xl overflow-hidden border border-stone-100">
+        <div className="mb-8 flex-1">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-sand-50">
-                <th className="py-2.5 px-3 font-semibold text-stone-500 text-center w-12 text-[11px] border-r border-stone-200 uppercase tracking-wider">ลำดับ</th>
-                <th className="py-2.5 px-6 font-semibold text-stone-500 text-[11px] border-r border-stone-200 uppercase tracking-wider">รายการ</th>
-                <th className="py-2.5 px-4 text-center font-semibold text-stone-500 w-20 text-[11px] border-r border-stone-200 uppercase tracking-wider">จำนวน</th>
-                <th className={`py-2.5 px-4 text-right font-semibold text-stone-500 w-28 text-[11px] uppercase tracking-wider ${data.columnSettings?.showPrice2 ? 'border-r border-stone-200' : ''}`}>{data.columnSettings?.price1Label || 'ราคา/หน่วย'}</th>
+              <tr className={`${c.bg} text-white`}>
+                <th className="py-2.5 px-3 font-medium text-center w-16 text-[11px]">ลำดับ</th>
+                <th className="py-2.5 px-6 font-medium text-[11px]">รายการสินค้า</th>
+                <th className="py-2.5 px-4 text-center font-medium w-24 text-[11px]">จำนวน</th>
+                <th className="py-2.5 px-4 text-center font-medium w-28 text-[11px]">{data.columnSettings?.price1Label || 'ราคา/หน่วย'}</th>
                 {data.columnSettings?.showPrice2 && (
-                  <th className="py-2.5 px-4 text-right font-semibold text-stone-500 w-28 text-[11px] border-r border-stone-200 uppercase tracking-wider">{data.columnSettings?.price2Label || 'ราคา/ปี'}</th>
+                  <th className="py-2.5 px-4 text-center font-medium w-28 text-[11px]">{data.columnSettings?.price2Label || 'ราคา/ปี'}</th>
                 )}
-                <th className="py-2.5 px-6 text-right font-semibold text-stone-500 w-32 text-[11px] uppercase tracking-wider">{data.columnSettings?.amountLabel || 'จำนวนเงิน'}</th>
+                <th className="py-2.5 px-6 text-center font-medium w-32 text-[11px]">{data.columnSettings?.amountLabel || 'ราคารวม'}</th>
               </tr>
             </thead>
             <tbody>
               {data.items.length === 0 ? (
                  <tr>
-                   <td className="py-6 px-3 text-center text-stone-300 border-t border-stone-100 border-r border-stone-200">1</td>
-                   <td className="py-6 px-6 text-stone-300 italic border-t border-stone-100 text-[12px] border-r border-stone-200">ยังไม่ระบุรายการ</td>
-                   <td className="py-6 px-4 text-center text-stone-800 border-t border-stone-100 text-[12px] border-r border-stone-200">1</td>
-                   <td className={`py-6 px-4 text-right text-stone-800 border-t border-stone-100 text-[12px] ${data.columnSettings?.showPrice2 ? 'border-r border-stone-200' : ''}`}>฿0.00</td>
+                   <td className={`py-4 px-3 text-center ${valueColor} text-[11px]`}>1</td>
+                   <td className={`py-4 px-6 ${valueColor} text-[11px]`}></td>
+                   <td className={`py-4 px-4 text-center ${valueColor} text-[11px]`}></td>
+                   <td className={`py-4 px-4 text-center ${valueColor} text-[11px]`}></td>
                    {data.columnSettings?.showPrice2 && (
-                     <td className="py-6 px-4 text-right text-stone-800 border-t border-stone-100 text-[12px] border-r border-stone-200">฿0.00</td>
+                     <td className={`py-4 px-4 text-center ${valueColor} text-[11px]`}></td>
                    )}
-                   <td className="py-6 px-6 text-right font-semibold text-stone-800 border-t border-stone-100 text-[12px]">฿0.00</td>
+                   <td className={`py-4 px-6 text-center ${valueColor} text-[11px]`}></td>
                  </tr>
               ) : (
                 data.items.map((item, index) => (
-                  <tr key={item.id} className="group hover:bg-stone-50 transition-colors">
-                    <td className="py-2.5 px-3 text-stone-400 text-center border-t border-stone-100 text-[12px] align-top border-r border-stone-200">{index + 1}</td>
-                    <td className="py-2.5 px-6 font-medium text-stone-800 border-t border-stone-100 leading-relaxed align-top break-words text-[12px] border-r border-stone-200">
-                      <div className="whitespace-pre-wrap">{item.description || '-'}</div>
+                  <tr key={item.id}>
+                    <td className={`py-3 px-3 text-center ${valueColor} text-[11px] align-top`}>{index + 1}</td>
+                    <td className={`py-3 px-6 font-medium ${valueColor} leading-relaxed align-top break-words text-[11px]`}>
+                      <div className="whitespace-pre-wrap">{item.description || ''}</div>
                     </td>
-                    <td className="py-2.5 px-4 text-center text-stone-700 border-t border-stone-100 align-top text-[12px] border-r border-stone-200">{item.quantity}</td>
-                    <td className={`py-2.5 px-4 text-right text-stone-600 border-t border-stone-100 align-top text-[12px] ${data.columnSettings?.showPrice2 ? 'border-r border-stone-200' : ''}`}>{formatCurrency(item.unitPrice)}</td>
+                    <td className={`py-3 px-4 text-center ${valueColor} align-top text-[11px]`}>{item.quantity}</td>
+                    <td className={`py-3 px-4 text-center ${valueColor} align-top text-[11px]`}>{formatCurrency(item.unitPrice)}</td>
                     {data.columnSettings?.showPrice2 && (
-                      <td className="py-2.5 px-4 text-right text-stone-600 border-t border-stone-100 align-top text-[12px] border-r border-stone-200">{formatCurrency(item.unitPrice2 || 0)}</td>
+                      <td className={`py-3 px-4 text-center ${valueColor} align-top text-[11px]`}>{formatCurrency(item.unitPrice2 || 0)}</td>
                     )}
-                    <td className="py-2.5 px-6 text-right font-semibold text-stone-800 border-t border-stone-100 align-top text-[12px]">
+                    <td className={`py-3 px-6 text-center ${valueColor} align-top text-[11px]`}>
                       {formatCurrency(item.amount !== undefined ? item.amount : ((item.quantity || 0) * (item.unitPrice || 0) + (data.columnSettings?.showPrice2 ? (item.quantity || 0) * (item.unitPrice2 || 0) : 0)))}
                     </td>
                   </tr>
@@ -202,83 +581,92 @@ export default function DocumentPreview({ data }: Props) {
         </div>
 
         {/* Totals & Notes Section */}
-        <div className="flex flex-row justify-between items-start gap-8 mt-auto print:mt-6 pt-2 print:break-inside-avoid print:flex-nowrap print:flex-row">
-          {/* Notes & Payment Terms */}
-          <div className="w-1/2 space-y-2">
-            {data.paymentTerms && (
-               <div className="text-sm bg-stone-50 p-3.5 rounded-2xl border border-stone-100">
-                 <h4 className="font-semibold text-stone-500 mb-1.5 flex items-center gap-2 text-[10px] uppercase tracking-wider">
-                   ช่องทางการชำระเงิน
-                 </h4>
-                 <p className="whitespace-pre-line break-words text-stone-600 leading-relaxed text-[12px]">{data.paymentTerms}</p>
+        <div className="mt-auto print:mt-0 print:break-inside-avoid">
+          {/* Thin border line above summary */}
+          <div className="w-full border-t border-stone-800 mb-4"></div>
+          
+          <div className="flex justify-between items-start mb-6">
+            <div className={`w-1/2 ${labelColor} font-bold text-[11px]`}>
+              หมายเหตุ
+            </div>
+            <div className="w-1/2 flex flex-col items-end gap-2 text-[11px]">
+               <div className="flex justify-between w-64 px-6">
+                 <span className={labelColor}>ราคารวม</span>
+                 <span className={valueColor}>{formatCurrency(subTotal)}</span>
                </div>
-            )}
-            {data.notes && (
-              <div className="text-sm bg-stone-50 p-3.5 rounded-2xl border border-stone-100">
-                <h4 className="font-semibold text-stone-500 mb-1.5 flex items-center gap-2 text-[10px] uppercase tracking-wider">
-                  หมายเหตุ
-                </h4>
-                <p className="whitespace-pre-line break-words text-stone-600 leading-relaxed text-[12px]">{data.notes}</p>
+               {data.discount > 0 && (
+                 <div className="flex justify-between w-64 px-6">
+                   <span className={labelColor}>ส่วนลด</span>
+                   <span className={valueColor}>-{formatCurrency(data.discount)}</span>
+                 </div>
+               )}
+               {data.includeTax && (
+                 <div className="flex justify-between w-64 px-6">
+                   <span className={labelColor}>ภาษีมูลค่าเพิ่ม {data.taxRate}%</span>
+                   <span className={valueColor}>{formatCurrency(taxAmount)}</span>
+                 </div>
+               )}
+            </div>
+          </div>
+
+          {/* Thick and thin border lines */}
+          <div className="w-full border-t-[3px] border-stone-800 mb-0.5"></div>
+          <div className="w-full border-t border-stone-800 mb-3"></div>
+
+          <div className="flex justify-between items-start mb-2">
+            <div className={`font-bold text-[13px] ${valueColor}`}>
+              จำนวนเงินรวมทั้งสิ้น
+            </div>
+            <div className="text-right">
+              <div className="font-bold text-[15px] text-stone-900 mb-1 leading-none">{formatCurrency(grandTotal)}</div>
+              <div className={`text-[11px] ${labelColor} leading-none`}>( {THBText(grandTotal)} )</div>
+            </div>
+          </div>
+
+          <div className="w-full border-t-[3px] border-stone-800 mt-3 mb-8"></div>
+
+          {/* Footer details: Payment and Signatures */}
+          <div className="flex justify-between items-start text-[11px]">
+            <div className="w-1/2 pr-4 space-y-2">
+              {data.paymentTerms && (
+                <>
+                  <div className={`font-bold ${valueColor}`}>ช่องทางการชำระเงิน</div>
+                  <div className={`whitespace-pre-line leading-relaxed ${valueColor}`}>{data.paymentTerms}</div>
+                </>
+              )}
+            </div>
+            <div className="w-1/2 flex justify-between px-4">
+              {/* Signature 1 */}
+              <div className="flex flex-col items-center">
+                <div className={`w-40 border-b border-stone-400 border-dashed mb-2 text-center pb-1 ${labelColor}`}>
+                  {data.type === 'QUOTATION' ? 'ผู้อนุมัติ' : 'ผู้อนุมัติ'}
+                </div>
+                <div className={`text-center ${labelColor}`}>
+                  {data.from.name ? `(${data.from.name})` : '(                          )'}
+                </div>
+                <div className={`mt-4 flex gap-4 ${labelColor}`}>
+                  <span>วันที่</span>
+                  <span className="w-24 border-b border-stone-300 border-dashed inline-block text-center">{formatDate(data.date)}</span>
+                </div>
               </div>
-            )}
-          </div>
-
-          {/* Totals */}
-          <div className="w-80 bg-white border border-stone-100 rounded-2xl p-4 shadow-[0_4px_24px_-8px_rgba(0,0,0,0.04)]">
-            <table className="w-full text-sm">
-              <tbody>
-                <tr>
-                  <td className="py-1 text-[13px] text-stone-500">ยอดยกมา</td>
-                  <td className="py-1 text-right text-stone-700 font-medium">{formatCurrency(subTotal)}</td>
-                </tr>
-                {data.discount > 0 && (
-                  <tr>
-                    <td className="py-1 text-[13px] text-stone-500">ส่วนลด</td>
-                    <td className="py-1 text-right text-clay-600 font-semibold">-{formatCurrency(data.discount)}</td>
-                  </tr>
-                )}
-                {data.discount > 0 && (
-                  <tr>
-                    <td className="py-1 text-stone-700 font-medium pt-2 text-[12px]">ยอดหลังหักส่วนลด</td>
-                    <td className="py-1 text-right text-stone-800 font-medium pt-2">{formatCurrency(afterDiscount)}</td>
-                  </tr>
-                )}
-                {data.includeTax && (
-                  <tr>
-                    <td className="py-1 text-[13px] text-stone-500">ภาษีมูลค่าเพิ่ม {data.taxRate}%</td>
-                    <td className="py-1 text-right text-stone-700 font-medium">{formatCurrency(taxAmount)}</td>
-                  </tr>
-                )}
-                <tr>
-                  <td className="pt-3 pb-0.5 text-stone-800 font-bold text-sm border-t border-stone-100 mt-1.5">ยอดรวมทั้งสิ้น</td>
-                  <td className={`pt-3 pb-0.5 text-right font-bold text-xl ${c.text} border-t border-stone-100 mt-1.5`}>
-                    <div>{formatCurrency(grandTotal)}</div>
-                    <div className="text-[12px] font-medium text-stone-500 mt-0.5 whitespace-nowrap">({THBText(grandTotal)})</div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        {/* Signatures */}
-        <div className="grid grid-cols-2 gap-12 mt-8 pt-6 border-t border-stone-100 print:break-inside-avoid">
-          <div className="text-center group flex flex-col items-center">
-            <div className={`border-b-[1.5px] border-stone-300 mb-3 h-10 w-48 ${c.hoverBorder} transition-colors relative flex items-end justify-center pb-1`}>
-              <span className="text-[10px] text-stone-300 uppercase tracking-widest">(ลายมือชื่อ)</span>
+              
+              {/* Signature 2 */}
+              <div className="flex flex-col items-center">
+                <div className={`w-40 border-b border-stone-400 border-dashed mb-2 text-center pb-1 ${labelColor}`}>
+                  {data.type === 'QUOTATION' ? 'ผู้รับใบเสนอราคา' : isInvoice ? 'ผู้รับใบแจ้งหนี้' : 'ผู้รับใบเสร็จรับเงิน'}
+                </div>
+                <div className={`text-center ${labelColor} w-48 break-words`}>
+                  {data.to.name ? `(${data.to.name})` : '(                          )'}
+                </div>
+                <div className={`mt-4 flex gap-4 ${labelColor}`}>
+                  <span>วันที่</span>
+                  <span className="w-24 border-b border-stone-300 border-dashed inline-block text-center text-transparent focus:text-stone-700">_</span>
+                </div>
+              </div>
             </div>
-            <p className="font-semibold text-stone-700 text-[13px]">ผู้รับเอกสาร</p>
-            <p className="text-[11px] text-stone-400 mt-1 opacity-70">วันที่ _____ / _____ / _____</p>
           </div>
-          <div className="text-center group flex flex-col items-center">
-            <div className={`border-b-[1.5px] border-stone-300 mb-3 h-10 w-48 ${c.hoverBorder} transition-colors relative flex items-end justify-center pb-1`}>
-               <span className="text-[10px] text-stone-300 uppercase tracking-widest">(ลายมือชื่อ)</span>
-            </div>
-            <p className="font-semibold text-stone-700 text-[13px]">ผู้อนุมัติ / ผู้รับเงิน</p>
-            <p className="text-[11px] text-stone-400 mt-1 opacity-70">วันที่ _____ / _____ / _____</p>
-          </div>
-        </div>
 
+        </div>
       </div>
     </div>
   );

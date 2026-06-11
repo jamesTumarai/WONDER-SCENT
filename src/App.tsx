@@ -159,8 +159,8 @@ export default function App() {
         margin:       0,
         filename:     finalFilename,
         image:        { type: 'jpeg', quality: 1 },
-        // ลด scale บน iOS เพื่อป้องกันแอพค้างเนื่องจากเมมโมรี่ 
-        html2canvas:  { scale: isIOS ? 1.5 : 2, useCORS: true, letterRendering: true, logging: false },
+        // เพิ่ม scale ให้ชัดขึ้นบน ipad และเซ็ต scrollY: 0 ป้องกันหน้าขาว
+        html2canvas:  { scale: 3, useCORS: true, letterRendering: true, logging: false, scrollY: 0 },
         jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 
@@ -366,9 +366,9 @@ export default function App() {
         {/* Preview Panel (Right) */}
         <section className={`flex-1 p-0 sm:p-6 md:p-8 xl:p-12 xl:overflow-y-auto print:h-auto print:overflow-visible justify-center bg-sand-100 print:bg-white print:p-0 print:block custom-scrollbar items-start relative z-0 ${showMobilePreview ? 'flex' : 'hidden xl:flex'} print:!flex`}>
           <div className="w-full overflow-x-auto overflow-y-hidden custom-scrollbar pb-6 xl:pb-0 px-4 sm:px-0">
-            <div className="bg-white shadow-xl shadow-stone-200 rounded-2xl print:shadow-none print:rounded-none w-[794px] min-h-[1123px] mx-auto overflow-hidden border border-sand-200 print:border-none print:w-full print:min-h-0 relative">
+            <div className="bg-white shadow-xl shadow-stone-200 rounded-2xl print:shadow-none print:rounded-none w-[794px] min-h-[1123px] mx-auto border border-sand-200 print:border-none print:w-full print:min-h-0 relative">
               {/* Aspect ratio A4 for realistic preview */}
-              <div id="document-preview-container" className="print-area print:min-h-0 bg-white w-[794px] min-h-[1123px] absolute top-0 left-0 right-0 origin-top flex flex-col justify-between print:static print:w-full">
+              <div id="document-preview-container" className="print-area print:min-h-0 bg-white w-full min-h-[1123px] flex flex-col justify-between print:static print:w-full overflow-hidden rounded-2xl print:rounded-none">
                  <DocumentPreview data={data} />
               </div>
             </div>
@@ -397,7 +397,12 @@ export default function App() {
         </button>
       </div>
 
-      {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
+      {(showLogin || (!loading && !user)) && (
+        <LoginModal 
+          onClose={() => setShowLogin(false)} 
+          closable={!!user} 
+        />
+      )}
       <PdfDownloadModal 
         isOpen={showPdfModal} 
         onClose={() => setShowPdfModal(false)} 

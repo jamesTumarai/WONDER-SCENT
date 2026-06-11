@@ -251,8 +251,8 @@ export default function SavedDocumentsList({ onClose, onSelect }: Props) {
                         onClick={() => onSelect(doc)}
                         className="p-4 rounded-2xl border border-stone-200 active:border-leaf-300 md:hover:border-leaf-300 active:shadow-md md:hover:shadow-md transition-all duration-200 active:scale-[0.98] cursor-pointer group bg-stone-50 active:bg-white md:hover:bg-white flex flex-col gap-2"
                       >
-                        <div className="flex items-start justify-between">
-                          <div>
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex-1 min-w-0">
                             {editingNameId === doc.id ? (
                               <form 
                                 onSubmit={handleRenameSubmit} 
@@ -280,29 +280,29 @@ export default function SavedDocumentsList({ onClose, onSelect }: Props) {
                                 </div>
                               </form>
                             ) : (
-                              <h4 className="font-bold text-stone-800 pr-2 flex items-center gap-1.5">
-                                {doc.starred && <Star size={14} className="fill-yellow-400 text-yellow-400 shrink-0" />}
-                                <span className="line-clamp-1">{doc.documentName || doc.to?.name || 'ไม่ได้ระบุผู้รับ'}</span>
+                              <h4 className="font-bold text-stone-800 flex items-start gap-1.5 leading-tight">
+                                {doc.starred && <Star size={14} className="fill-yellow-400 text-yellow-400 shrink-0 mt-1" />}
+                                <span className="break-words">{doc.documentName || doc.to?.name || 'ไม่ได้ระบุผู้รับ'}</span>
                               </h4>
                             )}
                             
                             {doc.to?.branch ? (
-                              <p className="text-sm text-stone-500 mt-0.5">สาขา: {doc.to.branch}</p>
+                              <p className="text-sm text-stone-500 mt-1">สาขา: {doc.to.branch}</p>
                             ) : (
-                              <p className="text-sm text-stone-500 font-medium font-mono mt-0.5">{doc.documentNumber || 'ไม่มีเลขที่'}</p>
+                              <p className="text-sm text-stone-500 font-medium font-mono mt-1">{doc.documentNumber || 'ไม่มีเลขที่'}</p>
                             )}
                           </div>
-                          <div className="flex items-center gap-1">
+                          <div className="flex flex-col sm:flex-row items-end sm:items-center gap-1 shrink-0">
                             <button 
                               onClick={(e) => handleStartRename(e, doc)}
-                              className="p-2 sm:-mt-2 rounded-xl transition-all duration-200 active:scale-90 text-stone-400 hover:text-stone-600 hover:bg-stone-50 active:bg-stone-100"
+                              className="p-1.5 sm:p-2 sm:-mt-2 rounded-xl transition-all duration-200 active:scale-90 text-stone-400 hover:text-stone-600 hover:bg-stone-50 active:bg-stone-100"
                               title="แก้ไขชื่อเอกสาร"
                             >
                               <Edit2 size={18} />
                             </button>
                             <button 
                               onClick={(e) => handleToggleStar(e, doc.id, !!doc.starred)} 
-                              className={`p-2 sm:-mt-2 rounded-xl transition-all duration-200 active:scale-90 ${
+                              className={`p-1.5 sm:p-2 sm:-mt-2 rounded-xl transition-all duration-200 active:scale-90 ${
                                 doc.starred 
                                   ? 'text-yellow-500 active:bg-yellow-50 md:hover:bg-yellow-50' 
                                   : 'text-stone-400 active:text-yellow-500 md:hover:text-yellow-500 active:bg-yellow-50 md:hover:bg-yellow-50'
@@ -313,7 +313,7 @@ export default function SavedDocumentsList({ onClose, onSelect }: Props) {
                             </button>
                             <button 
                               onClick={(e) => handleDelete(e, doc.id)} 
-                              className="p-2 sm:-mr-2 sm:-mt-2 text-stone-400 active:text-red-500 md:hover:text-red-500 active:bg-red-50 md:hover:bg-red-50 rounded-xl transition-all duration-200 active:scale-90"
+                              className="p-1.5 sm:p-2 sm:-mr-2 sm:-mt-2 text-stone-400 active:text-red-500 md:hover:text-red-500 active:bg-red-50 md:hover:bg-red-50 rounded-xl transition-all duration-200 active:scale-90"
                               title="ลบเอกสาร"
                             >
                               <Trash2 size={20} />
