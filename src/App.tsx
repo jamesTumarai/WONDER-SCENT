@@ -228,7 +228,7 @@ export default function App() {
 
         {/* Saved Docs Panel (Slide in from left) */}
         {user && showSavedDocs && (
-          <section className="fixed xl:absolute left-0 top-[73px] xl:top-0 bottom-0 w-full xl:w-[450px] 2xl:w-[500px] bg-white border-r border-stone-200 z-20 shadow-2xl animate-in slide-in-from-left xl:h-full overflow-y-auto">
+          <section className="fixed inset-0 z-[120] xl:absolute xl:inset-auto xl:left-0 xl:top-0 xl:bottom-0 xl:z-20 w-full xl:w-[450px] 2xl:w-[500px] bg-white border-r border-stone-200 shadow-2xl animate-in slide-in-from-left xl:h-full overflow-hidden">
             <SavedDocumentsList 
               onClose={() => setShowSavedDocs(false)} 
               onSelect={(docData) => {
