@@ -38,13 +38,15 @@
 @media print {
   @page {
     size: A4;
-    margin: 10mm;
+    margin: 0;
   }
   
   html, body {
     width: 210mm;
     height: 297mm;
     background: white;
+    margin: 0;
+    padding: 0;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
@@ -61,7 +63,7 @@
     width: 100% !important;
     max-width: 100% !important;
     margin: 0 !important;
-    padding: 0 !important;
+    padding: 15mm !important;
     border: none !important;
     box-shadow: none !important;
     min-height: auto !important;
