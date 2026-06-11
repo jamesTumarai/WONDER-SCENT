@@ -36,10 +36,23 @@ export default function DocumentPreview({ data }: Props) {
   const taxAmount = data.includeTax ? (afterDiscount * (data.taxRate || 0)) / 100 : 0;
   const grandTotal = afterDiscount + taxAmount;
 
+  const theme = data.themeColor || 'stone';
+  const colorMap = {
+    stone: { bg: 'bg-stone-500', text: 'text-stone-800', textLight: 'text-stone-500', hoverBorder: 'group-hover:border-stone-400' },
+    slate: { bg: 'bg-slate-500', text: 'text-slate-800', textLight: 'text-slate-500', hoverBorder: 'group-hover:border-slate-400' },
+    zinc: { bg: 'bg-zinc-500', text: 'text-zinc-800', textLight: 'text-zinc-500', hoverBorder: 'group-hover:border-zinc-400' },
+    leaf: { bg: 'bg-leaf-500', text: 'text-leaf-600', textLight: 'text-leaf-600/60', hoverBorder: 'group-hover:border-leaf-400' },
+    clay: { bg: 'bg-clay-500', text: 'text-clay-600', textLight: 'text-clay-600/60', hoverBorder: 'group-hover:border-clay-400' },
+    blue: { bg: 'bg-blue-500', text: 'text-blue-600', textLight: 'text-blue-500/60', hoverBorder: 'group-hover:border-blue-400' },
+  };
+  const c = colorMap[theme as keyof typeof colorMap] || colorMap.stone;
+
+  const fontStyle = data.fontFamily === 'prompt' ? '"Prompt", sans-serif' : data.fontFamily === 'sarabun' ? '"Sarabun", sans-serif' : 'sans-serif';
+
   return (
-    <div className="font-sans text-[13px] md:text-[14px] text-stone-800 bg-white min-h-[297mm] print:min-h-0 relative flex flex-col justify-between shadow-inner print:block">
+    <div className={`text-[13px] md:text-[14px] text-stone-800 bg-white min-h-[297mm] print:min-h-0 relative flex flex-col justify-between shadow-inner print:block`} style={{ fontFamily: fontStyle }}>
       {/* Top Border Bar */}
-      <div className="h-2 w-full bg-leaf-500 absolute top-0 left-0 right-0 print:hidden"></div>
+      <div className={`h-2 w-full ${c.bg} absolute top-0 left-0 right-0 print:hidden`}></div>
 
       <div className="pt-10 pb-8 px-10 md:px-12 flex flex-col flex-1 print:block">
         
@@ -59,11 +72,11 @@ export default function DocumentPreview({ data }: Props) {
                       <img src="/33.png" alt="Company Logo" className="h-16 sm:h-20 object-contain object-left rounded-xl" />
                     </div>
                   ) : null}
-                  {!(data.from.logo || data.from.name.replace(/\s/g, '').toLowerCase().includes('วอนเดอร์เซ้นท์') || data.from.name.replace(/\s/g, '').toLowerCase().includes('wonderscent')) && <h1 className="text-xl font-bold text-stone-800 tracking-tight">{data.from.name}</h1>}
+                  {!(data.from.logo || data.from.name.replace(/\s/g, '').toLowerCase().includes('วอนเดอร์เซ้นท์') || data.from.name.replace(/\s/g, '').toLowerCase().includes('wonderscent')) && <h1 className={`text-xl font-bold ${c.text} tracking-tight`}>{data.from.name}</h1>}
                 </div>
                 {(data.from.logo || data.from.name.replace(/\s/g, '').toLowerCase().includes('วอนเดอร์เซ้นท์') || data.from.name.replace(/\s/g, '').toLowerCase().includes('wonderscent')) && (
                   <div className="pb-1">
-                    <h1 className="text-base font-bold text-stone-800 tracking-tight">{data.from.name}</h1>
+                    <h1 className={`text-base font-bold text-stone-800 tracking-tight`}>{data.from.name}</h1>
                     {!data.from.name.toLowerCase().includes('wonder scent') && (
                       <h2 className="text-sm font-bold text-stone-600 tracking-tight uppercase mt-0.5">WONDER SCENT</h2>
                     )}
@@ -86,8 +99,8 @@ export default function DocumentPreview({ data }: Props) {
           
           {/* Document Details */}
           <div className="text-right w-64">
-            <h1 className="text-2xl md:text-3xl font-bold text-leaf-600 mb-1">{title.th}</h1>
-            <h2 className="font-semibold text-leaf-600/60 tracking-[0.2em] text-[10px] uppercase mb-4">{title.en}</h2>
+            <h1 className={`text-2xl md:text-3xl font-bold ${c.text} mb-1`}>{title.th}</h1>
+            <h2 className={`font-semibold ${c.textLight} tracking-[0.2em] text-[10px] uppercase mb-4`}>{title.en}</h2>
             
             <table className="w-full text-xs">
               <tbody>
@@ -114,7 +127,7 @@ export default function DocumentPreview({ data }: Props) {
 
         {/* Customer Information Section */}
         <div className="mb-6 p-4 bg-sand-50/50 rounded-2xl border border-stone-100/80 w-full max-w-xl">
-          <h4 className="font-bold text-leaf-600 text-[10px] tracking-wider uppercase mb-2 flex items-center gap-2">
+          <h4 className={`font-bold ${c.text} text-[10px] tracking-wider uppercase mb-2 flex items-center gap-2`}>
             ลูกค้า (Customer)
           </h4>
           {data.to.name ? (
@@ -223,7 +236,7 @@ export default function DocumentPreview({ data }: Props) {
                 )}
                 <tr>
                   <td className="pt-3 pb-0.5 text-stone-800 font-bold text-sm border-t border-stone-100 mt-1.5">ยอดรวมทั้งสิ้น</td>
-                  <td className="pt-3 pb-0.5 text-right font-bold text-xl text-leaf-600 border-t border-stone-100 mt-1.5">{formatCurrency(grandTotal)}</td>
+                  <td className={`pt-3 pb-0.5 text-right font-bold text-xl ${c.text} border-t border-stone-100 mt-1.5`}>{formatCurrency(grandTotal)}</td>
                 </tr>
               </tbody>
             </table>
@@ -233,14 +246,14 @@ export default function DocumentPreview({ data }: Props) {
         {/* Signatures */}
         <div className="grid grid-cols-2 gap-12 mt-8 pt-6 border-t border-stone-100 print:break-inside-avoid">
           <div className="text-center group flex flex-col items-center">
-            <div className="border-b-[1.5px] border-stone-300 mb-3 h-10 w-48 group-hover:border-leaf-400 transition-colors relative flex items-end justify-center pb-1">
+            <div className={`border-b-[1.5px] border-stone-300 mb-3 h-10 w-48 ${c.hoverBorder} transition-colors relative flex items-end justify-center pb-1`}>
               <span className="text-[10px] text-stone-300 uppercase tracking-widest">(ลายมือชื่อ)</span>
             </div>
             <p className="font-semibold text-stone-700 text-[13px]">ผู้รับเอกสาร</p>
             <p className="text-[11px] text-stone-400 mt-1 opacity-70">วันที่ _____ / _____ / _____</p>
           </div>
           <div className="text-center group flex flex-col items-center">
-            <div className="border-b-[1.5px] border-stone-300 mb-3 h-10 w-48 group-hover:border-leaf-400 transition-colors relative flex items-end justify-center pb-1">
+            <div className={`border-b-[1.5px] border-stone-300 mb-3 h-10 w-48 ${c.hoverBorder} transition-colors relative flex items-end justify-center pb-1`}>
                <span className="text-[10px] text-stone-300 uppercase tracking-widest">(ลายมือชื่อ)</span>
             </div>
             <p className="font-semibold text-stone-700 text-[13px]">ผู้อนุมัติ / ผู้รับเงิน</p>

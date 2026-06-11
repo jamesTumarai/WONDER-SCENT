@@ -31,4 +31,6 @@ export interface DocumentData {
   discount: number;
   taxRate: number;
   includeTax: boolean;
+  themeColor?: string;
+  fontFamily?: string;
 }

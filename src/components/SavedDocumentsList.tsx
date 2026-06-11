@@ -145,7 +145,7 @@ export default function SavedDocumentsList({ onClose, onSelect }: Props) {
                   className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${
                     filterType === type 
                       ? 'bg-leaf-600 text-white' 
-                      : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+                      : 'bg-stone-100 text-stone-600 active:bg-stone-200 md:hover:bg-stone-200'
                   }`}
                 >
                   {TYPE_LABELS[type]}
@@ -156,7 +156,7 @@ export default function SavedDocumentsList({ onClose, onSelect }: Props) {
                 className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors flex items-center gap-1 ${
                   showStarredOnly 
                     ? 'bg-yellow-100 text-yellow-700 border border-yellow-200' 
-                    : 'bg-stone-100 text-stone-600 hover:bg-stone-200 border border-transparent'
+                    : 'bg-stone-100 text-stone-600 active:bg-stone-200 md:hover:bg-stone-200 border border-transparent'
                 }`}
               >
                 <Star size={12} className={showStarredOnly ? 'fill-yellow-500 text-yellow-500' : ''} />
@@ -214,7 +214,7 @@ export default function SavedDocumentsList({ onClose, onSelect }: Props) {
                       <div 
                         key={doc.id}
                         onClick={() => onSelect(doc)}
-                        className="p-4 rounded-2xl border border-stone-200 hover:border-leaf-300 hover:shadow-md transition-all cursor-pointer group bg-stone-50/50 hover:bg-white flex flex-col gap-2"
+                        className="p-4 rounded-2xl border border-stone-200 active:border-leaf-300 md:hover:border-leaf-300 active:shadow-md md:hover:shadow-md transition-all cursor-pointer group bg-stone-50/50 active:bg-white md:hover:bg-white flex flex-col gap-2"
                       >
                         <div className="flex items-start justify-between">
                           <div>
@@ -229,8 +229,8 @@ export default function SavedDocumentsList({ onClose, onSelect }: Props) {
                               onClick={(e) => handleToggleStar(e, doc.id, !!doc.starred)} 
                               className={`p-2 sm:-mt-2 rounded-xl transition-all ${
                                 doc.starred 
-                                  ? 'text-yellow-500 hover:bg-yellow-50' 
-                                  : 'text-stone-400 hover:text-yellow-500 hover:bg-yellow-50'
+                                  ? 'text-yellow-500 active:bg-yellow-50 md:hover:bg-yellow-50' 
+                                  : 'text-stone-400 active:text-yellow-500 md:hover:text-yellow-500 active:bg-yellow-50 md:hover:bg-yellow-50'
                               }`}
                               title={doc.starred ? 'เลิกติดดาว' : 'ติดดาว'}
                             >
@@ -238,7 +238,7 @@ export default function SavedDocumentsList({ onClose, onSelect }: Props) {
                             </button>
                             <button 
                               onClick={(e) => handleDelete(e, doc.id)} 
-                              className="p-2 sm:-mr-2 sm:-mt-2 text-stone-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
+                              className="p-2 sm:-mr-2 sm:-mt-2 text-stone-400 active:text-red-500 md:hover:text-red-500 active:bg-red-50 md:hover:bg-red-50 rounded-xl transition-all"
                               title="ลบเอกสาร"
                             >
                               <Trash2 size={20} />

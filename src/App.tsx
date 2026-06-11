@@ -248,17 +248,24 @@ export default function App() {
 
         {/* Saved Docs Panel (Slide in from left) */}
         {user && showSavedDocs && (
-          <section className="fixed inset-0 z-[120] xl:absolute xl:inset-auto xl:left-0 xl:top-0 xl:bottom-0 xl:z-20 w-full xl:w-[450px] 2xl:w-[500px] bg-white border-r border-stone-200 shadow-2xl animate-in slide-in-from-left xl:h-full overflow-hidden">
-            <SavedDocumentsList 
-              onClose={() => setShowSavedDocs(false)} 
-              onSelect={(docData) => {
-                const { id, userId, createdAt, updatedAt, ...rest } = docData;
-                setData(rest as DocumentData);
-                setCurrentDocId(id);
-                setShowSavedDocs(false);
-              }}
+          <>
+            {/* Backdrop for mobile/tablet */}
+            <div 
+              className="fixed inset-0 bg-stone-900/40 z-[110] xl:hidden backdrop-blur-sm animate-in fade-in transition-opacity"
+              onClick={() => setShowSavedDocs(false)}
             />
-          </section>
+            <section className="fixed inset-y-0 left-0 z-[120] xl:absolute xl:inset-auto xl:left-0 xl:top-0 xl:bottom-0 xl:z-20 w-[85%] max-w-[400px] sm:max-w-[450px] xl:w-[450px] 2xl:w-[500px] bg-white border-r border-stone-200 shadow-2xl animate-in slide-in-from-left xl:h-full overflow-hidden flex flex-col">
+              <SavedDocumentsList 
+                onClose={() => setShowSavedDocs(false)} 
+                onSelect={(docData) => {
+                  const { id, userId, createdAt, updatedAt, ...rest } = docData;
+                  setData(rest as DocumentData);
+                  setCurrentDocId(id);
+                  setShowSavedDocs(false);
+                }}
+              />
+            </section>
+          </>
         )}
 
         {/* Preview Panel (Right) */}

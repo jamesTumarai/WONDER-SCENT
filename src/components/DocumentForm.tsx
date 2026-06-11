@@ -79,6 +79,55 @@ export default function DocumentForm({ data, onChange }: Props) {
         </div>
       </section>
 
+      {/* Setting Theme */}
+      <section className="space-y-4">
+        <h3 className="text-sm font-bold text-stone-700 pb-2 border-b border-stone-200/60 flex items-center justify-between">
+          <span>รูปแบบและการแสดงผล</span>
+        </h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-[11px] font-bold text-stone-500 mb-2 uppercase tracking-wider">สีหลักของเลย์เอาต์</label>
+            <div className="flex gap-2">
+              {[
+                { id: 'stone', class: 'bg-stone-800' },
+                { id: 'slate', class: 'bg-slate-700' },
+                { id: 'zinc', class: 'bg-zinc-600' },
+                { id: 'leaf', class: 'bg-leaf-600' },
+                { id: 'clay', class: 'bg-clay-600' },
+                { id: 'blue', class: 'bg-blue-600' },
+              ].map(theme => (
+                <button
+                  key={theme.id}
+                  onClick={() => updateField('themeColor', theme.id)}
+                  className={`w-8 h-8 rounded-full ${theme.class} border-2 ${data.themeColor === theme.id || (!data.themeColor && theme.id === 'stone') ? 'border-white outline outline-2 outline-stone-400' : 'border-transparent'} transition-all`}
+                  title={theme.id}
+                  aria-label={`Select ${theme.id} color`}
+                />
+              ))}
+            </div>
+          </div>
+          <div>
+            <label className="block text-[11px] font-bold text-stone-500 mb-2 uppercase tracking-wider">ฟอนต์เอกสาร</label>
+            <div className="flex gap-2">
+              {[
+                { id: 'sans', label: 'Kanit' },
+                { id: 'prompt', label: 'Prompt' },
+                { id: 'sarabun', label: 'Sarabun' },
+              ].map(font => (
+                <button
+                  key={font.id}
+                  onClick={() => updateField('fontFamily', font.id)}
+                  className={`px-4 py-1.5 rounded-full text-sm font-medium border ${data.fontFamily === font.id || (!data.fontFamily && font.id === 'sans') ? 'border-leaf-400 bg-leaf-50 text-leaf-700' : 'border-stone-200 bg-white text-stone-600 hover:bg-stone-50'} transition-all`}
+                  style={{ fontFamily: font.id === 'sans' ? 'sans-serif' : `"${font.id === 'prompt' ? 'Prompt' : 'Sarabun'}", sans-serif` }}
+                >
+                  {font.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Doc Specific Info */}
       <section className="space-y-4">
         <h3 className="text-sm font-bold text-stone-700 pb-2 border-b border-stone-200/60 flex items-center justify-between">

@@ -1,8 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
 
 @theme {
   --font-sans: "Kanit", ui-sans-serif, system-ui, sans-serif;
+  --font-prompt: "Prompt", ui-sans-serif, system-ui, sans-serif;
+  --font-sarabun: "Sarabun", ui-sans-serif, system-ui, sans-serif;
 
   --color-leaf-400: #8F9776;
   --color-leaf-500: #7C8363;
