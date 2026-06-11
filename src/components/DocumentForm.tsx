@@ -53,7 +53,7 @@ export default function DocumentForm({ data, onChange }: Props) {
       {/* Types Selection */}
       <section>
         <h3 className="text-sm font-bold text-stone-700 mb-4 tracking-wide">ประเภทเอกสาร</h3>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {docTypes.map(type => {
             const Icon = type.icon;
             const isActive = data.type === type.id;
