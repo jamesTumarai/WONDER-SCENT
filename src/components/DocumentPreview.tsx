@@ -56,11 +56,11 @@ export default function DocumentPreview({ data }: Props) {
   const labelColor = c.label;
   const valueColor = c.value;
 
-  const fontStyle = data.fontFamily === 'sans' ? 'sans-serif' : data.fontFamily === 'sarabun' ? '"Sarabun", sans-serif' : '"Prompt", sans-serif';
+  const fontStyle = data.fontFamily === 'sans' ? '"Kanit", sans-serif' : data.fontFamily === 'sarabun' ? '"Sarabun", sans-serif' : '"Prompt", sans-serif';
 
   if (isQuotation) {
     return (
-      <div className={`text-[12px] text-stone-800 bg-white h-[1123px] print:h-auto print:min-h-0 relative flex flex-col justify-between font-medium`} style={{ fontFamily: fontStyle }}>
+      <div className={`text-[12px] text-stone-800 bg-white min-h-[295mm] print:min-h-0 relative flex flex-col justify-between font-medium`} style={{ fontFamily: fontStyle }}>
         <div className="pt-12 pb-12 px-12 flex flex-col flex-1">
           
           {/* Header */}
@@ -316,7 +316,7 @@ export default function DocumentPreview({ data }: Props) {
 
   if (isReceipt) {
     return (
-      <div className={`text-[12px] text-stone-800 bg-white h-[1123px] print:h-auto print:min-h-0 relative flex flex-col justify-between font-medium`} style={{ fontFamily: fontStyle }}>
+      <div className={`text-[12px] text-stone-800 bg-white min-h-[295mm] print:min-h-0 relative flex flex-col justify-between font-medium`} style={{ fontFamily: fontStyle }}>
         <div className="pt-16 pb-12 px-16 flex flex-col flex-1">
           
           <div className="text-center relative mb-12">
@@ -509,7 +509,7 @@ export default function DocumentPreview({ data }: Props) {
   }
 
   return (
-    <div className={`text-[12px] text-stone-800 bg-white h-[1123px] print:h-auto print:min-h-0 relative flex flex-col justify-between font-medium`} style={{ fontFamily: fontStyle }}>
+    <div className={`text-[12px] text-stone-800 bg-white min-h-[295mm] print:min-h-0 relative flex flex-col justify-between font-medium`} style={{ fontFamily: fontStyle }}>
       
       <div className="pt-8 pb-8 px-12 flex flex-col flex-1">
         
@@ -536,38 +536,32 @@ export default function DocumentPreview({ data }: Props) {
         {/* Info Grid */}
         <div className="flex justify-between items-start mb-4 text-[11px] leading-relaxed">
           {/* Left: Customer Info */}
-          <div className="w-2/3 pr-8">
-            <table className="w-full table-fixed">
-              <colgroup>
-                <col className="w-px" />
-                <col className="w-[180px]" />
-                <col className="w-px" />
-                <col className="w-auto" />
-              </colgroup>
+          <div className="flex-1 pr-8">
+            <table className="w-full">
               <tbody>
                 <tr>
-                  <td className={`whitespace-nowrap pr-4 pb-1 ${labelColor}`}>ชื่อลูกค้า</td>
+                  <td className={`w-px whitespace-nowrap pr-4 pb-1 align-top ${labelColor}`}>ชื่อลูกค้า</td>
                   <td className={`pb-1 ${valueColor} font-bold break-words`} colSpan={data.to.branch ? 1 : 3}>{data.to.name || ''}</td>
                   {data.to.branch && (
                     <>
-                      <td className={`whitespace-nowrap pr-4 pb-1 ${labelColor} pl-4`}>สาขา</td>
+                      <td className={`w-px whitespace-nowrap pr-4 pb-1 align-top ${labelColor} pl-4`}>สาขา</td>
                       <td className={`pb-1 ${valueColor} font-bold break-words`}>{data.to.branch}</td>
                     </>
                   )}
                 </tr>
                 <tr>
-                  <td className={`align-top whitespace-nowrap pr-4 pb-1 ${labelColor}`}>ที่อยู่</td>
+                  <td className={`w-px align-top whitespace-nowrap pr-4 pb-1 ${labelColor}`}>ที่อยู่</td>
                   <td colSpan={3} className={`pb-1 ${valueColor} whitespace-pre-wrap break-words`}>{data.to.address || ''}</td>
                 </tr>
                 <tr>
-                  <td className={`whitespace-nowrap pr-4 pb-1 ${labelColor}`}>เลขผู้เสียภาษี</td>
+                  <td className={`w-px whitespace-nowrap pr-4 pb-1 align-top ${labelColor}`}>เลขผู้เสียภาษี</td>
                   <td className={`pb-1 ${valueColor} break-words`}>{data.to.taxId || ''}</td>
-                  <td className={`whitespace-nowrap pr-4 pb-1 ${labelColor} pl-4`}>เบอร์โทรศัพท์</td>
+                  <td className={`w-px whitespace-nowrap pr-4 pb-1 align-top ${labelColor} pl-4`}>เบอร์โทรศัพท์</td>
                   <td className={`pb-1 ${valueColor} break-words`}>{data.to.phone || ''}</td>
                 </tr>
                 {data.to.contactPerson && (
                   <tr>
-                    <td className={`whitespace-nowrap pr-4 pb-1 ${labelColor}`}>ผู้ติดต่อ</td>
+                    <td className={`w-px whitespace-nowrap pr-4 pb-1 align-top ${labelColor}`}>ผู้ติดต่อ</td>
                     <td colSpan={3} className={`pb-1 ${valueColor} break-words`}>{data.to.contactPerson}</td>
                   </tr>
                 )}
