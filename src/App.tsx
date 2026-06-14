@@ -157,6 +157,8 @@ export default function App() {
       const element = document.getElementById('document-preview-container');
       if (!element) return;
 
+      await document.fonts.ready;
+
       const originalBg = element.style.backgroundColor;
       element.style.backgroundColor = 'white';
 
@@ -164,8 +166,26 @@ export default function App() {
         margin:       0,
         filename:     finalFilename,
         image:        { type: 'jpeg', quality: 1 },
-        // เพิ่ม scale ให้ชัดขึ้นบน ipad และเซ็ต scrollY: 0 ป้องกันหน้าขาว
-        html2canvas:  { scale: 4, useCORS: true, logging: false, scrollY: 0 },
+        html2canvas:  { 
+          scale: 4, 
+          useCORS: true, 
+          logging: false, 
+          scrollY: 0,
+          windowWidth: 794,
+          onclone: (doc: any) => {
+            const style = doc.createElement('style');
+            style.innerHTML = `
+              #document-preview-container {
+                font-family: ${data.fontFamily === 'sans' ? '"Kanit"' : data.fontFamily === 'sarabun' ? '"Sarabun"' : '"Prompt"'}, sans-serif !important;
+              }
+              #document-preview-container .break-words {
+                word-break: break-all;
+                overflow-wrap: break-word;
+              }
+            `;
+            doc.head.appendChild(style);
+          }
+        },
         jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 

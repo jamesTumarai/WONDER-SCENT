@@ -2,6 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+.table-bordered {
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  border-top: 1px solid #1c1917 !important;
+  border-left: 1px solid #1c1917 !important;
+}
+
+.table-bordered th, 
+.table-bordered td {
+  border-bottom: 1px solid #1c1917 !important;
+  border-right: 1px solid #1c1917 !important;
+}
+
 @layer base {
   html, body {
     height: 100% !important;

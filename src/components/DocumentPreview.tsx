@@ -60,7 +60,7 @@ export default function DocumentPreview({ data }: Props) {
 
   if (isQuotation) {
     return (
-      <div className={`text-[12px] text-stone-800 bg-white min-h-[295mm] print:min-h-0 relative flex flex-col justify-between font-medium`} style={{ fontFamily: fontStyle }}>
+      <div className={`text-[12px] leading-[1.35] text-stone-800 bg-white min-h-[295mm] print:min-h-0 relative flex flex-col justify-between font-medium`} style={{ fontFamily: fontStyle }}>
         <div className="pt-12 pb-12 px-12 flex flex-col flex-1">
           
           {/* Header */}
@@ -99,19 +99,19 @@ export default function DocumentPreview({ data }: Props) {
               <table className="w-full">
                 <tbody>
                   <tr>
-                    <td className="w-px whitespace-nowrap pr-2 py-0.5 align-top">นามลูกค้า</td>
+                    <td className="w-[1%] whitespace-nowrap pr-4 py-0.5 align-top">นามลูกค้า</td>
                     <td className="py-0.5">{data.to.name || ''}</td>
                   </tr>
                   <tr>
-                    <td className="w-px whitespace-nowrap pr-2 py-0.5 align-top">ที่อยู่</td>
+                    <td className="w-[1%] whitespace-nowrap pr-4 py-0.5 align-top">ที่อยู่</td>
                     <td className="py-0.5">{data.to.address || ''}</td>
                   </tr>
                   <tr>
-                    <td className="w-px whitespace-nowrap pr-2 py-0.5 align-top"></td>
+                    <td className="w-[1%] whitespace-nowrap pr-4 py-0.5 align-top"></td>
                     <td className="py-0.5">ผู้ติดต่อ: {data.to.contactPerson || '-'} เบอร์โทร: {data.to.phone || '-'}</td>
                   </tr>
                   <tr>
-                    <td className="w-px whitespace-nowrap pr-2 py-0.5 align-top">เลขประจำตัวผู้เสียภาษี</td>
+                    <td className="w-[1%] whitespace-nowrap pr-4 py-0.5 align-top">เลขประจำตัวผู้เสียภาษี</td>
                     <td className="py-0.5">
                       <div className="flex items-center gap-6">
                         <span>{data.to.taxId || ''}</span>
@@ -132,39 +132,39 @@ export default function DocumentPreview({ data }: Props) {
 
           {/* Table */}
           <div className="mb-4 flex-1">
-            <table className="w-full text-left border-collapse border border-black table-fixed">
+            <table className="w-full text-left table-bordered text-stone-900 table-fixed">
               <thead>
                 <tr className={`${c.bg} text-white`}>
-                  <th className="py-2.5 px-3 font-medium text-center w-12 text-[11px] border border-black">ลำดับ</th>
-                  <th className="py-2.5 px-6 font-medium text-[11px] border border-black text-center">รายการ</th>
-                  <th className="py-2.5 px-4 text-center font-medium w-24 text-[11px] border border-black">จำนวน</th>
-                  <th className="py-2.5 px-4 text-center font-medium w-28 text-[11px] border border-black">{data.columnSettings?.price1Label || 'ราคา/เดือน'}</th>
+                  <th className="py-2.5 px-3 font-bold text-center w-12 text-[11px]">ลำดับ</th>
+                  <th className="py-2.5 px-6 font-bold text-[11px] text-center">รายการ</th>
+                  <th className="py-2.5 px-4 text-center font-bold w-24 text-[11px]">จำนวน</th>
+                  <th className="py-2.5 px-4 text-center font-bold w-28 text-[11px]">{data.columnSettings?.price1Label || 'ราคา/เดือน'}</th>
                   {data.columnSettings?.showPrice2 && (
-                    <th className="py-2.5 px-4 text-center font-medium w-28 text-[11px] border border-black">{data.columnSettings?.price2Label || 'ราคา/ปี'}</th>
+                    <th className="py-2.5 px-4 text-center font-bold w-28 text-[11px]">{data.columnSettings?.price2Label || 'ราคา/ปี'}</th>
                   )}
-                  <th className="py-2.5 px-6 text-center font-medium w-32 text-[11px] border border-black">ราคารวม</th>
+                  <th className="py-2.5 px-6 text-center font-bold w-32 text-[11px]">ราคารวม</th>
                 </tr>
               </thead>
               <tbody>
                 {data.items.length === 0 ? (
                   <tr className="h-6">
-                    <td className="py-4 border border-black"></td><td className="border border-black"></td><td className="border border-black"></td><td className="border border-black"></td>
-                    {data.columnSettings?.showPrice2 && <td className="border border-black"></td>}
-                    <td className="border border-black"></td>
+                    <td className="py-4"></td><td></td><td></td><td></td>
+                    {data.columnSettings?.showPrice2 && <td></td>}
+                    <td></td>
                   </tr>
                 ) : (
                   data.items.map((item, index) => (
-                    <tr key={item.id} className="h-6">
-                      <td className="py-2 px-3 text-center border border-black text-[11px] align-top">{index + 1}</td>
-                      <td className="py-2 px-6 border text-stone-800 align-top break-words text-[11px] border-black">
-                        <div className="whitespace-pre-wrap break-words">{item.description || ''}</div>
+                    <tr key={item.id}>
+                      <td className="py-2 px-3 text-center text-[11px] align-top">{index + 1}</td>
+                      <td className="py-2 px-6 text-stone-800 align-top break-words text-[11px]">
+                        <div className="whitespace-pre-wrap break-words leading-tight">{item.description || ''}</div>
                       </td>
-                      <td className="py-2 px-4 text-center align-top text-[11px] border border-black">{item.quantity}</td>
-                      <td className="py-2 px-4 text-right align-top text-[11px] border border-black">{formatCurrency(item.unitPrice)}</td>
+                      <td className="py-2 px-4 text-center align-top text-[11px]">{item.quantity}</td>
+                      <td className="py-2 px-4 text-right align-top text-[11px]">{formatCurrency(item.unitPrice)}</td>
                       {data.columnSettings?.showPrice2 && (
-                        <td className="py-2 px-4 text-right align-top text-[11px] border border-black">{formatCurrency(item.unitPrice2 || 0)}</td>
+                        <td className="py-2 px-4 text-right align-top text-[11px]">{formatCurrency(item.unitPrice2 || 0)}</td>
                       )}
-                      <td className="py-2 px-6 text-right align-top text-[11px] border border-black">{formatCurrency(item.amount !== undefined ? item.amount : ((item.quantity || 0) * (item.unitPrice || 0) + (data.columnSettings?.showPrice2 ? (item.quantity || 0) * (item.unitPrice2 || 0) : 0)))}</td>
+                      <td className="py-2 px-6 text-right align-top text-[11px]">{formatCurrency(item.amount !== undefined ? item.amount : ((item.quantity || 0) * (item.unitPrice || 0) + (data.columnSettings?.showPrice2 ? (item.quantity || 0) * (item.unitPrice2 || 0) : 0)))}</td>
                     </tr>
                   ))
                 )}
@@ -172,33 +172,33 @@ export default function DocumentPreview({ data }: Props) {
                 {/* Fill empty rows visually */}
                 {Array.from({ length: Math.max(0, 5 - data.items.length) }).map((_, i) => (
                   <tr key={`empty-${i}`} className="h-8">
-                    <td className="border border-black"></td>
-                    <td className="border border-black"></td>
-                    <td className="border border-black"></td>
-                    <td className="border border-black"></td>
-                    {data.columnSettings?.showPrice2 && <td className="border border-black"></td>}
-                    <td className="border border-black"></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    {data.columnSettings?.showPrice2 && <td></td>}
+                    <td></td>
                   </tr>
                 ))}
                 
                 {data.paymentTerms && (
                   <tr className="h-6">
-                    <td className="border border-black"></td>
-                    <td className="py-2 px-6 border text-stone-800 align-top break-words text-[11px] border-black">
+                    <td></td>
+                    <td className="py-2 px-6 text-stone-800 align-top break-words text-[11px]">
                       <div className="font-bold underline mb-1">ช่องทางการชำระเงิน</div>
                       <div className="whitespace-pre-wrap pb-2 break-words">{data.paymentTerms.replace(/^ช่องทางการชำระเงิน\s*\n?/, '')}</div>
                     </td>
-                    <td className="border border-black"></td>
-                    <td className="border border-black"></td>
-                    {data.columnSettings?.showPrice2 && <td className="border border-black"></td>}
-                    <td className="border border-black"></td>
+                    <td></td>
+                    <td></td>
+                    {data.columnSettings?.showPrice2 && <td></td>}
+                    <td></td>
                   </tr>
                 )}
 
                 {notes && (
                   <tr className="h-6">
-                    <td className="border border-black"></td>
-                    <td className="pt-1.5 px-6 border text-stone-800 align-top break-words text-[11px] border-black">
+                    <td></td>
+                    <td className="pt-1.5 px-6 text-stone-800 align-top break-words text-[11px]">
                       <div className="font-bold italic mb-1">หมายเหตุ:</div>
                       <div className="flex flex-col w-full pb-1">
                         <div className="border-t border-stone-300 w-full"></div>
@@ -209,53 +209,53 @@ export default function DocumentPreview({ data }: Props) {
                         ))}
                       </div>
                     </td>
-                    <td className="border border-black"></td>
-                    <td className="border border-black"></td>
-                    {data.columnSettings?.showPrice2 && <td className="border border-black"></td>}
-                    <td className="border border-black"></td>
+                    <td></td>
+                    <td></td>
+                    {data.columnSettings?.showPrice2 && <td></td>}
+                    <td></td>
                   </tr>
                 )}
               </tbody>
               <tfoot className="font-semibold text-[11px] bg-white">
                 <tr>
-                   <td colSpan={2} rowSpan={2 + (data.discount > 0 ? 1 : 0) + (data.includeTax ? 1 : 0)} className="border border-black px-4 align-middle bg-white">
+                   <td colSpan={2} rowSpan={2 + (data.discount > 0 ? 1 : 0) + (data.includeTax ? 1 : 0)} className="px-4 align-middle bg-white">
                       <div className="flex items-center gap-8">
-                         <span className="font-bold">ตัวอักษร.</span>
+                         <span className="font-bold">ตัวอักษร</span>
                          <span className="flex-1 text-center font-normal">({THBText(grandTotal)})</span>
                       </div>
                    </td>
-                   <td colSpan={data.columnSettings?.showPrice2 ? 3 : 2} className="border border-black px-4 py-2 bg-white">
+                   <td colSpan={data.columnSettings?.showPrice2 ? 3 : 2} className="px-4 py-2 bg-white">
                        รวมเงิน
                    </td>
-                   <td className={`border border-black px-6 py-2 text-right font-normal bg-white text-black`}>
+                   <td className={`px-6 py-2 text-right font-normal bg-white text-black`}>
                        {formatCurrency(subTotal)}
                    </td>
                 </tr>
                 {data.discount > 0 && (
                   <tr>
-                     <td colSpan={data.columnSettings?.showPrice2 ? 3 : 2} className="border border-black px-4 py-2 bg-white">
+                     <td colSpan={data.columnSettings?.showPrice2 ? 3 : 2} className="px-4 py-2 bg-white">
                          ส่วนลด
                      </td>
-                     <td className={`border border-black px-6 py-2 text-right font-normal bg-white text-black`}>
+                     <td className={`px-6 py-2 text-right font-normal bg-white text-black`}>
                          -{formatCurrency(data.discount)}
                      </td>
                   </tr>
                 )}
                 {data.includeTax && (
                   <tr>
-                     <td colSpan={data.columnSettings?.showPrice2 ? 3 : 2} className="border border-black px-4 py-2 bg-white">
+                     <td colSpan={data.columnSettings?.showPrice2 ? 3 : 2} className="px-4 py-2 bg-white">
                          ภาษีมูลค่าเพิ่ม {data.taxRate}%
                      </td>
-                     <td className={`border border-black px-6 py-2 text-right font-normal bg-white text-black`}>
+                     <td className={`px-6 py-2 text-right font-normal bg-white text-black`}>
                          {formatCurrency(taxAmount)}
                      </td>
                   </tr>
                 )}
                 <tr>
-                   <td colSpan={data.columnSettings?.showPrice2 ? 3 : 2} className="border border-black px-4 py-2 bg-white">
+                   <td colSpan={data.columnSettings?.showPrice2 ? 3 : 2} className="px-4 py-2 bg-white">
                        จำนวนเงินทั้งสิ้น
                    </td>
-                   <td className={`border border-black px-6 py-2 text-right font-bold bg-white text-black`}>
+                   <td className={`px-6 py-2 text-right font-bold bg-white text-black`}>
                        {formatCurrency(grandTotal)}
                    </td>
                 </tr>
@@ -278,11 +278,11 @@ export default function DocumentPreview({ data }: Props) {
                 <div className="mt-auto space-y-4 pt-12">
                   <div className="flex gap-2 items-end">
                     <span className="w-10">ผู้อนุมัติ</span>
-                    <span className="flex-1 border-b border-dashed border-black"></span>
+                    <span className="flex-1 border-b border-dashed border-black pb-0.5"></span>
                   </div>
                   <div className="flex gap-2 items-end">
                     <span className="w-10">วันที่</span>
-                    <span className="flex-1 border-b border-dashed border-black text-transparent focus:text-stone-700">_</span>
+                    <span className="flex-1 border-b border-dashed border-black text-transparent pb-0.5 focus:text-stone-700">_</span>
                   </div>
                 </div>
               </div>
@@ -290,11 +290,11 @@ export default function DocumentPreview({ data }: Props) {
                 <div className="mt-auto space-y-4 pt-12">
                   <div className="flex gap-2 items-end">
                     <span className="w-16">ผู้เสนอราคา</span>
-                    <span className="flex-1 text-center border-b border-dashed border-black">บุษยาพร สามารถ</span>
+                    <span className="flex-1 text-center border-b border-dashed border-black pb-0.5">บุษยาพร สามารถ</span>
                   </div>
                   <div className="flex gap-2 items-end">
                     <span className="w-16">วันที่</span>
-                    <span className="flex-1 text-center border-b border-dashed border-black">{formatDate(data.date)}</span>
+                    <span className="flex-1 text-center border-b border-dashed border-black pb-0.5">{formatDate(data.date)}</span>
                   </div>
                 </div>
               </div>
@@ -316,7 +316,7 @@ export default function DocumentPreview({ data }: Props) {
 
   if (isReceipt) {
     return (
-      <div className={`text-[12px] text-stone-800 bg-white min-h-[295mm] print:min-h-0 relative flex flex-col justify-between font-medium`} style={{ fontFamily: fontStyle }}>
+      <div className={`text-[12px] leading-[1.35] text-stone-800 bg-white min-h-[295mm] print:min-h-0 relative flex flex-col justify-between font-medium`} style={{ fontFamily: fontStyle }}>
         <div className="pt-16 pb-12 px-16 flex flex-col flex-1">
           
           <div className="text-center relative mb-12">
@@ -364,42 +364,42 @@ export default function DocumentPreview({ data }: Props) {
 
           {/* Table */}
           <div className="mb-12 flex-1">
-            <table className="w-full text-left border-collapse border border-black table-fixed">
+            <table className="w-full text-left table-bordered text-stone-900 table-fixed">
               <thead>
                 <tr className={`${c.receiptBg} text-white`}>
-                  <th className="py-2 px-3 font-medium text-center w-16 text-[11px] border border-black">ลำดับ</th>
-                  <th className="py-2 px-6 font-medium text-[11px] border border-black text-center">รายการ (ชนิด/ชื่อ)</th>
-                  <th className="py-2 px-4 text-center font-medium w-20 text-[11px] border border-black">จำนวน</th>
-                  <th className="py-2 px-4 text-center font-medium w-28 text-[11px] border border-black">{data.columnSettings?.price1Label || 'ราคา/หน่วย'}</th>
+                  <th className="py-2 px-3 font-bold text-center w-16 text-[11px]">ลำดับ</th>
+                  <th className="py-2 px-6 font-bold text-[11px] text-center">รายการ (ชนิด/ชื่อ)</th>
+                  <th className="py-2 px-4 text-center font-bold w-20 text-[11px]">จำนวน</th>
+                  <th className="py-2 px-4 text-center font-bold w-28 text-[11px]">{data.columnSettings?.price1Label || 'ราคา/หน่วย'}</th>
                   {data.columnSettings?.showPrice2 && (
-                    <th className="py-2 px-4 text-center font-medium w-28 text-[11px] border border-black">{data.columnSettings?.price2Label || 'ราคา/ปี'}</th>
+                    <th className="py-2 px-4 text-center font-bold w-28 text-[11px]">{data.columnSettings?.price2Label || 'ราคา/ปี'}</th>
                   )}
-                  <th className="py-2 px-6 text-center font-medium w-32 text-[11px] border border-black">จำนวนเงิน</th>
+                  <th className="py-2 px-6 text-center font-bold w-32 text-[11px]">จำนวนเงิน</th>
                 </tr>
               </thead>
               <tbody>
                 {data.items.length === 0 ? (
                   <tr>
-                    <td className={`py-4 px-3 text-center border border-black text-[11px]`}>1</td>
-                    <td className={`py-4 px-6 border border-black text-[11px]`}></td>
-                    <td className={`py-4 px-4 text-center border border-black text-[11px]`}></td>
-                    <td className={`py-4 px-4 text-center border border-black text-[11px]`}></td>
-                    {data.columnSettings?.showPrice2 && <td className={`py-4 px-4 text-center border border-black text-[11px]`}></td>}
-                    <td className={`py-4 px-6 text-center border border-black text-[11px]`}></td>
+                    <td className={`py-4 px-3 text-center text-[11px]`}>1</td>
+                    <td className={`py-4 px-6 text-[11px]`}></td>
+                    <td className={`py-4 px-4 text-center text-[11px]`}></td>
+                    <td className={`py-4 px-4 text-center text-[11px]`}></td>
+                    {data.columnSettings?.showPrice2 && <td className={`py-4 px-4 text-center text-[11px]`}></td>}
+                    <td className={`py-4 px-6 text-center text-[11px]`}></td>
                   </tr>
                 ) : (
                   data.items.map((item, index) => (
-                    <tr key={item.id} className="h-6">
-                      <td className={`py-2 px-3 text-center border border-black text-[11px] align-top`}>{index + 1}</td>
-                      <td className={`py-2 px-6 border text-stone-800 align-top break-words text-[11px] border-black`}>
-                        <div className="whitespace-pre-wrap break-words">{item.description || ''}</div>
+                    <tr key={item.id}>
+                      <td className={`py-2 px-3 text-center text-[11px] align-top`}>{index + 1}</td>
+                      <td className={`py-2 px-6 text-stone-800 align-top break-words text-[11px]`}>
+                        <div className="whitespace-pre-wrap break-words leading-tight">{item.description || ''}</div>
                       </td>
-                      <td className={`py-2 px-4 text-center align-top text-[11px] border border-black`}>{item.quantity}</td>
-                      <td className={`py-2 px-4 text-right align-top text-[11px] border border-black`}>{formatCurrency(item.unitPrice)}</td>
+                      <td className={`py-2 px-4 text-center align-top text-[11px]`}>{item.quantity}</td>
+                      <td className={`py-2 px-4 text-right align-top text-[11px]`}>{formatCurrency(item.unitPrice)}</td>
                       {data.columnSettings?.showPrice2 && (
-                        <td className={`py-2 px-4 text-right align-top text-[11px] border border-black`}>{formatCurrency(item.unitPrice2 || 0)}</td>
+                        <td className={`py-2 px-4 text-right align-top text-[11px]`}>{formatCurrency(item.unitPrice2 || 0)}</td>
                       )}
-                      <td className={`py-2 px-6 text-right align-top text-[11px] border border-black`}>
+                      <td className={`py-2 px-6 text-right align-top text-[11px]`}>
                         {formatCurrency(item.amount !== undefined ? item.amount : ((item.quantity || 0) * (item.unitPrice || 0) + (data.columnSettings?.showPrice2 ? (item.quantity || 0) * (item.unitPrice2 || 0) : 0)))}
                       </td>
                     </tr>
@@ -408,25 +408,25 @@ export default function DocumentPreview({ data }: Props) {
                 {/* Fill empty rows to make the table look full if there are few items */}
                 {data.items.length > 0 && Array.from({ length: Math.max(0, 15 - data.items.length) }).map((_, i) => (
                    <tr key={`empty-${i}`} className="h-6">
-                      <td className="border border-black"></td>
-                      <td className="border border-black"></td>
-                      <td className="border border-black"></td>
-                      <td className="border border-black"></td>
-                      {data.columnSettings?.showPrice2 && <td className="border border-black"></td>}
-                      <td className="border border-black"></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      {data.columnSettings?.showPrice2 && <td></td>}
+                      <td></td>
                    </tr>
                 ))}
                  {notes && (
                   <tr className="h-6">
-                    <td className="border border-black"></td>
-                    <td className="py-2 px-6 border text-stone-800 align-top break-words text-[11px] border-black">
+                    <td></td>
+                    <td className="py-2 px-6 text-stone-800 align-top break-words text-[11px]">
                       <div className="font-bold italic underline mb-1">หมายเหตุ:</div>
                       <div className="whitespace-pre-wrap leading-relaxed pb-2 break-words">{notes}</div>
                     </td>
-                    <td className="border border-black"></td>
-                    <td className="border border-black"></td>
-                    {data.columnSettings?.showPrice2 ? <td className="border border-black"></td> : null}
-                    <td className="border border-black"></td>
+                    <td></td>
+                    <td></td>
+                    {data.columnSettings?.showPrice2 ? <td></td> : null}
+                    <td></td>
                   </tr>
                  )}
               </tbody>
@@ -434,57 +434,57 @@ export default function DocumentPreview({ data }: Props) {
                 {(data.discount > 0 || data.includeTax) ? (
                   <>
                     <tr>
-                       <td colSpan={2} rowSpan={2 + (data.discount > 0 ? 1 : 0) + (data.includeTax ? 1 : 0)} className={`border border-black px-4 align-middle bg-white`}>
+                       <td colSpan={2} rowSpan={2 + (data.discount > 0 ? 1 : 0) + (data.includeTax ? 1 : 0)} className={`px-4 align-middle bg-white`}>
                            <div className="flex items-center gap-8">
                               <span className="font-bold">ตัวอักษร</span>
                               <span className="flex-1 text-center font-normal">({THBText(grandTotal)})</span>
                            </div>
                        </td>
-                       <td colSpan={data.columnSettings?.showPrice2 ? 3 : 2} className="border border-black p-2 text-center bg-white">
+                       <td colSpan={data.columnSettings?.showPrice2 ? 3 : 2} className="p-2 text-center bg-white">
                            รวมเงิน
                        </td>
-                       <td className={`border border-black px-6 py-2 text-right bg-white text-black`}>
+                       <td className={`px-6 py-2 text-right bg-white text-black`}>
                            {formatCurrency(subTotal)}
                        </td>
                     </tr>
                     {data.discount > 0 && (
                       <tr>
-                         <td colSpan={data.columnSettings?.showPrice2 ? 3 : 2} className="border border-black p-2 text-center bg-white">
+                         <td colSpan={data.columnSettings?.showPrice2 ? 3 : 2} className="p-2 text-center bg-white">
                              ส่วนลด
                          </td>
-                         <td className={`border border-black px-6 py-2 text-right bg-white text-black`}>
+                         <td className={`px-6 py-2 text-right bg-white text-black`}>
                              -{formatCurrency(data.discount)}
                          </td>
                       </tr>
                     )}
                     {data.includeTax && (
                       <tr>
-                         <td colSpan={data.columnSettings?.showPrice2 ? 3 : 2} className="border border-black p-2 text-center bg-white">
+                         <td colSpan={data.columnSettings?.showPrice2 ? 3 : 2} className="p-2 text-center bg-white">
                              ภาษีมูลค่าเพิ่ม {data.taxRate}%
                          </td>
-                         <td className={`border border-black px-6 py-2 text-right bg-white text-black`}>
+                         <td className={`px-6 py-2 text-right bg-white text-black`}>
                              {formatCurrency(taxAmount)}
                          </td>
                       </tr>
                     )}
                     <tr>
-                       <td colSpan={data.columnSettings?.showPrice2 ? 3 : 2} className="border border-black p-2 text-center bg-white">
+                       <td colSpan={data.columnSettings?.showPrice2 ? 3 : 2} className="p-2 text-center bg-white">
                           จำนวนเงินทั้งสิ้น
                        </td>
-                       <td className={`border border-black px-6 py-2 text-right text-black font-bold ${c.secBg}`}>
+                       <td className={`px-6 py-2 text-right text-black font-bold ${c.secBg}`}>
                           {formatCurrency(grandTotal)}
                        </td>
                     </tr>
                   </>
                 ) : (
                   <tr>
-                     <td colSpan={2} className={`border border-black p-2 text-center ${c.secBg}`}>
+                     <td colSpan={2} className={`p-2 text-center ${c.secBg}`}>
                          ( {THBText(grandTotal)} )
                      </td>
-                     <td colSpan={data.columnSettings?.showPrice2 ? 3 : 2} className="border border-black p-2 text-center bg-white">
+                     <td colSpan={data.columnSettings?.showPrice2 ? 3 : 2} className="p-2 text-center bg-white">
                         รวมทั้งสิ้น
                      </td>
-                     <td className={`border border-black px-6 py-2 text-right text-black ${c.secBg}`}>
+                     <td className={`px-6 py-2 text-right text-black ${c.secBg}`}>
                         {formatCurrency(grandTotal)}
                      </td>
                   </tr>
@@ -509,7 +509,7 @@ export default function DocumentPreview({ data }: Props) {
   }
 
   return (
-    <div className={`text-[12px] text-stone-800 bg-white min-h-[295mm] print:min-h-0 relative flex flex-col justify-between font-medium`} style={{ fontFamily: fontStyle }}>
+    <div className={`text-[12px] leading-[1.35] text-stone-800 bg-white min-h-[295mm] print:min-h-0 relative flex flex-col justify-between font-medium`} style={{ fontFamily: fontStyle }}>
       
       <div className="pt-8 pb-8 px-12 flex flex-col flex-1">
         
@@ -540,28 +540,28 @@ export default function DocumentPreview({ data }: Props) {
             <table className="w-full">
               <tbody>
                 <tr>
-                  <td className={`w-px whitespace-nowrap pr-4 pb-1 align-top ${labelColor}`}>ชื่อลูกค้า</td>
+                  <td className={`w-[1%] whitespace-nowrap pr-4 pb-1 align-top ${labelColor}`}>ชื่อลูกค้า</td>
                   <td className={`pb-1 ${valueColor} font-bold break-words`} colSpan={data.to.branch ? 1 : 3}>{data.to.name || ''}</td>
                   {data.to.branch && (
                     <>
-                      <td className={`w-px whitespace-nowrap pr-4 pb-1 align-top ${labelColor} pl-4`}>สาขา</td>
+                      <td className={`w-[1%] whitespace-nowrap pr-4 pb-1 align-top ${labelColor} pl-4`}>สาขา</td>
                       <td className={`pb-1 ${valueColor} font-bold break-words`}>{data.to.branch}</td>
                     </>
                   )}
                 </tr>
                 <tr>
-                  <td className={`w-px align-top whitespace-nowrap pr-4 pb-1 ${labelColor}`}>ที่อยู่</td>
+                  <td className={`w-[1%] align-top whitespace-nowrap pr-4 pb-1 ${labelColor}`}>ที่อยู่</td>
                   <td colSpan={3} className={`pb-1 ${valueColor} whitespace-pre-wrap break-words`}>{data.to.address || ''}</td>
                 </tr>
                 <tr>
-                  <td className={`w-px whitespace-nowrap pr-4 pb-1 align-top ${labelColor}`}>เลขผู้เสียภาษี</td>
+                  <td className={`w-[1%] whitespace-nowrap pr-4 pb-1 align-top ${labelColor}`}>เลขผู้เสียภาษี</td>
                   <td className={`pb-1 ${valueColor} break-words`}>{data.to.taxId || ''}</td>
-                  <td className={`w-px whitespace-nowrap pr-4 pb-1 align-top ${labelColor} pl-4`}>เบอร์โทรศัพท์</td>
+                  <td className={`w-[1%] whitespace-nowrap pr-4 pb-1 align-top ${labelColor} pl-4`}>เบอร์โทรศัพท์</td>
                   <td className={`pb-1 ${valueColor} break-words`}>{data.to.phone || ''}</td>
                 </tr>
                 {data.to.contactPerson && (
                   <tr>
-                    <td className={`w-px whitespace-nowrap pr-4 pb-1 align-top ${labelColor}`}>ผู้ติดต่อ</td>
+                    <td className={`w-[1%] whitespace-nowrap pr-4 pb-1 align-top ${labelColor}`}>ผู้ติดต่อ</td>
                     <td colSpan={3} className={`pb-1 ${valueColor} break-words`}>{data.to.contactPerson}</td>
                   </tr>
                 )}
@@ -574,16 +574,16 @@ export default function DocumentPreview({ data }: Props) {
             <table className="w-full">
               <tbody>
                 <tr>
-                  <td className={`w-px pr-4 whitespace-nowrap pb-1 ${labelColor}`}>เลขที่</td>
+                  <td className={`w-[1%] pr-4 whitespace-nowrap pb-1 ${labelColor}`}>เลขที่</td>
                   <td className={`pb-1 ${valueColor} font-bold`}>{data.documentNumber || ''}</td>
                 </tr>
                 <tr>
-                  <td className={`w-px pr-4 whitespace-nowrap pb-1 ${labelColor}`}>วันที่</td>
+                  <td className={`w-[1%] pr-4 whitespace-nowrap pb-1 ${labelColor}`}>วันที่</td>
                   <td className={`pb-1 ${valueColor} font-bold`}>{formatDate(data.date)}</td>
                 </tr>
                 {data.dueDate && (
                   <tr>
-                    <td className={`w-px pr-4 whitespace-nowrap pb-1 ${labelColor}`}>{data.type === 'QUOTATION' ? 'ยืนยันราคาถึง' : 'ครบกำหนด'}</td>
+                    <td className={`w-[1%] pr-4 whitespace-nowrap pb-1 ${labelColor}`}>{data.type === 'QUOTATION' ? 'ยืนยันราคาถึง' : 'ครบกำหนด'}</td>
                     <td className={`pb-1 ${valueColor} font-bold`}>{formatDate(data.dueDate)}</td>
                   </tr>
                 )}
@@ -598,11 +598,11 @@ export default function DocumentPreview({ data }: Props) {
             <table className="w-full">
               <tbody>
                 <tr>
-                  <td className={`w-px pr-4 whitespace-nowrap pb-1 ${labelColor}`}>ผู้ออก</td>
+                  <td className={`w-[1%] pr-4 whitespace-nowrap pb-1 ${labelColor}`}>ผู้ออก</td>
                   <td className={`pb-1 ${valueColor} font-bold`}>{data.from.name || ''}</td>
                 </tr>
                 <tr>
-                  <td className={`w-px pr-4 align-top whitespace-nowrap pb-1 ${labelColor}`}>ที่อยู่</td>
+                  <td className={`w-[1%] pr-4 align-top whitespace-nowrap pb-1 ${labelColor}`}>ที่อยู่</td>
                   <td className={`pb-1 ${valueColor} whitespace-pre-wrap`}>{data.from.address || ''}</td>
                 </tr>
               </tbody>
@@ -612,15 +612,15 @@ export default function DocumentPreview({ data }: Props) {
             <table className="w-full">
               <tbody>
                 <tr>
-                  <td className={`w-px pr-4 whitespace-nowrap pb-1 ${labelColor}`}>เลขประจำตัวผู้เสียภาษี</td>
+                  <td className={`w-[1%] pr-4 whitespace-nowrap pb-1 ${labelColor}`}>เลขประจำตัวผู้เสียภาษี</td>
                   <td className={`pb-1 ${valueColor} font-bold`}>{data.from.taxId || ''}</td>
                 </tr>
                 <tr>
-                  <td className={`w-px pr-4 whitespace-nowrap pb-1 ${labelColor}`}>เบอร์โทร</td>
+                  <td className={`w-[1%] pr-4 whitespace-nowrap pb-1 ${labelColor}`}>เบอร์โทร</td>
                   <td className={`pb-1 ${valueColor} font-bold`}>{data.from.phone || ''}</td>
                 </tr>
                 <tr>
-                  <td className={`w-px pr-4 whitespace-nowrap pb-1 ${labelColor}`}>อีเมล์</td>
+                  <td className={`w-[1%] pr-4 whitespace-nowrap pb-1 ${labelColor}`}>อีเมล์</td>
                   <td className={`pb-1 ${valueColor} font-bold`}>{data.from.email || ''}</td>
                 </tr>
               </tbody>
@@ -630,17 +630,17 @@ export default function DocumentPreview({ data }: Props) {
 
         {/* Items Table */}
         <div className="mb-8 flex-1">
-          <table className="w-full text-left border-collapse table-fixed">
+          <table className="w-full text-left table-bordered text-stone-900 table-fixed">
             <thead>
               <tr className={`${c.bg} text-white`}>
-                <th className="py-2.5 px-3 font-medium text-center w-16 text-[11px]">ลำดับ</th>
-                <th className="py-2.5 px-6 font-medium text-[11px] text-center">รายการสินค้า</th>
-                <th className="py-2.5 px-4 text-center font-medium w-24 text-[11px]">จำนวน</th>
-                <th className="py-2.5 px-4 text-center font-medium w-28 text-[11px]">{data.columnSettings?.price1Label || 'ราคา/หน่วย'}</th>
+                <th className="py-2.5 px-3 font-bold text-center w-16 text-[11px]">ลำดับ</th>
+                <th className="py-2.5 px-6 font-bold text-[11px] text-center">รายการสินค้า</th>
+                <th className="py-2.5 px-4 text-center font-bold w-24 text-[11px]">จำนวน</th>
+                <th className="py-2.5 px-4 text-center font-bold w-28 text-[11px]">{data.columnSettings?.price1Label || 'ราคา/หน่วย'}</th>
                 {data.columnSettings?.showPrice2 && (
-                  <th className="py-2.5 px-4 text-center font-medium w-28 text-[11px]">{data.columnSettings?.price2Label || 'ราคา/ปี'}</th>
+                  <th className="py-2.5 px-4 text-center font-bold w-28 text-[11px]">{data.columnSettings?.price2Label || 'ราคา/ปี'}</th>
                 )}
-                <th className="py-2.5 px-6 text-center font-medium w-32 text-[11px]">{data.columnSettings?.amountLabel || 'ราคารวม'}</th>
+                <th className="py-2.5 px-6 text-center font-bold w-32 text-[11px]">{data.columnSettings?.amountLabel || 'ราคารวม'}</th>
               </tr>
             </thead>
             <tbody>
@@ -658,16 +658,16 @@ export default function DocumentPreview({ data }: Props) {
               ) : (
                 data.items.map((item, index) => (
                   <tr key={item.id}>
-                    <td className={`py-3 px-3 text-center ${valueColor} text-[11px] align-top`}>{index + 1}</td>
-                    <td className={`py-3 px-6 font-medium ${valueColor} leading-relaxed align-top break-words text-[11px]`}>
-                      <div className="whitespace-pre-wrap break-words">{item.description || ''}</div>
+                    <td className={`py-3 px-3 text-center ${valueColor} text-[11px]`}>{index + 1}</td>
+                    <td className={`py-3 px-6 font-medium ${valueColor} break-words text-[11px]`}>
+                      <div className="whitespace-pre-wrap break-words leading-tight">{item.description || ''}</div>
                     </td>
-                    <td className={`py-3 px-4 text-center ${valueColor} align-top text-[11px]`}>{item.quantity}</td>
-                    <td className={`py-3 px-4 text-center ${valueColor} align-top text-[11px]`}>{formatCurrency(item.unitPrice)}</td>
+                    <td className={`py-3 px-4 text-center ${valueColor} text-[11px]`}>{item.quantity}</td>
+                    <td className={`py-3 px-4 text-center ${valueColor} text-[11px]`}>{formatCurrency(item.unitPrice)}</td>
                     {data.columnSettings?.showPrice2 && (
-                      <td className={`py-3 px-4 text-center ${valueColor} align-top text-[11px]`}>{formatCurrency(item.unitPrice2 || 0)}</td>
+                      <td className={`py-3 px-4 text-center ${valueColor} text-[11px]`}>{formatCurrency(item.unitPrice2 || 0)}</td>
                     )}
-                    <td className={`py-3 px-6 text-center ${valueColor} align-top text-[11px]`}>
+                    <td className={`py-3 px-6 text-center ${valueColor} text-[11px]`}>
                       {formatCurrency(item.amount !== undefined ? item.amount : ((item.quantity || 0) * (item.unitPrice || 0) + (data.columnSettings?.showPrice2 ? (item.quantity || 0) * (item.unitPrice2 || 0) : 0)))}
                     </td>
                   </tr>
