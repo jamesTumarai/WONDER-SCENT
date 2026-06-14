@@ -151,6 +151,7 @@ export default function App() {
       setIsGeneratingPdf(true);
       // พัก thread เล็กน้อยให้ UI อัพเดทสถานะ loading
       await new Promise(resolve => setTimeout(resolve, 50));
+      await document.fonts.ready;
 
       const html2pdf = (await import('html2pdf.js')).default;
       const element = document.getElementById('document-preview-container');
@@ -374,9 +375,9 @@ export default function App() {
         {/* Preview Panel (Right) */}
         <section className={`flex-1 p-0 sm:p-6 md:p-8 xl:p-12 xl:overflow-y-auto print:h-auto print:overflow-visible justify-center bg-sand-100 print:bg-white print:p-0 print:block custom-scrollbar items-start relative z-0 ${showMobilePreview ? 'flex' : 'hidden xl:flex'} print:!flex`}>
           <div className="w-full overflow-x-auto overflow-y-hidden custom-scrollbar pb-6 xl:pb-0 px-4 sm:px-0">
-            <div className="bg-white shadow-xl shadow-stone-200 rounded-2xl print:shadow-none print:rounded-none w-[794px] min-h-[1123px] mx-auto border border-sand-200 print:border-none print:w-full print:min-h-0 relative">
+            <div className="bg-white shadow-xl shadow-stone-200 rounded-2xl print:shadow-none print:rounded-none w-[794px] h-[1123px] mx-auto border border-sand-200 print:border-none print:w-full print:h-auto relative">
               {/* Aspect ratio A4 for realistic preview */}
-              <div id="document-preview-container" className="print-area print:min-h-0 bg-white w-full min-h-[1123px] flex flex-col justify-between print:static print:w-full overflow-hidden rounded-2xl print:rounded-none">
+              <div id="document-preview-container" className="print-area print:h-auto bg-white w-full h-[1123px] flex flex-col justify-between print:static print:w-full overflow-hidden rounded-2xl print:rounded-none">
                  <DocumentPreview data={data} />
               </div>
             </div>

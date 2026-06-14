@@ -60,7 +60,7 @@ export default function DocumentPreview({ data }: Props) {
 
   if (isQuotation) {
     return (
-      <div className={`text-[12px] text-stone-800 bg-white min-h-[295mm] print:min-h-0 relative flex flex-col justify-between font-medium`} style={{ fontFamily: fontStyle }}>
+      <div className={`text-[12px] text-stone-800 bg-white h-[1123px] print:h-auto print:min-h-0 relative flex flex-col justify-between font-medium`} style={{ fontFamily: fontStyle }}>
         <div className="pt-12 pb-12 px-12 flex flex-col flex-1">
           
           {/* Header */}
@@ -87,7 +87,7 @@ export default function DocumentPreview({ data }: Props) {
 
           {/* Title Box */}
           <div className="flex justify-center mb-6">
-            <div className={`border-2 ${c.border} rounded-xl px-12 py-1.5 text-center ${c.text}`}>
+            <div className={`border ${c.border} rounded-xl px-12 py-1.5 text-center ${c.text}`}>
               <h2 className="text-lg font-bold">ใบเสนอราคา</h2>
               <h3 className="font-bold">Quotation</h3>
             </div>
@@ -132,7 +132,7 @@ export default function DocumentPreview({ data }: Props) {
 
           {/* Table */}
           <div className="mb-4 flex-1">
-            <table className="w-full text-left border-collapse border-2 border-black table-fixed">
+            <table className="w-full text-left border-collapse border border-black table-fixed">
               <thead>
                 <tr className={`${c.bg} text-white`}>
                   <th className="py-2.5 px-3 font-medium text-center w-12 text-[11px] border border-black">ลำดับ</th>
@@ -272,7 +272,7 @@ export default function DocumentPreview({ data }: Props) {
 
           {/* Signatures */}
           <div className="flex gap-2 text-[11px] print:break-inside-avoid">
-            <div className="w-[60%] flex border-2 border-black">
+            <div className="w-[60%] flex border border-black">
               <div className="w-1/2 flex flex-col p-3 border-r border-black">
                 <div className="font-bold mb-4 text-center break-words min-h-[16px]">{data.to.name}</div>
                 <div className="mt-auto space-y-4 pt-12">
@@ -300,7 +300,7 @@ export default function DocumentPreview({ data }: Props) {
               </div>
             </div>
             
-            <div className="flex-1 flex flex-col border-2 border-black p-3 text-center justify-between">
+            <div className="flex-1 flex flex-col border border-black p-3 text-center justify-between">
               <div className="font-bold uppercase tracking-wide">{(data.from.name && data.from.name.toLowerCase().includes('wonder') ? 'WONDER SCENT' : data.from.name)}</div>
               <div className="mt-auto w-full px-6 pt-12">
                 <div className="border-b border-dashed border-black w-full mb-1.5"></div>
@@ -316,7 +316,7 @@ export default function DocumentPreview({ data }: Props) {
 
   if (isReceipt) {
     return (
-      <div className={`text-[12px] text-stone-800 bg-white min-h-[295mm] print:min-h-0 relative flex flex-col justify-between font-medium`} style={{ fontFamily: fontStyle }}>
+      <div className={`text-[12px] text-stone-800 bg-white h-[1123px] print:h-auto print:min-h-0 relative flex flex-col justify-between font-medium`} style={{ fontFamily: fontStyle }}>
         <div className="pt-16 pb-12 px-16 flex flex-col flex-1">
           
           <div className="text-center relative mb-12">
@@ -364,7 +364,7 @@ export default function DocumentPreview({ data }: Props) {
 
           {/* Table */}
           <div className="mb-12 flex-1">
-            <table className="w-full text-left border-collapse border-2 border-black table-fixed">
+            <table className="w-full text-left border-collapse border border-black table-fixed">
               <thead>
                 <tr className={`${c.receiptBg} text-white`}>
                   <th className="py-2 px-3 font-medium text-center w-16 text-[11px] border border-black">ลำดับ</th>
@@ -509,7 +509,7 @@ export default function DocumentPreview({ data }: Props) {
   }
 
   return (
-    <div className={`text-[12px] text-stone-800 bg-white min-h-[295mm] print:min-h-0 relative flex flex-col justify-between font-medium`} style={{ fontFamily: fontStyle }}>
+    <div className={`text-[12px] text-stone-800 bg-white h-[1123px] print:h-auto print:min-h-0 relative flex flex-col justify-between font-medium`} style={{ fontFamily: fontStyle }}>
       
       <div className="pt-8 pb-8 px-12 flex flex-col flex-1">
         
