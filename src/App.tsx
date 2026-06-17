@@ -179,6 +179,9 @@ export default function App() {
       // รอให้ browser reflow
       await new Promise(resolve => setTimeout(resolve, 200));
 
+      // วัดความกว้าง element จริงหลัง reflow
+      const actualWidth = element.offsetWidth;
+
       const opt: any = {
         margin: 0,
         filename: finalFilename,
@@ -188,17 +191,15 @@ export default function App() {
           useCORS: true,
           allowTaint: true,
           logging: false,
-          scrollY: -window.scrollY,
+          scrollY: 0,
           scrollX: 0,
-          windowWidth: 794,
+          windowWidth: actualWidth,
           backgroundColor: '#ffffff',
           onclone: (_clonedDoc: Document, clonedEl: HTMLElement) => {
             clonedEl.style.minHeight = 'unset';
             clonedEl.style.height = 'auto';
-            clonedEl.style.width = '794px';
             clonedEl.style.fontFamily = `'${fontName}', sans-serif`;
 
-            // แก้ทุก child ที่มี min-h ติดมาจาก Tailwind
             clonedEl.querySelectorAll('[class*="min-h"]').forEach((el) => {
               (el as HTMLElement).style.minHeight = 'unset';
             });
