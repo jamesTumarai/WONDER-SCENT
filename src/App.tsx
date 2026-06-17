@@ -135,62 +135,119 @@ export default function App() {
       return;
     }
 
-    // Open Modal instead of window.prompt
     setShowPdfModal(true);
+  };
+
+  // ฟังก์ชันช่วย: รอให้ font โหลดครบจริงๆ
+  const waitForFonts = async (fontFamily: string): Promise<void> => {
+    const fontsToCheck = [
+      `400 16px ${fontFamily}`,
+      `500 16px ${fontFamily}`,
+      `600 16px ${fontFamily}`,
+      `700 16px ${fontFamily}`,
+    ];
+    try {
+      await Promise.all(fontsToCheck.map(f => document.fonts.load(f)));
+      await document.fonts.ready;
+    } catch {
+      await document.fonts.ready;
+    }
   };
 
   const executePdfGeneration = async (filename: string) => {
     setShowPdfModal(false);
     
-    // Ensure filename has .pdf extension
     const finalFilename = filename.endsWith('.pdf') ? filename : filename + '.pdf';
     
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
     try {
       setIsGeneratingPdf(true);
-      // พัก thread เล็กน้อยให้ UI อัพเดทสถานะ loading
-      await new Promise(resolve => setTimeout(resolve, 50));
-      await document.fonts.ready;
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      // รอ font ไทยโหลดครบก่อน render
+      const fontName = data.fontFamily === 'sans' ? 'Kanit' : data.fontFamily === 'sarabun' ? 'Sarabun' : 'Prompt';
+      await waitForFonts(fontName);
 
       const html2pdf = (await import('html2pdf.js')).default;
       const element = document.getElementById('document-preview-container');
       if (!element) return;
 
-      await document.fonts.ready;
-
+      // วัดขนาด element จริง
+      const elementWidth = element.offsetWidth;
       const originalBg = element.style.backgroundColor;
       element.style.backgroundColor = 'white';
 
       const opt: any = {
-        margin:       0,
-        filename:     finalFilename,
-        image:        { type: 'jpeg', quality: 1 },
-        html2canvas:  { 
-          scale: 4, 
-          useCORS: true, 
-          logging: false, 
+        margin: 0,
+        filename: finalFilename,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: {
+          scale: 2,                    // ลด scale จาก 4 → 2 ลด distortion
+          useCORS: true,
+          logging: false,
           scrollY: 0,
-          windowWidth: 794,
-          onclone: (doc: any) => {
-            const style = doc.createElement('style');
+          scrollX: 0,
+          windowWidth: elementWidth,   // ใช้ขนาด element จริง ไม่ hardcode 794
+          allowTaint: true,
+          backgroundColor: '#ffffff',
+          onclone: (clonedDoc: Document) => {
+            // inject font + style ใน cloned document ให้ตรงกับหน้าจอ
+            const style = clonedDoc.createElement('style');
             style.innerHTML = `
-              #document-preview-container {
-                font-family: ${data.fontFamily === 'sans' ? '"Kanit"' : data.fontFamily === 'sarabun' ? '"Sarabun"' : '"Prompt"'}, sans-serif !important;
+              @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap');
+
+              * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                box-sizing: border-box !important;
               }
+
+              #document-preview-container {
+                font-family: '${fontName}', sans-serif !important;
+                width: ${elementWidth}px !important;
+                background: white !important;
+              }
+
+              #document-preview-container table {
+                border-collapse: separate !important;
+                border-spacing: 0 !important;
+                table-layout: fixed !important;
+                width: 100% !important;
+              }
+
+              #document-preview-container .table-bordered {
+                border-top: 1px solid #1c1917 !important;
+                border-left: 1px solid #1c1917 !important;
+              }
+
+              #document-preview-container .table-bordered th,
+              #document-preview-container .table-bordered td {
+                border-bottom: 1px solid #1c1917 !important;
+                border-right: 1px solid #1c1917 !important;
+              }
+
               #document-preview-container .break-words {
-                word-break: break-all;
-                overflow-wrap: break-word;
+                word-break: break-word !important;
+                overflow-wrap: break-word !important;
+                white-space: pre-wrap !important;
               }
             `;
-            doc.head.appendChild(style);
+            clonedDoc.head.appendChild(style);
+
+            // รอ font โหลดใน cloned doc ด้วย
+            const clonedContainer = clonedDoc.getElementById('document-preview-container');
+            if (clonedContainer) {
+              clonedContainer.style.fontFamily = `'${fontName}', sans-serif`;
+            }
           }
         },
-        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 
       await html2pdf().set(opt).from(element).save();
       element.style.backgroundColor = originalBg;
+
     } catch (error) {
       console.error("Failed to generate PDF", error);
       alert("ไม่สามารถสร้างไฟล์ PDF ได้ ระบบจะทำการพิมพ์แบบปกติแทน");
@@ -373,7 +430,6 @@ export default function App() {
         {/* Saved Docs Panel (Slide in from left) */}
         {user && showSavedDocs && (
           <>
-            {/* Backdrop for mobile/tablet */}
             <div 
               className="fixed inset-0 bg-[#1c191766] z-[110] xl:hidden backdrop-blur-sm animate-in fade-in transition-opacity"
               onClick={() => setShowSavedDocs(false)}
@@ -396,7 +452,6 @@ export default function App() {
         <section className={`flex-1 p-0 sm:p-6 md:p-8 xl:p-12 xl:overflow-y-auto print:h-auto print:overflow-visible justify-center bg-sand-100 print:bg-white print:p-0 print:block custom-scrollbar items-start relative z-0 ${showMobilePreview ? 'flex' : 'hidden xl:flex'} print:!flex`}>
           <div className="w-full overflow-x-auto overflow-y-hidden custom-scrollbar pb-6 xl:pb-0 px-4 sm:px-0">
             <div className="bg-white shadow-xl shadow-stone-200 rounded-2xl print:shadow-none print:rounded-none w-[794px] min-h-[1123px] mx-auto border border-sand-200 print:border-none print:w-full print:min-h-0 relative">
-              {/* Aspect ratio A4 for realistic preview */}
               <div id="document-preview-container" className="print-area print:min-h-0 bg-white w-full min-h-[1123px] flex flex-col justify-between print:static print:w-full overflow-hidden rounded-2xl print:rounded-none">
                  <DocumentPreview data={data} />
               </div>
