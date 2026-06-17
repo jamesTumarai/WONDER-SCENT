@@ -41,13 +41,16 @@
 
 @media print {
   @page {
-    size: A4;
+    size: A4 portrait;
     margin: 0;
   }
-  
+
+  /* บังคับ 1 หน้า: ซ่อน scrollbar และ overflow */
   html, body {
     width: 210mm;
-    height: auto;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
     background: white;
     margin: 0;
     padding: 0;
@@ -55,21 +58,55 @@
     print-color-adjust: exact;
   }
 
+  /* ซ่อน UI ที่ไม่เกี่ยวกับเอกสาร */
   .no-print {
     display: none !important;
   }
-  
-  .print-only {
-    display: block !important;
-  }
 
+  /* preview wrapper — ลบ fixed size ออกทั้งหมด */
   .print-area {
-    width: 100% !important;
-    max-width: 100% !important;
+    width: 210mm !important;
+    max-width: 210mm !important;
+    min-height: unset !important;
+    height: auto !important;
     margin: 0 !important;
     padding: 0 !important;
     border: none !important;
     box-shadow: none !important;
-    min-height: auto !important;
+    overflow: visible !important;
+  }
+
+  /* parent ของ print-area */
+  #document-preview-container {
+    min-height: unset !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  /* ซ่อน outer wrapper ที่ไม่ใช่ print-area */
+  body > * {
+    display: none !important;
+  }
+
+  /* แสดงเฉพาะ preview panel */
+  #root {
+    display: block !important;
+    height: auto !important;
+  }
+
+  .print\:block {
+    display: block !important;
+  }
+
+  /* ลบ border มือถือที่ scale เพี้ยน */
+  .table-bordered {
+    border-top-width: 0.75pt !important;
+    border-left-width: 0.75pt !important;
+  }
+
+  .table-bordered th,
+  .table-bordered td {
+    border-bottom-width: 0.75pt !important;
+    border-right-width: 0.75pt !important;
   }
 }
