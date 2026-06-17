@@ -170,17 +170,15 @@ export default function App() {
       const element = document.getElementById('document-preview-container');
       if (!element) return;
 
-      // จำค่าเดิมไว้ก่อน แล้วบังคับ element ให้เป็น 794px ชั่วคราว
+      const actualWidth = element.offsetWidth;
+
+      // ลบ minHeight ชั่วคราวเพื่อไม่ให้หน้าว่าง
       const prevMinHeight = element.style.minHeight;
       const prevHeight = element.style.height;
       element.style.minHeight = 'unset';
       element.style.height = 'auto';
 
-      // รอให้ browser reflow
-      await new Promise(resolve => setTimeout(resolve, 200));
-
-      // วัดความกว้าง element จริงหลัง reflow
-      const actualWidth = element.offsetWidth;
+      await new Promise(resolve => setTimeout(resolve, 300));
 
       const opt: any = {
         margin: 0,
@@ -196,12 +194,21 @@ export default function App() {
           windowWidth: actualWidth,
           backgroundColor: '#ffffff',
           onclone: (_clonedDoc: Document, clonedEl: HTMLElement) => {
-            clonedEl.style.minHeight = 'unset';
-            clonedEl.style.height = 'auto';
-            clonedEl.style.fontFamily = `'${fontName}', sans-serif`;
-
-            clonedEl.querySelectorAll('[class*="min-h"]').forEach((el) => {
-              (el as HTMLElement).style.minHeight = 'unset';
+            // ใน cloned doc: ลบ min-h ทุกตัว และบังคับให้ position เป็น static
+            clonedEl.style.cssText += `
+              min-height: unset !important;
+              height: auto !important;
+              font-family: '${fontName}', sans-serif !important;
+              position: static !important;
+              transform: none !important;
+            `;
+            clonedEl.querySelectorAll('*').forEach((el) => {
+              const htmlEl = el as HTMLElement;
+              const computed = window.getComputedStyle(htmlEl);
+              // ลบ min-height ที่มาจาก Tailwind
+              if (computed.minHeight && computed.minHeight !== '0px') {
+                htmlEl.style.minHeight = 'unset';
+              }
             });
           }
         },
