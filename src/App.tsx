@@ -156,10 +156,8 @@ export default function App() {
 
   const executePdfGeneration = async (filename: string) => {
     setShowPdfModal(false);
-    
+
     const finalFilename = filename.endsWith('.pdf') ? filename : filename + '.pdf';
-    
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
     try {
       setIsGeneratingPdf(true);
@@ -173,26 +171,23 @@ export default function App() {
       const element = document.getElementById('document-preview-container');
       if (!element) return;
 
-      // วัดขนาด element จริง
-      const elementWidth = element.offsetWidth;
-      const originalBg = element.style.backgroundColor;
-      element.style.backgroundColor = 'white';
+      // A4 ที่ 96dpi = 794px พอดี — hardcode เพื่อความแม่นยำ
+      const A4_WIDTH_PX = 794;
 
       const opt: any = {
         margin: 0,
         filename: finalFilename,
-        image: { type: 'jpeg', quality: 0.98 },
+        image: { type: 'jpeg', quality: 1 },
         html2canvas: {
-          scale: 2,                    // ลด scale จาก 4 → 2 ลด distortion
+          scale: 2,
           useCORS: true,
+          allowTaint: true,
           logging: false,
           scrollY: 0,
           scrollX: 0,
-          windowWidth: elementWidth,   // ใช้ขนาด element จริง ไม่ hardcode 794
-          allowTaint: true,
+          windowWidth: A4_WIDTH_PX,
           backgroundColor: '#ffffff',
           onclone: (clonedDoc: Document) => {
-            // inject font + style ใน cloned document ให้ตรงกับหน้าจอ
             const style = clonedDoc.createElement('style');
             style.innerHTML = `
               @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap');
@@ -205,18 +200,16 @@ export default function App() {
 
               #document-preview-container {
                 font-family: '${fontName}', sans-serif !important;
-                width: ${elementWidth}px !important;
+                width: ${A4_WIDTH_PX}px !important;
+                min-height: unset !important;
+                height: auto !important;
                 background: white !important;
-              }
-
-              #document-preview-container table {
-                border-collapse: separate !important;
-                border-spacing: 0 !important;
-                table-layout: fixed !important;
-                width: 100% !important;
+                overflow: visible !important;
               }
 
               #document-preview-container .table-bordered {
+                border-collapse: separate !important;
+                border-spacing: 0 !important;
                 border-top: 1px solid #1c1917 !important;
                 border-left: 1px solid #1c1917 !important;
               }
@@ -227,17 +220,27 @@ export default function App() {
                 border-right: 1px solid #1c1917 !important;
               }
 
+              #document-preview-container table {
+                table-layout: fixed !important;
+                width: 100% !important;
+              }
+
               #document-preview-container .break-words {
                 word-break: break-word !important;
                 overflow-wrap: break-word !important;
-                white-space: pre-wrap !important;
               }
+
+              /* ซ่อน class ที่เกี่ยวกับ print/screen ที่ทำให้ layout พัง */
+              .no-print { display: none !important; }
             `;
             clonedDoc.head.appendChild(style);
 
-            // รอ font โหลดใน cloned doc ด้วย
             const clonedContainer = clonedDoc.getElementById('document-preview-container');
             if (clonedContainer) {
+              // ลบ min-height ออกเพื่อไม่ให้เกิดหน้าว่าง
+              clonedContainer.style.minHeight = 'unset';
+              clonedContainer.style.height = 'auto';
+              clonedContainer.style.width = `${A4_WIDTH_PX}px`;
               clonedContainer.style.fontFamily = `'${fontName}', sans-serif`;
             }
           }
@@ -246,7 +249,6 @@ export default function App() {
       };
 
       await html2pdf().set(opt).from(element).save();
-      element.style.backgroundColor = originalBg;
 
     } catch (error) {
       console.error("Failed to generate PDF", error);
