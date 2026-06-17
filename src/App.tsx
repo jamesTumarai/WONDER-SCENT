@@ -156,78 +156,11 @@ export default function App() {
 
   const executePdfGeneration = async (filename: string) => {
     setShowPdfModal(false);
-
-    const finalFilename = filename.endsWith('.pdf') ? filename : filename + '.pdf';
-
-    try {
-      setIsGeneratingPdf(true);
-      await new Promise(resolve => setTimeout(resolve, 100));
-
-      const fontName = data.fontFamily === 'sans' ? 'Kanit' : data.fontFamily === 'sarabun' ? 'Sarabun' : 'Prompt';
-      await waitForFonts(fontName);
-
-      const html2pdf = (await import('html2pdf.js')).default;
-      const element = document.getElementById('document-preview-container');
-      if (!element) return;
-
-      const actualWidth = element.offsetWidth;
-
-      // ลบ minHeight ชั่วคราวเพื่อไม่ให้หน้าว่าง
-      const prevMinHeight = element.style.minHeight;
-      const prevHeight = element.style.height;
-      element.style.minHeight = 'unset';
-      element.style.height = 'auto';
-
-      await new Promise(resolve => setTimeout(resolve, 300));
-
-      const opt: any = {
-        margin: 0,
-        filename: finalFilename,
-        image: { type: 'jpeg', quality: 1 },
-        html2canvas: {
-          scale: 3,
-          useCORS: true,
-          allowTaint: true,
-          logging: false,
-          scrollY: 0,
-          scrollX: 0,
-          windowWidth: actualWidth,
-          backgroundColor: '#ffffff',
-          onclone: (_clonedDoc: Document, clonedEl: HTMLElement) => {
-            // ใน cloned doc: ลบ min-h ทุกตัว และบังคับให้ position เป็น static
-            clonedEl.style.cssText += `
-              min-height: unset !important;
-              height: auto !important;
-              font-family: '${fontName}', sans-serif !important;
-              position: static !important;
-              transform: none !important;
-            `;
-            clonedEl.querySelectorAll('*').forEach((el) => {
-              const htmlEl = el as HTMLElement;
-              const computed = window.getComputedStyle(htmlEl);
-              // ลบ min-height ที่มาจาก Tailwind
-              if (computed.minHeight && computed.minHeight !== '0px') {
-                htmlEl.style.minHeight = 'unset';
-              }
-            });
-          }
-        },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      };
-
-      await html2pdf().set(opt).from(element).save();
-
-      // คืนค่าเดิม
-      element.style.minHeight = prevMinHeight;
-      element.style.height = prevHeight;
-
-    } catch (error) {
-      console.error("Failed to generate PDF", error);
-      alert("ไม่สามารถสร้างไฟล์ PDF ได้ ระบบจะทำการพิมพ์แบบปกติแทน");
+    // ใช้ browser print แทน html2pdf เพื่อให้ได้ผลตรงต้นฉบับ 100%
+    // แนะนำให้ user เลือก "Save as PDF" ใน print dialog
+    setTimeout(() => {
       window.print();
-    } finally {
-      setIsGeneratingPdf(false);
-    }
+    }, 100);
   };
 
   const resetForm = () => {
@@ -384,8 +317,8 @@ export default function App() {
             disabled={isGeneratingPdf}
             className="flex items-center justify-center gap-2 px-6 py-2 text-sm font-medium text-white bg-leaf-600 hover:bg-leaf-700 active:bg-leaf-800 disabled:opacity-70 disabled:cursor-not-allowed rounded-xl transition-all duration-200 active:scale-95 shadow-sm shadow-leaf-500 focus:outline-none focus:ring-2 focus:ring-leaf-500 focus:ring-offset-2 flex-1 md:flex-none cursor-pointer"
           >
-            {isGeneratingPdf ? <Loader2 size={18} className="animate-spin" /> : <FileText size={18} />}
-            {isGeneratingPdf ? 'กำลังโหลด...' : 'โหลด PDF'}
+            <FileText size={18} />
+            บันทึก PDF
           </button>
         </div>
       </header>
