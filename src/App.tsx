@@ -159,9 +159,6 @@ export default function App() {
 
     const finalFilename = filename.endsWith('.pdf') ? filename : filename + '.pdf';
 
-    // สร้าง hidden div สำหรับ render PDF โดยเฉพาะ ขนาด 794px พอดี A4
-    let renderContainer: HTMLDivElement | null = null;
-
     try {
       setIsGeneratingPdf(true);
       await new Promise(resolve => setTimeout(resolve, 100));
@@ -169,36 +166,18 @@ export default function App() {
       const fontName = data.fontFamily === 'sans' ? 'Kanit' : data.fontFamily === 'sarabun' ? 'Sarabun' : 'Prompt';
       await waitForFonts(fontName);
 
+      const html2pdf = (await import('html2pdf.js')).default;
       const element = document.getElementById('document-preview-container');
       if (!element) return;
 
-      // Clone element และวางใน hidden div ขนาด 794px
-      // เพื่อให้ browser reflow layout ที่ความกว้าง A4 จริงๆ ก่อน capture
-      renderContainer = document.createElement('div');
-      renderContainer.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: -9999px;
-        width: 794px;
-        background: white;
-        z-index: -1;
-        font-family: '${fontName}', sans-serif;
-      `;
+      // จำค่าเดิมไว้ก่อน แล้วบังคับ element ให้เป็น 794px ชั่วคราว
+      const prevMinHeight = element.style.minHeight;
+      const prevHeight = element.style.height;
+      element.style.minHeight = 'unset';
+      element.style.height = 'auto';
 
-      const cloned = element.cloneNode(true) as HTMLElement;
-      cloned.style.width = '794px';
-      cloned.style.minHeight = 'unset';
-      cloned.style.height = 'auto';
-      cloned.style.fontFamily = `'${fontName}', sans-serif`;
-
-      renderContainer.appendChild(cloned);
-      document.body.appendChild(renderContainer);
-
-      // รอให้ browser reflow เสร็จ
-      await new Promise(resolve => setTimeout(resolve, 300));
-      await waitForFonts(fontName);
-
-      const html2pdf = (await import('html2pdf.js')).default;
+      // รอให้ browser reflow
+      await new Promise(resolve => setTimeout(resolve, 200));
 
       const opt: any = {
         margin: 0,
@@ -209,25 +188,36 @@ export default function App() {
           useCORS: true,
           allowTaint: true,
           logging: false,
-          scrollY: 0,
+          scrollY: -window.scrollY,
           scrollX: 0,
           windowWidth: 794,
           backgroundColor: '#ffffff',
+          onclone: (_clonedDoc: Document, clonedEl: HTMLElement) => {
+            clonedEl.style.minHeight = 'unset';
+            clonedEl.style.height = 'auto';
+            clonedEl.style.width = '794px';
+            clonedEl.style.fontFamily = `'${fontName}', sans-serif`;
+
+            // แก้ทุก child ที่มี min-h ติดมาจาก Tailwind
+            clonedEl.querySelectorAll('[class*="min-h"]').forEach((el) => {
+              (el as HTMLElement).style.minHeight = 'unset';
+            });
+          }
         },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 
-      await html2pdf().set(opt).from(renderContainer).save();
+      await html2pdf().set(opt).from(element).save();
+
+      // คืนค่าเดิม
+      element.style.minHeight = prevMinHeight;
+      element.style.height = prevHeight;
 
     } catch (error) {
       console.error("Failed to generate PDF", error);
       alert("ไม่สามารถสร้างไฟล์ PDF ได้ ระบบจะทำการพิมพ์แบบปกติแทน");
       window.print();
     } finally {
-      // ลบ hidden div ออกหลังเสร็จ
-      if (renderContainer && document.body.contains(renderContainer)) {
-        document.body.removeChild(renderContainer);
-      }
       setIsGeneratingPdf(false);
     }
   };
