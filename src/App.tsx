@@ -159,102 +159,75 @@ export default function App() {
 
     const finalFilename = filename.endsWith('.pdf') ? filename : filename + '.pdf';
 
+    // สร้าง hidden div สำหรับ render PDF โดยเฉพาะ ขนาด 794px พอดี A4
+    let renderContainer: HTMLDivElement | null = null;
+
     try {
       setIsGeneratingPdf(true);
       await new Promise(resolve => setTimeout(resolve, 100));
 
-      // รอ font ไทยโหลดครบก่อน render
       const fontName = data.fontFamily === 'sans' ? 'Kanit' : data.fontFamily === 'sarabun' ? 'Sarabun' : 'Prompt';
       await waitForFonts(fontName);
 
-      const html2pdf = (await import('html2pdf.js')).default;
       const element = document.getElementById('document-preview-container');
       if (!element) return;
 
-      // A4 ที่ 96dpi = 794px พอดี — hardcode เพื่อความแม่นยำ
-      const A4_WIDTH_PX = 794;
+      // Clone element และวางใน hidden div ขนาด 794px
+      // เพื่อให้ browser reflow layout ที่ความกว้าง A4 จริงๆ ก่อน capture
+      renderContainer = document.createElement('div');
+      renderContainer.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: -9999px;
+        width: 794px;
+        background: white;
+        z-index: -1;
+        font-family: '${fontName}', sans-serif;
+      `;
+
+      const cloned = element.cloneNode(true) as HTMLElement;
+      cloned.style.width = '794px';
+      cloned.style.minHeight = 'unset';
+      cloned.style.height = 'auto';
+      cloned.style.fontFamily = `'${fontName}', sans-serif`;
+
+      renderContainer.appendChild(cloned);
+      document.body.appendChild(renderContainer);
+
+      // รอให้ browser reflow เสร็จ
+      await new Promise(resolve => setTimeout(resolve, 300));
+      await waitForFonts(fontName);
+
+      const html2pdf = (await import('html2pdf.js')).default;
 
       const opt: any = {
         margin: 0,
         filename: finalFilename,
         image: { type: 'jpeg', quality: 1 },
         html2canvas: {
-          scale: 2,
+          scale: 3,
           useCORS: true,
           allowTaint: true,
           logging: false,
           scrollY: 0,
           scrollX: 0,
-          windowWidth: A4_WIDTH_PX,
+          windowWidth: 794,
           backgroundColor: '#ffffff',
-          onclone: (clonedDoc: Document) => {
-            const style = clonedDoc.createElement('style');
-            style.innerHTML = `
-              @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap');
-
-              * {
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-                box-sizing: border-box !important;
-              }
-
-              #document-preview-container {
-                font-family: '${fontName}', sans-serif !important;
-                width: ${A4_WIDTH_PX}px !important;
-                min-height: unset !important;
-                height: auto !important;
-                background: white !important;
-                overflow: visible !important;
-              }
-
-              #document-preview-container .table-bordered {
-                border-collapse: separate !important;
-                border-spacing: 0 !important;
-                border-top: 1px solid #1c1917 !important;
-                border-left: 1px solid #1c1917 !important;
-              }
-
-              #document-preview-container .table-bordered th,
-              #document-preview-container .table-bordered td {
-                border-bottom: 1px solid #1c1917 !important;
-                border-right: 1px solid #1c1917 !important;
-              }
-
-              #document-preview-container table {
-                table-layout: fixed !important;
-                width: 100% !important;
-              }
-
-              #document-preview-container .break-words {
-                word-break: break-word !important;
-                overflow-wrap: break-word !important;
-              }
-
-              /* ซ่อน class ที่เกี่ยวกับ print/screen ที่ทำให้ layout พัง */
-              .no-print { display: none !important; }
-            `;
-            clonedDoc.head.appendChild(style);
-
-            const clonedContainer = clonedDoc.getElementById('document-preview-container');
-            if (clonedContainer) {
-              // ลบ min-height ออกเพื่อไม่ให้เกิดหน้าว่าง
-              clonedContainer.style.minHeight = 'unset';
-              clonedContainer.style.height = 'auto';
-              clonedContainer.style.width = `${A4_WIDTH_PX}px`;
-              clonedContainer.style.fontFamily = `'${fontName}', sans-serif`;
-            }
-          }
         },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 
-      await html2pdf().set(opt).from(element).save();
+      await html2pdf().set(opt).from(renderContainer).save();
 
     } catch (error) {
       console.error("Failed to generate PDF", error);
       alert("ไม่สามารถสร้างไฟล์ PDF ได้ ระบบจะทำการพิมพ์แบบปกติแทน");
       window.print();
     } finally {
+      // ลบ hidden div ออกหลังเสร็จ
+      if (renderContainer && document.body.contains(renderContainer)) {
+        document.body.removeChild(renderContainer);
+      }
       setIsGeneratingPdf(false);
     }
   };
