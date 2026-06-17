@@ -356,7 +356,7 @@ export default function App() {
 
         {/* Preview Panel (Right) */}
         <section className={`flex-1 p-0 sm:p-6 md:p-8 xl:p-12 xl:overflow-y-auto print:h-auto print:overflow-visible justify-center bg-sand-100 print:bg-white print:p-0 print:block custom-scrollbar items-start relative z-0 ${showMobilePreview ? 'flex' : 'hidden xl:flex'} print:!flex`}>
-          <div className="w-full overflow-x-auto overflow-y-hidden custom-scrollbar pb-6 xl:pb-0 px-4 sm:px-0">
+          <div className="w-full overflow-x-auto overflow-y-hidden custom-scrollbar pb-6 xl:pb-0 px-4 sm:px-0 print:p-0 print:overflow-visible print:w-full">
             <div className="bg-white shadow-xl shadow-stone-200 rounded-2xl print:shadow-none print:rounded-none w-[794px] min-h-[1123px] mx-auto border border-sand-200 print:border-none print:w-full print:min-h-0 print:mx-0 relative">
               <div id="document-preview-container" className="print-area bg-white w-full min-h-[1123px] print:min-h-0 flex flex-col justify-between print:static print:w-full overflow-hidden rounded-2xl print:rounded-none print:overflow-visible">
                  <DocumentPreview data={data} />

@@ -40,33 +40,32 @@
 }
 
 @media print {
+  /* ใช้ margin ที่ @page เพื่อให้ iOS Safari จัดการขอบได้ถูก */
   @page {
     size: A4 portrait;
-    margin: 0;
+    margin: 10mm 8mm;
   }
 
-  /* บังคับ 1 หน้า: ซ่อน scrollbar และ overflow */
   html, body {
-    width: 210mm;
+    width: 100% !important;
     height: auto !important;
     max-height: none !important;
     overflow: visible !important;
-    background: white;
-    margin: 0;
-    padding: 0;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
+    background: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
-  /* ซ่อน UI ที่ไม่เกี่ยวกับเอกสาร */
   .no-print {
     display: none !important;
   }
 
-  /* preview wrapper — ลบ fixed size ออกทั้งหมด */
+  /* ให้ print-area เต็มหน้ากระดาษ (margin จัดการโดย @page แล้ว) */
   .print-area {
-    width: 210mm !important;
-    max-width: 210mm !important;
+    width: 100% !important;
+    max-width: 100% !important;
     min-height: unset !important;
     height: auto !important;
     margin: 0 !important;
@@ -74,39 +73,25 @@
     border: none !important;
     box-shadow: none !important;
     overflow: visible !important;
+    border-radius: 0 !important;
   }
 
-  /* parent ของ print-area */
   #document-preview-container {
     min-height: unset !important;
     height: auto !important;
     overflow: visible !important;
+    border-radius: 0 !important;
   }
 
-  /* ซ่อน outer wrapper ที่ไม่ใช่ print-area */
-  body > * {
-    display: none !important;
-  }
-
-  /* แสดงเฉพาะ preview panel */
-  #root {
-    display: block !important;
-    height: auto !important;
-  }
-
-  .print\:block {
-    display: block !important;
-  }
-
-  /* ลบ border มือถือที่ scale เพี้ยน */
+  /* เส้นตาราง — ใช้ pt ซึ่งเป็น physical unit เท่ากันทุกอุปกรณ์ */
   .table-bordered {
-    border-top-width: 0.75pt !important;
-    border-left-width: 0.75pt !important;
+    border-top: 0.5pt solid #1c1917 !important;
+    border-left: 0.5pt solid #1c1917 !important;
   }
 
   .table-bordered th,
   .table-bordered td {
-    border-bottom-width: 0.75pt !important;
-    border-right-width: 0.75pt !important;
+    border-bottom: 0.5pt solid #1c1917 !important;
+    border-right: 0.5pt solid #1c1917 !important;
   }
 }
