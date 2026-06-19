@@ -157,22 +157,36 @@ export default function App() {
       font-family: '${fontName}', sans-serif !important;
       -webkit-print-color-adjust: exact !important;
       print-color-adjust: exact !important;
-      width: 100% !important;
+      width: 210mm !important;
       height: auto !important;
       overflow: visible !important;
     }
 
     #print-root {
       width: 210mm;
-      margin: 0 auto;
+      margin: 0;
       background: white;
       font-family: '${fontName}', sans-serif;
+      min-height: unset !important;
+      height: auto !important;
+      overflow: visible !important;
     }
 
-    /* ลบ min-height ทั้งหมดเพื่อไม่ให้ล้น 2 หน้า */
-    #print-root * {
+    /* ลบ min-height ทุก element */
+    #print-root, #print-root * {
       min-height: unset !important;
     }
+
+    /* ลด padding ให้ fit 1 หน้า A4 */
+    .pt-12 { padding-top: 1.5rem !important; }
+    .pb-12 { padding-bottom: 1.5rem !important; }
+    .pt-16 { padding-top: 2rem !important; }
+    .pb-16 { padding-bottom: 2rem !important; }
+    .px-12 { padding-left: 1.5rem !important; padding-right: 1.5rem !important; }
+    .px-16 { padding-left: 2rem !important; padding-right: 2rem !important; }
+    .mt-16 { margin-top: 1rem !important; }
+    .mb-12 { margin-bottom: 1rem !important; }
+    .mt-auto { margin-top: 0.5rem !important; }
 
     .table-bordered {
       border-collapse: separate !important;
@@ -187,12 +201,16 @@ export default function App() {
 
     @page {
       size: A4 portrait;
-      margin: 8mm 8mm;
+      margin: 0;
     }
 
     @media print {
-      html, body { margin: 0 !important; padding: 0 !important; }
-      #print-root { width: 100% !important; }
+      html, body {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 210mm !important;
+      }
+      #print-root { width: 210mm !important; }
     }
   </style>
 </head>
