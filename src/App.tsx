@@ -125,26 +125,18 @@ export default function App() {
 
     const fontName = data.fontFamily === 'sans' ? 'Kanit' : data.fontFamily === 'sarabun' ? 'Sarabun' : 'Prompt';
 
-    // เก็บ style sheets ทั้งหมดจากหน้าปัจจุบัน
-    const styles = Array.from(document.styleSheets)
-      .map(sheet => {
-        try {
-          return Array.from(sheet.cssRules).map(rule => rule.cssText).join('\n');
-        } catch {
-          // external stylesheet — ใช้ link แทน
-          return '';
-        }
-      })
-      .join('\n');
-
-    const content = element.innerHTML;
+    // เก็บ CSS rules จาก stylesheets ทั้งหมดของหน้าปัจจุบัน
+    let allCss = '';
+    Array.from(document.styleSheets).forEach(sheet => {
+      try {
+        Array.from(sheet.cssRules).forEach(rule => {
+          allCss += rule.cssText + '\n';
+        });
+      } catch { /* cross-origin sheet */ }
+    });
 
     const printWindow = window.open('', '_blank', 'width=900,height=1200');
-    if (!printWindow) {
-      // fallback ถ้า popup ถูก block
-      window.print();
-      return;
-    }
+    if (!printWindow) { window.print(); return; }
 
     printWindow.document.write(`<!DOCTYPE html>
 <html>
@@ -152,68 +144,66 @@ export default function App() {
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>เอกสาร</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <style>
-    ${styles}
+    ${allCss}
 
-    /* Reset สำหรับ print window */
-    * { box-sizing: border-box; }
+    *, *::before, *::after { box-sizing: border-box !important; }
 
-    body {
-      margin: 0;
-      padding: 0;
-      background: white;
-      font-family: '${fontName}', sans-serif;
-      -webkit-print-color-adjust: exact;
-      print-color-adjust: exact;
+    html, body {
+      margin: 0 !important;
+      padding: 0 !important;
+      background: white !important;
+      font-family: '${fontName}', sans-serif !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      width: 100% !important;
+      height: auto !important;
+      overflow: visible !important;
     }
 
-    .wrapper {
+    #print-root {
       width: 210mm;
       margin: 0 auto;
       background: white;
       font-family: '${fontName}', sans-serif;
     }
 
-    /* ลบ min-height เพื่อไม่ให้ล้น 1 หน้า */
-    .wrapper, .wrapper * {
+    /* ลบ min-height ทั้งหมดเพื่อไม่ให้ล้น 2 หน้า */
+    #print-root * {
       min-height: unset !important;
+    }
+
+    .table-bordered {
+      border-collapse: separate !important;
+      border-spacing: 0 !important;
+      border-top: 0.5pt solid #1c1917 !important;
+      border-left: 0.5pt solid #1c1917 !important;
+    }
+    .table-bordered th, .table-bordered td {
+      border-bottom: 0.5pt solid #1c1917 !important;
+      border-right: 0.5pt solid #1c1917 !important;
     }
 
     @page {
       size: A4 portrait;
-      margin: 10mm 8mm;
+      margin: 8mm 8mm;
     }
 
     @media print {
-      body { margin: 0; padding: 0; }
-      .wrapper { width: 100%; }
-
-      .table-bordered {
-        border-collapse: separate !important;
-        border-spacing: 0 !important;
-        border-top: 0.5pt solid #1c1917 !important;
-        border-left: 0.5pt solid #1c1917 !important;
-      }
-      .table-bordered th,
-      .table-bordered td {
-        border-bottom: 0.5pt solid #1c1917 !important;
-        border-right: 0.5pt solid #1c1917 !important;
-      }
+      html, body { margin: 0 !important; padding: 0 !important; }
+      #print-root { width: 100% !important; }
     }
   </style>
 </head>
 <body>
-  <div class="wrapper">${content}</div>
+  <div id="print-root">${element.innerHTML}</div>
   <script>
-    // รอ font โหลดแล้วค่อย print
     document.fonts.ready.then(function() {
       setTimeout(function() {
         window.print();
-        setTimeout(function() { window.close(); }, 500);
-      }, 500);
+        setTimeout(function() { window.close(); }, 1000);
+      }, 800);
     });
   </script>
 </body>
