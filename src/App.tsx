@@ -138,6 +138,8 @@ export default function App() {
     const printWindow = window.open('', '_blank', 'width=900,height=1200');
     if (!printWindow) { window.print(); return; }
 
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
     printWindow.document.write(`<!DOCTYPE html>
 <html>
 <head>
@@ -146,76 +148,63 @@ export default function App() {
   <title>เอกสาร</title>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <style>
-    ${allCss}
+    \${allCss}
 
     *, *::before, *::after { box-sizing: border-box !important; }
 
     html, body {
-      margin: 0 !important;
-      padding: 0 !important;
-      background: white !important;
-      font-family: '${fontName}', sans-serif !important;
+      margin: 0 !important; padding: 0 !important; background: white !important;
+      font-family: '\${fontName}', sans-serif !important;
       -webkit-print-color-adjust: exact !important;
       print-color-adjust: exact !important;
-      width: 210mm !important;
-      height: auto !important;
-      overflow: visible !important;
+      width: 210mm !important; height: auto !important; overflow: visible !important;
     }
 
     #print-root {
-      width: 210mm;
-      margin: 0;
-      background: white;
-      font-family: '${fontName}', sans-serif;
-      min-height: unset !important;
-      height: auto !important;
-      overflow: visible !important;
+      width: 210mm; margin: 0; background: white;
+      font-family: '\${fontName}', sans-serif;
     }
 
-    /* ลบ min-height ทุก element */
-    #print-root, #print-root * {
-      min-height: unset !important;
-    }
+    #print-root, #print-root * { min-height: unset !important; }
 
-    /* ลด padding ให้ fit 1 หน้า A4 */
+    /* ลบ justify-between ที่ทำให้มีพื้นที่ว่างล่าง */
+    #print-root .flex-col.justify-between { justify-content: flex-start !important; }
+
     .pt-12 { padding-top: 1.5rem !important; }
     .pb-12 { padding-bottom: 1.5rem !important; }
     .pt-16 { padding-top: 2rem !important; }
-    .pb-16 { padding-bottom: 2rem !important; }
     .px-12 { padding-left: 1.5rem !important; padding-right: 1.5rem !important; }
     .px-16 { padding-left: 2rem !important; padding-right: 2rem !important; }
     .mt-16 { margin-top: 1rem !important; }
     .mb-12 { margin-bottom: 1rem !important; }
-    .mt-auto { margin-top: 0.5rem !important; }
 
     .table-bordered {
-      border-collapse: separate !important;
-      border-spacing: 0 !important;
-      border-top: 0.5pt solid #1c1917 !important;
-      border-left: 0.5pt solid #1c1917 !important;
+      border-collapse: separate !important; border-spacing: 0 !important;
+      border-top: 0.5pt solid #1c1917 !important; border-left: 0.5pt solid #1c1917 !important;
     }
     .table-bordered th, .table-bordered td {
-      border-bottom: 0.5pt solid #1c1917 !important;
-      border-right: 0.5pt solid #1c1917 !important;
+      border-bottom: 0.5pt solid #1c1917 !important; border-right: 0.5pt solid #1c1917 !important;
     }
 
-    @page {
-      size: A4 portrait;
-      margin: 0;
-    }
+    @page { size: A4 portrait; margin: 0; }
 
     @media print {
-      html, body {
-        margin: 0 !important;
-        padding: 0 !important;
-        width: 210mm !important;
-      }
+      html, body { margin: 0 !important; padding: 0 !important; width: 210mm !important; }
       #print-root { width: 210mm !important; }
+      #ios-hint { display: none !important; }
+    }
+
+    #ios-hint {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      background: #1c1917; color: white; padding: 12px 20px; border-radius: 999px;
+      font-size: 13px; z-index: 9999; white-space: nowrap;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     }
   </style>
 </head>
 <body>
-  <div id="print-root">${element.innerHTML}</div>
+  <div id="print-root">\${element.innerHTML}</div>
+  \${isIOS ? '<div id="ios-hint">💡 ใน print dialog: ปิด Header and Footer เพื่อซ่อน URL</div>' : ''}
   <script>
     document.fonts.ready.then(function() {
       setTimeout(function() {
@@ -225,8 +214,8 @@ export default function App() {
     });
   </script>
 </body>
-</html>`);
-    printWindow.document.close();
+</html>\`);
+        printWindow.document.close();
   };
 
   const handlePrint = async (useNativePrint = false) => {
