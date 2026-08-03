@@ -1,0 +1,17 @@
+{
+  "name": "Wonder Scent",
+  "short_name": "Wonder Scent",
+  "description": "ระบบจัดการใบเสนอราคาและเอกสารบัญชีสำหรับ Wonder Scent",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#16a34a",
+  "icons": [
+    {
+      "src": "/33.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
