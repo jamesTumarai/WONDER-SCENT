@@ -174,13 +174,14 @@ export default function App() {
         filename:     finalFilename,
         image:        { type: 'jpeg', quality: 0.98 },
         html2canvas:  { 
-          scale: 3, 
+          scale: 2.5, 
           useCORS: true, 
           logging: false, 
           scrollY: 0,
           scrollX: 0,
           windowWidth: 794,
           windowHeight: 1123,
+          letterRendering: false,
           onclone: (clonedDoc: any) => {
             const targetEl = clonedDoc.getElementById('document-preview-container');
             if (targetEl) {
@@ -203,8 +204,12 @@ export default function App() {
 
             const style = clonedDoc.createElement('style');
             style.innerHTML = `
-              #document-preview-container {
+              #document-preview-container, #document-preview-container * {
                 font-family: ${data.fontFamily === 'sans' ? '"Kanit"' : data.fontFamily === 'sarabun' ? '"Sarabun"' : '"Prompt"'}, sans-serif !important;
+                letter-spacing: 0px !important;
+                word-spacing: 0px !important;
+                -webkit-font-smoothing: antialiased !important;
+                text-rendering: optimizeLegibility !important;
               }
               #document-preview-container .break-words {
                 word-break: break-all;
