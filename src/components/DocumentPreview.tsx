@@ -155,14 +155,14 @@ export default function DocumentPreview({ data }: Props) {
             <table className="w-full text-left table-bordered text-stone-900 table-fixed">
               <thead>
                 <tr className={`${c.bg} text-white`}>
-                  <th className="py-2.5 px-3 font-bold text-center w-12 text-[11px]">ลำดับ</th>
-                  <th className="py-2.5 px-6 font-bold text-[11px] text-center">รายการ</th>
-                  <th className="py-2.5 px-4 text-center font-bold w-24 text-[11px]">จำนวน</th>
-                  <th className="py-2.5 px-4 text-center font-bold w-28 text-[11px]">{data.columnSettings?.price1Label || 'ราคา/เดือน'}</th>
+                  <th className="py-2.5 px-3 font-bold text-center w-[8%] text-[11px]">ลำดับ</th>
+                  <th className="py-2.5 px-6 font-bold text-[11px] text-center w-[44%]">รายการ</th>
+                  <th className="py-2.5 px-4 text-center font-bold w-[12%] text-[11px]">จำนวน</th>
+                  <th className="py-2.5 px-4 text-center font-bold w-[18%] text-[11px]">{data.columnSettings?.price1Label || 'ราคา/เดือน'}</th>
                   {data.columnSettings?.showPrice2 && (
-                    <th className="py-2.5 px-4 text-center font-bold w-28 text-[11px]">{data.columnSettings?.price2Label || 'ราคา/ปี'}</th>
+                    <th className="py-2.5 px-4 text-center font-bold w-[15%] text-[11px]">{data.columnSettings?.price2Label || 'ราคา/ปี'}</th>
                   )}
-                  <th className="py-2.5 px-6 text-center font-bold w-32 text-[11px]">{data.columnSettings?.amountLabel || 'จำนวนเงิน'}</th>
+                  <th className="py-2.5 px-6 text-center font-bold w-[18%] text-[11px]">{data.columnSettings?.amountLabel || 'จำนวนเงิน'}</th>
                 </tr>
               </thead>
               <tbody>
@@ -387,14 +387,14 @@ export default function DocumentPreview({ data }: Props) {
             <table className="w-full text-left table-bordered text-stone-900 table-fixed">
               <thead>
                 <tr className={`${c.receiptBg} text-white`}>
-                  <th className="py-2 px-3 font-bold text-center w-16 text-[11px]">ลำดับ</th>
-                  <th className="py-2 px-6 font-bold text-[11px] text-center">รายการ (ชนิด/ชื่อ)</th>
-                  <th className="py-2 px-4 text-center font-bold w-20 text-[11px]">จำนวน</th>
-                  <th className="py-2 px-4 text-center font-bold w-28 text-[11px]">{data.columnSettings?.price1Label || 'ราคา/หน่วย'}</th>
+                  <th className="py-2 px-3 font-bold text-center w-[8%] text-[11px]">ลำดับ</th>
+                  <th className="py-2 px-6 font-bold text-[11px] text-center w-[44%]">รายการ (ชนิด/ชื่อ)</th>
+                  <th className="py-2 px-4 text-center font-bold w-[12%] text-[11px]">จำนวน</th>
+                  <th className="py-2 px-4 text-center font-bold w-[18%] text-[11px]">{data.columnSettings?.price1Label || 'ราคา/หน่วย'}</th>
                   {data.columnSettings?.showPrice2 && (
-                    <th className="py-2 px-4 text-center font-bold w-28 text-[11px]">{data.columnSettings?.price2Label || 'ราคา/ปี'}</th>
+                    <th className="py-2 px-4 text-center font-bold w-[15%] text-[11px]">{data.columnSettings?.price2Label || 'ราคา/ปี'}</th>
                   )}
-                  <th className="py-2 px-6 text-center font-bold w-32 text-[11px]">{data.columnSettings?.amountLabel || 'จำนวนเงิน'}</th>
+                  <th className="py-2 px-6 text-center font-bold w-[18%] text-[11px]">{data.columnSettings?.amountLabel || 'จำนวนเงิน'}</th>
                 </tr>
               </thead>
               <tbody>
@@ -652,14 +652,14 @@ export default function DocumentPreview({ data }: Props) {
           <table className="w-full text-left table-bordered text-stone-900 table-fixed">
             <thead>
               <tr className={`${c.bg} text-white`}>
-                <th className="py-2.5 px-3 font-bold text-center w-16 text-[11px]">ลำดับ</th>
-                <th className="py-2.5 px-6 font-bold text-[11px] text-center">รายการสินค้า</th>
-                <th className="py-2.5 px-4 text-center font-bold w-24 text-[11px]">จำนวน</th>
-                <th className="py-2.5 px-4 text-center font-bold w-28 text-[11px]">{data.columnSettings?.price1Label || 'ราคา/หน่วย'}</th>
+                <th className="py-2.5 px-3 font-bold text-center w-[8%] text-[11px]">ลำดับ</th>
+                <th className="py-2.5 px-6 font-bold text-[11px] text-center w-[44%]">รายการสินค้า</th>
+                <th className="py-2.5 px-4 text-center font-bold w-[12%] text-[11px]">จำนวน</th>
+                <th className="py-2.5 px-4 text-center font-bold w-[18%] text-[11px]">{data.columnSettings?.price1Label || 'ราคา/หน่วย'}</th>
                 {data.columnSettings?.showPrice2 && (
-                  <th className="py-2.5 px-4 text-center font-bold w-28 text-[11px]">{data.columnSettings?.price2Label || 'ราคา/ปี'}</th>
+                  <th className="py-2.5 px-4 text-center font-bold w-[15%] text-[11px]">{data.columnSettings?.price2Label || 'ราคา/ปี'}</th>
                 )}
-                <th className="py-2.5 px-6 text-center font-bold w-32 text-[11px]">{data.columnSettings?.amountLabel || 'จำนวนเงิน'}</th>
+                <th className="py-2.5 px-6 text-center font-bold w-[18%] text-[11px]">{data.columnSettings?.amountLabel || 'จำนวนเงิน'}</th>
               </tr>
             </thead>
             <tbody>

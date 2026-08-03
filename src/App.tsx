@@ -154,84 +154,24 @@ export default function App() {
   const executePdfGeneration = async (filename: string) => {
     setShowPdfModal(false);
     
-    // Ensure filename has .pdf extension
-    const finalFilename = filename.endsWith('.pdf') ? filename : filename + '.pdf';
+    // Set document title so Chrome uses it as the default filename when saving as PDF
+    const cleanFilename = filename.replace(/\.pdf$/i, '').trim();
+    const oldTitle = document.title;
+    document.title = cleanFilename || 'เอกสาร';
 
     try {
       setIsGeneratingPdf(true);
       await document.fonts.ready;
-      await new Promise(resolve => setTimeout(resolve, 250));
+      await new Promise(resolve => setTimeout(resolve, 100));
 
-      const html2pdf = (await import('html2pdf.js')).default;
-      const element = document.getElementById('document-preview-container');
-      if (!element) return;
-
-      const originalBg = element.style.backgroundColor;
-      element.style.backgroundColor = 'white';
-
-      const opt: any = {
-        margin:       0,
-        filename:     finalFilename,
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { 
-          scale: 2, 
-          useCORS: true, 
-          logging: false, 
-          scrollY: 0,
-          scrollX: 0,
-          windowWidth: 794,
-          windowHeight: 1123,
-          letterRendering: false,
-          onclone: (clonedDoc: any) => {
-            const targetEl = clonedDoc.getElementById('document-preview-container');
-            if (targetEl) {
-              targetEl.style.width = '210mm';
-              targetEl.style.height = '297mm';
-              targetEl.style.maxHeight = '297mm';
-              targetEl.style.boxSizing = 'border-box';
-              targetEl.style.overflow = 'hidden';
-              targetEl.style.borderRadius = '0';
-              targetEl.style.boxShadow = 'none';
-              targetEl.style.margin = '0';
-              targetEl.style.padding = '0';
-            }
-
-            // Ensure Google Thai Fonts are available in cloned head
-            const fontLink = clonedDoc.createElement('link');
-            fontLink.rel = 'stylesheet';
-            fontLink.href = 'https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap';
-            clonedDoc.head.appendChild(fontLink);
-
-            const style = clonedDoc.createElement('style');
-            style.innerHTML = `
-              #document-preview-container, #document-preview-container * {
-                font-family: ${data.fontFamily === 'sans' ? '"Kanit"' : data.fontFamily === 'sarabun' ? '"Sarabun"' : '"Prompt"'}, sans-serif !important;
-                letter-spacing: 0px !important;
-                word-spacing: 0px !important;
-                -webkit-font-smoothing: antialiased !important;
-                text-rendering: optimizeLegibility !important;
-              }
-              #document-preview-container .break-words {
-                word-break: break-all;
-                overflow-wrap: break-word;
-              }
-            `;
-            clonedDoc.head.appendChild(style);
-          }
-        },
-        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
-      };
-
-      await html2pdf().set(opt).from(element).save();
-      element.style.backgroundColor = originalBg;
-      showToast(`ดาวน์โหลดไฟล์ ${finalFilename} เรียบร้อยแล้ว`);
-    } catch (error) {
-      console.error("Failed to generate PDF", error);
-      showToast("เกิดข้อผิดพลาดในการสร้าง PDF ระบบเปิดหน้าพิมพ์ให้อัตโนมัติ");
-      setTimeout(() => window.print(), 300);
+      window.print();
+    } catch (err) {
+      console.error('Print generation failed:', err);
     } finally {
       setIsGeneratingPdf(false);
+      setTimeout(() => {
+        document.title = oldTitle;
+      }, 1000);
     }
   };
 
