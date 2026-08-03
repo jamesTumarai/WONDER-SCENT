@@ -159,8 +159,8 @@ export default function App() {
 
     try {
       setIsGeneratingPdf(true);
-      await new Promise(resolve => setTimeout(resolve, 80));
       await document.fonts.ready;
+      await new Promise(resolve => setTimeout(resolve, 250));
 
       const html2pdf = (await import('html2pdf.js')).default;
       const element = document.getElementById('document-preview-container');
@@ -174,7 +174,7 @@ export default function App() {
         filename:     finalFilename,
         image:        { type: 'jpeg', quality: 0.98 },
         html2canvas:  { 
-          scale: 2.5, 
+          scale: 2, 
           useCORS: true, 
           logging: false, 
           scrollY: 0,

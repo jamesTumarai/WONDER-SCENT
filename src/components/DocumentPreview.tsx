@@ -296,25 +296,25 @@ export default function DocumentPreview({ data }: Props) {
               <div className="w-1/2 flex flex-col p-3 border-r border-black">
                 <div className="font-bold mb-4 text-center break-words min-h-[16px]">{data.to.name}</div>
                 <div className="mt-auto space-y-4 pt-12">
-                  <div className="flex gap-2 items-end">
-                    <span className="w-10">ผู้อนุมัติ</span>
-                    <span className="flex-1 border-b border-dashed border-black pb-0.5"></span>
+                  <div className="flex gap-2 items-baseline">
+                    <span className="w-10 shrink-0">ผู้อนุมัติ</span>
+                    <span className="flex-1 border-b border-dashed border-black pb-0"></span>
                   </div>
-                  <div className="flex gap-2 items-end">
-                    <span className="w-10">วันที่</span>
-                    <span className="flex-1 border-b border-dashed border-black text-transparent pb-0.5 focus:text-stone-700">_</span>
+                  <div className="flex gap-2 items-baseline">
+                    <span className="w-10 shrink-0">วันที่</span>
+                    <span className="flex-1 border-b border-dashed border-black text-transparent pb-0">_</span>
                   </div>
                 </div>
               </div>
               <div className="w-1/2 flex flex-col p-3">
                 <div className="mt-auto space-y-4 pt-12">
-                  <div className="flex gap-2 items-end">
-                    <span className="w-16">ผู้เสนอราคา</span>
-                    <span className="flex-1 text-center border-b border-dashed border-black pb-0.5">บุษยาพร สามารถ</span>
+                  <div className="flex gap-2 items-baseline">
+                    <span className="w-16 shrink-0">ผู้เสนอราคา</span>
+                    <span className="flex-1 text-center border-b border-dashed border-black pb-0 leading-tight">บุษยาพร สามารถ</span>
                   </div>
-                  <div className="flex gap-2 items-end">
-                    <span className="w-16">วันที่</span>
-                    <span className="flex-1 text-center border-b border-dashed border-black pb-0.5">{formatDate(data.date)}</span>
+                  <div className="flex gap-2 items-baseline">
+                    <span className="w-16 shrink-0">วันที่</span>
+                    <span className="flex-1 text-center border-b border-dashed border-black pb-0 leading-tight">{formatDate(data.date)}</span>
                   </div>
                 </div>
               </div>
